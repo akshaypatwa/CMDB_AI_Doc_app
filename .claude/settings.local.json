@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(find /Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app -name *scheduled* -o -name *job* -o -name *cron*)",
+      "Bash(find /Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/target -type f \\\\\\(-name *.ts -o -name *.xml -o -name *.json \\\\\\))",
+      "Bash(sed \"s/''''$//\")",
+      "Bash(for f:*)",
+      "Bash(do sed:*)",
+      "Bash(done)",
+      "Read(//Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/**)",
+      "Read(//Users/akshaypatwa/.claude/**)",
+      "Bash(find ~/.claude/projects -type f -name *.md)",
+      "Read(//Users/akshaypatwa/.vscode/extensions/saoudrizwan.claude-dev-3.76.0/.claude/**)",
+      "Read(//opt/homebrew/.claude/**)",
+      "Bash(mv ~/.claude/skills/service_portal.md ~/.claude/service_portal.md)",
+      "Bash(rm -rf ~/.claude/skills/sndev)",
+      "Bash(ls -lh ~/.claude/*.md)",
+      "Bash(mv ~/.claude/skills/sndev.md \"/Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/.claude/skills/sndev.md\")",
+      "Bash(mv ~/.claude/skills/cmdb-health-sp.md \"/Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/.claude/skills/cmdb-health-sp.md\")",
+      "Bash(mv ~/.claude/service_portal.md \"/Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/.claude/service_portal.md\")"
+    ]
+  }
+}
