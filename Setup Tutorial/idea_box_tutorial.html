@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Idea Box — ServiceNow SDK Documentation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="progress-bar"></div>
+
+    <!-- HERO -->
+    <header class="hero">
+        <div class="hero-inner">
+            <div class="hero-eyebrow">ServiceNow SDK · Developer Guide</div>
+            <h1>Building &amp; Deploying a ServiceNow App<br>with Claude Code + ServiceNow SDK</h1>
+            <div class="hero-subtitle">A Complete Step-by-Step Guide for Beginners — No Prior Knowledge Assumed</div>
+            <div class="hero-pills">
+                <span class="hero-pill">Version 1.0</span>
+                <span class="hero-pill">ServiceNow SDK 4.4.1</span>
+                <span class="hero-pill">March 2026</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE NAV -->
+    <div class="mobile-header">
+        <span>📘 SDK Guide</span>
+        <button class="hamburger" onclick="toggleMobileNav()" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+    <div class="mobile-nav-drawer" id="mobile-nav">
+        <div class="sidebar-nav" id="mobile-nav-links"></div>
+    </div>
+
+    <!-- LAYOUT -->
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <nav class="sidebar" aria-label="Page navigation">
+            <div class="sidebar-label">Table of Contents</div>
+            <div class="sidebar-nav" id="sidebar-nav-links">
+                <a href="#s0"><span class="nav-num">00</span>Overview</a>
+                <a href="#s1"><span class="nav-num">01</span>What You Need to Install</a>
+                <a href="#s2"><span class="nav-num">02</span>ServiceNow Instance Connection</a>
+                <a href="#s3"><span class="nav-num">03</span>Creating Your Project</a>
+                <a href="#s4"><span class="nav-num">04</span>Project Structure</a>
+                <a href="#s5"><span class="nav-num">05</span>Starting Claude Code</a>
+                <a href="#s6"><span class="nav-num">06</span>Creating Your Skill File</a>
+                <a href="#s7"><span class="nav-num">07</span>Creating a Reference File</a>
+                <a href="#s8"><span class="nav-num">08</span>Building Your App</a>
+                <a href="#s9"><span class="nav-num">09</span>Build &amp; Deploy Commands</a>
+                <a href="#s10"><span class="nav-num">10</span>After Deployment</a>
+                <a href="#s11"><span class="nav-num">11</span>Tips &amp; Common Mistakes</a>
+                <a href="#s12"><span class="nav-num">12</span>Project Lifecycle</a>
+                <a href="#sa"><span class="nav-num">A</span>Command Reference</a>
+                <a href="#sb"><span class="nav-num">B</span>Glossary</a>
+                <a href="#sc"><span class="nav-num">C</span>Project File Map</a>
+            </div>
+        </nav>
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 0
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s0">
+                <div class="section-header">
+                    <span class="section-number">Section 00</span>
+                    <h2><i class="fa-solid fa-map-location-dot section-icon"
+                            style="color:var(--accent-primary)"></i> Understanding the Big Picture First</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>Before touching any tool, understand what we are building and why.</p>
+
+                <h3>What is the ServiceNow SDK?</h3>
+                <p>SDK stands for "Software Development Kit." Normally, building a ServiceNow app means clicking around
+                    in a browser inside ServiceNow's UI, which is slow, hard to version-control, and difficult to
+                    automate. The ServiceNow SDK lets you write your app as code on your laptop using modern tools
+                    (TypeScript, npm) and then deploy it to ServiceNow automatically.</p>
+
+                <h3>What is Claude Code?</h3>
+                <p>Claude Code is an AI assistant that lives in your terminal (command line). Instead of writing code
+                    yourself, you describe what you want in plain English and Claude Code writes the code for you. It
+                    understands your project, reads your files, and makes intelligent decisions.</p>
+
+                <h3>What is a Skill in Claude Code?</h3>
+                <p>A Skill is a Markdown document that you write once and store in your project. It teaches Claude Code
+                    about your specific project — your table names, your rules, your architecture. Without skills, you
+                    would have to re-explain your project every time you start a new Claude session.</p>
+
+                <h3>What Are We Building?</h3>
+                <p>This guide walks you through building the <strong>Employee Idea Box</strong> — a ServiceNow app
+                    where any employee can submit improvement ideas, colleagues can upvote them, and managers can review
+                    and approve them. Think of it as a company-wide suggestion box, but structured and trackable.</p>
+                <p>The app has one table, a simple status workflow, and navigation menus. There is no complex
+                    automation — just a clean, deployable app you can have live on ServiceNow in under an hour.</p>
+
+                <h3>Why Use Claude Code + SDK Together?</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Without Claude Code</th>
+                                <th>With Claude Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>You write all the TypeScript yourself, configure every field manually, set up all
+                                    the structures from scratch</td>
+                                <td>You describe what you want in plain English. Claude writes the code. You review it.
+                                    You deploy it.</td>
+                            </tr>
+                            <tr>
+                                <td>Requires expert knowledge of ServiceNow APIs and TypeScript</td>
+                                <td>The SDK handles the actual push to ServiceNow — no browser clicking required</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>This guide covers BOTH: the SDK setup AND how to use Claude Code to write all the code using prompts.</p>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 1
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s1">
+                <div class="section-header">
+                    <span class="section-number">Section 01</span>
+                    <h2><i class="fa-solid fa-screwdriver-wrench section-icon"
+                            style="color:var(--accent-primary)"></i> What You Need to Install</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>Think of this section as "setting up your workbench." Before you build anything, you need the right
+                    tools on your laptop.</p>
+
+                <!-- TOOL 1 -->
+                <div class="tool-card reveal">
+                    <span class="tool-num">Tool 1</span>
+                    <h3>Node.js</h3>
+                    <div class="meta-pair"><span class="meta-label">What it is:</span><span class="meta-value">Node.js
+                            is a runtime that lets your laptop run JavaScript programs. The ServiceNow SDK and Claude
+                            Code CLI are both Node.js programs.</span></div>
+                    <div class="meta-pair"><span class="meta-label">Why you need it:</span><span
+                            class="meta-value">Without Node.js, you cannot run npm commands or the SDK.</span></div>
+                    <h4>How to install:</h4>
+                    <p><strong>Step 1</strong> — Open your Terminal. On Mac: press Cmd+Space, type "Terminal", press
+                        Enter.</p>
+                    <p><strong>Step 2</strong> — Check if Node.js is already installed:</p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>node --version</code></pre>
+                    </div>
+                    <p>If you see something like <code>v18.17.0</code>, you are good. If you see "command not found,"
+                        continue below.</p>
+                    <p><strong>Step 3</strong> — Install nvm (Node Version Manager):</p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash</code></pre>
+                    </div>
+                    <p><strong>Step 4</strong> — Close and reopen your Terminal window, then install Node 18:</p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>nvm install 18
+nvm use 18</code></pre>
+                    </div>
+                    <p><strong>Step 5</strong> — Verify:</p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>node --version
+npm --version</code></pre>
+                    </div>
+                </div>
+
+                <!-- TOOL 2 -->
+                <div class="tool-card reveal">
+                    <span class="tool-num">Tool 2</span>
+                    <h3>The ServiceNow SDK CLI</h3>
+                    <div class="meta-pair"><span class="meta-label">What it is:</span><span class="meta-value">A
+                            command-line tool made by ServiceNow that handles building and deploying your
+                            app.</span></div>
+                    <div class="meta-pair"><span class="meta-label">Why you need it:</span><span
+                            class="meta-value">The SDK compiles your code, packages it, connects to your instance, and
+                            uploads everything.</span></div>
+                    <h4>How to install:</h4>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>npm install -g @servicenow/sdk</code></pre>
+                    </div>
+                    <p><strong>Verify:</strong></p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>now-sdk --version</code></pre>
+                    </div>
+                </div>
+
+                <!-- TOOL 3 -->
+                <div class="tool-card reveal">
+                    <span class="tool-num">Tool 3</span>
+                    <h3>Claude Code CLI</h3>
+                    <div class="meta-pair"><span class="meta-label">What it is:</span><span class="meta-value">The
+                            command-line version of Claude (Anthropic's AI). Runs directly in your terminal with access
+                            to your files.</span></div>
+                    <div class="meta-pair"><span class="meta-label">Why you need it:</span><span
+                            class="meta-value">This is your AI coding assistant. You describe what you want and Claude
+                            Code builds it.</span></div>
+                    <h4>How to install:</h4>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
+                    </div>
+                    <p><strong>Verify and first-time login:</strong></p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>claude --version</code></pre>
+                    </div>
+                    <p>When you first run <code>claude</code>, it will ask you to log in with your Anthropic account.
+                        Follow the prompts — it opens a browser for authentication.</p>
+                </div>
+
+                <!-- TOOL 4 -->
+                <div class="tool-card reveal">
+                    <span class="tool-num">Tool 4</span>
+                    <h3>Git</h3>
+                    <div class="meta-pair"><span class="meta-label">What it is:</span><span class="meta-value">Version
+                            control — tracks changes to your code over time.</span></div>
+                    <h4>Check if installed:</h4>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>git --version</code></pre>
+                    </div>
+                    <p>Most Macs come with Git pre-installed. If not: <code>xcode-select --install</code></p>
+                </div>
+
+                <!-- TOOL 5 -->
+                <div class="tool-card reveal">
+                    <span class="tool-num">Tool 5</span>
+                    <h3>VS Code (Recommended Editor)</h3>
+                    <div class="meta-pair"><span class="meta-label">What it is:</span><span class="meta-value">A free
+                            code editor by Microsoft for reading and reviewing files.</span></div>
+                    <p>Search "VS Code download" and install from the official Microsoft site.</p>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 2
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s2">
+                <div class="section-header">
+                    <span class="section-number">Section 02</span>
+                    <h2><i class="fa-solid fa-link section-icon"
+                            style="color:var(--accent-secondary)"></i> Setting Up Your ServiceNow Instance Connection</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <h3>Step 2.1: Get Your Instance URL</h3>
+                <p>Your instance URL looks like: <code>https://yourcompany.service-now.com</code></p>
+                <p>You should have received this from your ServiceNow administrator. If you are using a personal
+                    developer instance (PDI), log in to <strong>developer.servicenow.com</strong> to find your URL.</p>
+
+                <h3>Step 2.2: Confirm Admin Access</h3>
+                <p>You need to be an <strong>admin</strong> on the instance to deploy apps. Log in and confirm you see
+                    "Admin" in the top-right corner of the ServiceNow browser UI.</p>
+
+                <h3>Step 2.3: Add Your Instance to the SDK Keychain</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span
+                                class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>now-sdk auth add</code></pre>
+                </div>
+                <p>The SDK will ask for an alias name (e.g., <code>dev</code>), your instance URL, username, and
+                    password. Credentials are stored in your OS keychain — never in project files.</p>
+
+                <h3>Step 2.4: Verify the Connection</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span
+                                class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>now-sdk auth list</code></pre>
+                </div>
+                <p>You should see your alias and instance URL listed.</p>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 3
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s3">
+                <div class="section-header">
+                    <span class="section-number">Section 03</span>
+                    <h2><i class="fa-solid fa-folder-plus section-icon" style="color:#f59e0b"></i> Creating Your Project</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <h3>Step 3.1: Create a Project Folder</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span
+                                class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>mkdir EmployeeIdeaBox
+cd EmployeeIdeaBox</code></pre>
+                </div>
+
+                <h3>Step 3.2: Initialize the SDK Project</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span
+                                class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>now-sdk init</code></pre>
+                </div>
+                <p>When prompted:</p>
+                <ul>
+                    <li><strong>App name:</strong> <code>Employee Idea Box</code></li>
+                    <li><strong>Scope:</strong> <code>x_ideabox</code> — a namespace prefix that prevents conflicts with
+                        other apps</li>
+                    <li><strong>Auth alias:</strong> The alias you set up in Step 2.3 (e.g., <code>dev</code>)</li>
+                </ul>
+
+                <h3>Step 3.3: Install Dependencies</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span
+                                class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>npm install</code></pre>
+                </div>
+
+                <h3>Step 3.4: Fetch ServiceNow Type Definitions</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span
+                                class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>npm run types</code></pre>
+                </div>
+                <p>Downloads type definitions for all existing ServiceNow tables and APIs from your instance.</p>
+
+                <h3>Step 3.5: Initialize Git and Open in VS Code</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span
+                                class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>git init
+git add .
+git commit -m "Initial project setup"
+code .</code></pre>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 4
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s4">
+                <div class="section-header">
+                    <span class="section-number">Section 04</span>
+                    <h2><i class="fa-solid fa-diagram-project section-icon"
+                            style="color:#10b981"></i> Understanding Your Project Structure</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>After <code>now-sdk init</code>, your project looks like this. As you build your app, you will add
+                    folders under <code>src/fluent/</code>:</p>
+
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span
+                                class="code-dot dot-green"></span><span style="color:#888">Project Structure</span>
+                        </div>
+                    </div>
+                    <pre><code>EmployeeIdeaBox/
+│
+├── src/
+│   └── fluent/                  ← TypeScript files that DEFINE your app structure
+│       ├── index.now.ts         ← The master export list — every file must be listed here
+│       ├── tables/              ← Your database tables
+│       ├── acls/                ← Security rules (who can see and edit what)
+│       └── navigation/          ← Menu items in the ServiceNow sidebar
+│
+├── package.json                 ← Project settings and build commands
+├── now.config.json              ← Your app identity (scope, name, scopeId)
+└── .eslintrc                    ← Code quality rules</code></pre>
+                </div>
+
+                <div class="callout callout-warning">
+                    <span class="callout-label">Important — The Barrel File</span>
+                    <p><code>src/fluent/index.now.ts</code> must export every other Fluent file in your project. Think
+                        of it as a table of contents. If you create a new Fluent file but forget to add it here, that
+                        piece of your app will be silently skipped during deployment.</p>
+                </div>
+
+                <div class="callout callout-info">
+                    <span class="callout-label">Key Concept</span>
+                    <p><strong>Fluent files (.now.ts)</strong> are blueprints — they describe the shape of your app:
+                        tables, columns, menu items, security rules. They contain no business logic. Think of them as
+                        the architect's drawings.</p>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 5
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s5">
+                <div class="section-header">
+                    <span class="section-number">Section 05</span>
+                    <h2><i class="fa-solid fa-robot section-icon" style="color:#6366f1"></i> Starting Claude Code</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <h3>Launch Claude Code from Your Project Folder</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span
+                                class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>claude</code></pre>
+                </div>
+                <p>Claude Code starts up and shows you a prompt. It automatically reads your project files to understand
+                    what you are working with.</p>
+
+                <h3>How It Works</h3>
+                <p>When you type a message and press Enter, Claude Code:</p>
+                <ol>
+                    <li>Reads your request</li>
+                    <li>Decides what files to create or edit</li>
+                    <li>Shows you what it plans to do and asks for permission</li>
+                    <li>Makes the changes after you approve</li>
+                </ol>
+
+                <h3>Writing Good Prompts</h3>
+                <p>Good prompts are <strong>specific</strong> (give exact field names and types), <strong>purposeful</strong>
+                    (explain what the thing should DO), and <strong>scoped</strong> (tell Claude exactly which file to
+                    create and what other files to update).</p>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 6
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s6">
+                <div class="section-header">
+                    <span class="section-number">Section 06</span>
+                    <h2><i class="fa-solid fa-brain section-icon" style="color:#ec4899"></i> Creating Your Skill File</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <h3>What Is a Skill and Why Create It First?</h3>
+                <p>A Skill file is a briefing document for Claude Code. Every new Claude session starts fresh — without
+                    a Skill, you would have to re-explain your project every time. With a Skill file in
+                    <code>.claude/skills/</code>, Claude automatically loads your project context at the start of every
+                    session.</p>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">Real-World Analogy</span>
+                    <p>Imagine hiring a contractor. Without a briefing, they ask basic questions every day. With a
+                        proper briefing document, they show up already knowing your requirements, preferences, and
+                        constraints.</p>
+                </div>
+
+                <h3>Prompt to Create Your Skill</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#c586c0">Prompt</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create a skill file at .claude/skills/ideabox.md for this project.
+
+Read now.config.json and package.json to get the real app values, then write a
+skill that covers:
+
+1. Project identity: app name, scope prefix, SDK version, auth alias
+
+2. SDK command reference:
+   - npm run build: compiles TypeScript to XML, checks for errors, does NOT touch instance
+   - npm run deploy: builds + pushes everything to ServiceNow
+   - npm run types: fetches type definitions from instance (run when schema changes on instance)
+   - npm run transform: pulls current instance state to local files (always commit first)
+
+3. File structure rules:
+   - Fluent files (.now.ts) define structure: tables, columns, ACLs, menus
+   - Every Fluent file MUST be exported from src/fluent/index.now.ts
+   - If you create a file and forget to export it, it will be silently skipped at deploy time
+
+4. App context:
+   This is the Employee Idea Box — employees submit improvement ideas, colleagues
+   upvote them, and managers review and approve. The app has one table (idea),
+   ACLs controlling who can create and edit, and navigation menus.
+   All Fluent-only app — no server-side JavaScript needed.</code></pre>
+                    </div>
+                </div>
+
+                <div class="callout callout-info">
+                    <span class="callout-label">What Claude Code will do</span>
+                    <p>Read your actual <code>package.json</code> and <code>now.config.json</code> to extract real
+                        values, then generate a skill file specific to your project.</p>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 7
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s7">
+                <div class="section-header">
+                    <span class="section-number">Section 07</span>
+                    <h2><i class="fa-solid fa-book-open section-icon"
+                            style="color:#0ea5e9"></i> Creating a Reference File</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>A Reference File is a simple Markdown document with facts Claude can look up — field names, data
+                    types, allowed values. Unlike a Skill (which contains rules and instructions), a reference file is
+                    a dictionary.</p>
+
+                <p>For this app we need just one: a record of all fields in the idea table so Claude always uses the
+                    correct names when making changes later.</p>
+
+                <div class="callout callout-info">
+                    <span class="callout-label">When to create it</span>
+                    <p>Create the reference file <em>after</em> Prompt A in Section 8 (once the table exists). That
+                        way Claude can read the real table definition instead of guessing.</p>
+                </div>
+
+                <h3>Prompt to Create the Field Reference</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Claude Code</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Read src/fluent/tables/idea.now.ts and create a reference document at
+docs/field-reference.md.
+
+For each field include: short field name, full scoped field name, data type,
+allowed values or max length, and a one-line plain English description.
+
+Also document the status workflow at the bottom:
+new → under_review → approved or rejected → implemented</code></pre>
+                    </div>
+                </div>
+
+                <p>Once created, reference it in any future prompt:</p>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span
+                                class="code-dot dot-green"></span><span style="color:#888">Claude Code</span></div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>Looking at @docs/field-reference.md, add a new field called target_department</code></pre>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 8
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s8">
+                <div class="section-header">
+                    <span class="section-number">Section 08</span>
+                    <h2><i class="fa-solid fa-gears section-icon" style="color:#8b5cf6"></i> Building Your App with Claude Code Prompts</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>One prompt builds the complete app. Review what Claude creates, approve, then move on to build and deploy.</p>
+
+                <!-- MERGED PROMPT -->
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt — Build the Complete App</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create the complete Employee Idea Box app in one pass.
+
+Create all four Fluent files below, then add each one's export to
+src/fluent/index.now.ts.
+
+───────────────────────────────────────────────────────────────
+FILE 1 — Table: src/fluent/tables/idea.now.ts
+───────────────────────────────────────────────────────────────
+Table purpose: store one record per employee idea submission.
+Employees submit ideas, colleagues upvote them, managers review and approve.
+
+Fields:
+
+IDEA CONTENT:
+- title: String max 200 chars, mandatory — the idea headline
+- description: String max 4000 chars — full explanation of the idea
+- category: Choice field with options:
+    process_improvement, technology, cost_saving, culture, customer_experience, other
+  Default: other
+
+WORKFLOW:
+- status: Choice field with options: new, under_review, approved, rejected, implemented
+  Default: new
+- submitted_by: Reference to sys_user, mandatory — who submitted the idea
+- submitted_on: Date — when the idea was submitted
+- reviewer: Reference to sys_user — the manager evaluating this idea
+- review_notes: String max 2000 chars — feedback from the reviewer
+- reviewed_on: Date — when the review was completed
+
+ENGAGEMENT:
+- votes: Integer, default 0 — number of upvotes from colleagues
+- impact: Choice field with options: low, medium, high
+  Description: estimated business impact if implemented
+
+───────────────────────────────────────────────────────────────
+FILE 2 — Business Rule: src/fluent/business-rules/set-submitted-on.now.ts
+───────────────────────────────────────────────────────────────
+Rule: when a new idea record is inserted (on insert only), automatically set
+the submitted_on field to today's date if it is not already populated.
+
+───────────────────────────────────────────────────────────────
+FILE 3 — ACLs: src/fluent/acls/idea-acls.now.ts
+───────────────────────────────────────────────────────────────
+ACL 1 — READ: Any authenticated user can read all ideas.
+ACL 2 — CREATE: Any authenticated user can submit a new idea.
+ACL 3 — WRITE: Users with idea_reviewer or admin role can update ideas
+  (change status, add review notes, modify other people's submissions).
+ACL 4 — DELETE: Only admin can delete ideas.
+
+───────────────────────────────────────────────────────────────
+FILE 4 — Navigation: src/fluent/navigation/app-menu.now.ts
+───────────────────────────────────────────────────────────────
+Application menu:
+- Title: "Employee Idea Box"
+- Visible to all authenticated users (no special role required)
+
+Menu items:
+1. "All Ideas" at order 100 — shows every record in the idea table
+2. "My Ideas" at order 200 — shows only ideas where submitted_by is the
+   current logged-in user
+3. "Under Review" at order 300 — shows ideas where status equals under_review
+4. "Approved Ideas" at order 400 — shows ideas where status is approved or
+   implemented</code></pre>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">After this prompt</span>
+                    <p>This is a good time to create the field reference document from Section 7 before deploying.
+                        Then proceed to Section 9 to build and deploy.</p>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 9
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s9">
+                <div class="section-header">
+                    <span class="section-number">Section 09</span>
+                    <h2><i class="fa-solid fa-rocket section-icon" style="color:#f43f5e"></i> Build &amp; Deploy Commands</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <div class="content-card reveal">
+                    <h3 style="margin-top:0">Step 1 — Build: <code>npm run build</code></h3>
+                    <p>Compiles your TypeScript Fluent files into ServiceNow XML. Checks for errors. Does <strong>not</strong>
+                        touch your instance — nothing is sent anywhere yet.</p>
+                    <p><strong>What success looks like:</strong></p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal Output</span>
+                            </div>
+                        </div>
+                        <pre><code><span class="s">✔ Compiled 4 modules
+✔ No errors found
+Build completed in 2.1s</span></code></pre>
+                    </div>
+                    <p><strong>What failure looks like:</strong></p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal Output (Error)</span>
+                        </div>
+                        </div>
+                        <pre><code>✗ Error in src/fluent/tables/idea.now.ts line 22
+  Unknown column type 'blob' — did you mean 'string'?</code></pre>
+                    </div>
+                    <p>Fix the error in the file, then build again.</p>
+                </div>
+
+                <div class="content-card reveal">
+                    <h3 style="margin-top:0">Step 2 — Deploy: <code>npm run deploy</code></h3>
+                    <p>The main deployment command. Internally it:</p>
+                    <ol>
+                        <li>Runs <code>npm run build</code> to compile everything</li>
+                        <li>Packages the output into a ServiceNow Update Set</li>
+                        <li>Authenticates to your instance using the stored keychain credentials</li>
+                        <li>Uploads and commits the Update Set — your app is now live</li>
+                    </ol>
+                    <p><strong>What success looks like:</strong></p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal Output</span>
+                            </div>
+                        </div>
+                        <pre><code><span class="s">✔ Table:         x_ideabox_idea
+✔ BusinessRule:  Set submitted_on on insert
+✔ ACL:           x_ideabox_idea.read (4 rules)
+✔ AppMenu:       Employee Idea Box
+✔ Deployed successfully in 11.3s</span></code></pre>
+                    </div>
+                </div>
+
+                <div class="content-card reveal">
+                    <h3 style="margin-top:0">Other Commands (For Reference)</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Command</th>
+                                    <th>What It Does</th>
+                                    <th>When to Use</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>npm run types</code></td>
+                                    <td>Fetches type definitions from instance</td>
+                                    <td>When someone changed the schema directly on the instance</td>
+                                </tr>
+                                <tr>
+                                    <td><code>npm run transform</code></td>
+                                    <td>Pulls instance state to local files</td>
+                                    <td>When instance was edited via browser — always commit first</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 10
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s10">
+                <div class="section-header">
+                    <span class="section-number">Section 10</span>
+                    <h2><i class="fa-solid fa-gears section-icon" style="color:#8b5cf6"></i> After Deployment</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <h3>Step 10.1: Find Your App in ServiceNow</h3>
+                <p>Log into your ServiceNow instance and look in the left sidebar. You should see
+                    <strong>"Employee Idea Box"</strong> with the four menu items you defined. If it does not appear,
+                    type <code>Employee Idea Box</code> in the Navigator search bar at the top of the sidebar.</p>
+
+                <h3>Step 10.2: Create the idea_reviewer Role</h3>
+                <p>Your ACLs reference an <code>idea_reviewer</code> role. Create it on the instance:</p>
+                <ol>
+                    <li>Navigate to: <strong>User Administration &gt; Roles</strong></li>
+                    <li>Click <strong>New</strong></li>
+                    <li>Name: <code>idea_reviewer</code></li>
+                    <li>Description: <code>Can review and update Employee Idea Box submissions</code></li>
+                    <li>Save</li>
+                    <li>Assign this role to managers and reviewers via their User records</li>
+                </ol>
+
+                <h3>Step 10.3: Submit a Test Idea</h3>
+                <ol>
+                    <li>Click <strong>All Ideas</strong> in the sidebar</li>
+                    <li>Click <strong>New</strong></li>
+                    <li>Fill in a title, description, and category</li>
+                    <li>Save — the business rule should automatically populate <strong>Submitted On</strong> with
+                        today's date</li>
+                    <li>Confirm the record appears in <strong>My Ideas</strong></li>
+                </ol>
+
+                <h3>Step 10.4: Test the Review Workflow</h3>
+                <ol>
+                    <li>Open the test idea you just created</li>
+                    <li>Change Status to <strong>under_review</strong> and assign a Reviewer</li>
+                    <li>Save — the record should now appear under <strong>Under Review</strong></li>
+                    <li>Change Status to <strong>approved</strong> — it should appear under <strong>Approved
+                            Ideas</strong></li>
+                </ol>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">Your app is live</span>
+                    <p>That is it. You have a fully deployed, working ServiceNow app built with four Claude Code prompts
+                        and the ServiceNow SDK.</p>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 11
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s11">
+                <div class="section-header">
+                    <span class="section-number">Section 11</span>
+                    <h2><i class="fa-solid fa-triangle-exclamation section-icon"
+                            style="color:#ef4444"></i> Tips &amp; Common Mistakes</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <h3>Tips</h3>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">Tip 1 — Always Build Before You Deploy</span>
+                    <p>Run <code>npm run build</code> before <code>npm run deploy</code>. It catches errors locally in
+                        seconds rather than failing on the instance mid-upload.</p>
+                </div>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">Tip 2 — Commit After Each Prompt</span>
+                    <div class="code-block" style="margin-top:10px">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Terminal</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>git add .
+git commit -m "Add idea table"</code></pre>
+                    </div>
+                    <p>This gives you a restore point. If a later prompt breaks something, you can see exactly what
+                        changed with <code>git diff</code>.</p>
+                </div>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">Tip 3 — Reference Your Docs in Future Prompts</span>
+                    <p>When asking Claude Code to add or change something later, point it to your field reference:</p>
+                    <div class="code-block" style="margin-top:10px">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Claude Code</span></div>
+                        </div>
+                        <pre><code>Looking at @docs/field-reference.md, add a new choice option "urgent"
+to the impact field</code></pre>
+                    </div>
+                </div>
+
+                <h3>Common Mistakes</h3>
+
+                <div class="callout callout-critical">
+                    <span class="callout-label">Mistake 1 — Forgot to Export from index.now.ts</span>
+                    <p><strong>What happens:</strong> The deploy succeeds without errors but the table or menu does not
+                        appear on the instance — silently skipped.</p>
+                    <p><strong>How to fix it:</strong></p>
+                    <div class="code-block" style="margin-top:10px">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span
+                                    class="code-dot dot-green"></span><span style="color:#888">Claude Code</span></div>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Check src/fluent/index.now.ts and compare it against all .now.ts files
+in src/fluent/ and its subdirectories. Add exports for any missing files.</code></pre>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <span class="callout-label">Mistake 2 — Running transform Without Committing First</span>
+                    <p><strong>What happens:</strong> <code>npm run transform</code> overwrites your local files with
+                        the instance state. Any uncommitted local changes are lost.</p>
+                    <p><strong>Rule:</strong> Always run <code>git status</code> and <code>git commit</code> before
+                        running <code>transform</code>. If you do lose changes, check <code>git diff</code> and
+                        <code>git checkout .</code> to recover.</p>
+                </div>
+
+                <div class="callout callout-warning">
+                    <span class="callout-label">Mistake 3 — idea_reviewer Role Not Created</span>
+                    <p><strong>What happens:</strong> Users with the right intent cannot update ideas. The ACL
+                        references <code>idea_reviewer</code> but if the role does not exist on the instance, the rule
+                        silently fails to match anyone.</p>
+                    <p><strong>Fix:</strong> Follow Step 10.2 to create the role on the instance after deployment.</p>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 12
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s12">
+                <div class="section-header">
+                    <span class="section-number">Section 12</span>
+                    <h2><i class="fa-solid fa-rotate section-icon" style="color:#14b8a6"></i> The Full Project Lifecycle</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <!-- WORKFLOW 1 -->
+                <div class="workflow reveal">
+                    <div class="workflow-title">One-Time Setup</div>
+                    <div class="flow-steps navy">
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 1</span>Install Node.js →
+                                SDK CLI → Claude Code</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 2</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">now-sdk auth add</code> —
+                                Connect to your instance</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 3</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">now-sdk init</code> — Create
+                                project scaffold</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 4</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">npm install &amp;&amp; npm run types</code></div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 5</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">git init &amp;&amp; git commit</code></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WORKFLOW 2 -->
+                <div class="workflow reveal" style="margin-top:32px">
+                    <div class="workflow-title teal">Development Cycle</div>
+                    <div class="flow-steps teal">
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 1</span>Launch <code
+                                    style="background:rgba(255,255,255,0.15);color:white">claude</code></div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 2</span>Give a prompt →
+                                Claude writes code → Review → Approve</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 3</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">npm run build</code> — Check
+                                for errors locally</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 4</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">npm run deploy</code> — Push
+                                to ServiceNow</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 5</span>Test on instance →
+                                <code
+                                    style="background:rgba(255,255,255,0.15);color:white">git commit</code>
+                                <div><span class="cycle-badge">↩ Repeat from Step 1</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         APPENDIX A
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="sa">
+                <div class="section-header">
+                    <span class="section-number appendix-label">Appendix A</span>
+                    <h2><i class="fa-solid fa-list-check section-icon" style="color:#0ea5e9"></i> Complete Command Reference</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Command</th>
+                                <th>What It Does</th>
+                                <th>When to Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>now-sdk auth add</code></td>
+                                <td>Save instance credentials to keychain</td>
+                                <td>Once per instance</td>
+                            </tr>
+                            <tr>
+                                <td><code>now-sdk auth list</code></td>
+                                <td>Show saved credentials</td>
+                                <td>To verify auth is configured</td>
+                            </tr>
+                            <tr>
+                                <td><code>now-sdk init</code></td>
+                                <td>Create new project scaffold</td>
+                                <td>Once at project start</td>
+                            </tr>
+                            <tr>
+                                <td><code>npm install</code></td>
+                                <td>Download project libraries</td>
+                                <td>After cloning or first setup</td>
+                            </tr>
+                            <tr>
+                                <td><code>npm run types</code></td>
+                                <td>Fetch type definitions from instance</td>
+                                <td>After schema changes on instance</td>
+                            </tr>
+                            <tr>
+                                <td><code>npm run build</code></td>
+                                <td>Compile TypeScript, check for errors</td>
+                                <td>Before every deploy</td>
+                            </tr>
+                            <tr>
+                                <td><code>npm run deploy</code></td>
+                                <td>Build + push to instance</td>
+                                <td>When ready to deploy changes</td>
+                            </tr>
+                            <tr>
+                                <td><code>npm run transform</code></td>
+                                <td>Pull instance state to local files</td>
+                                <td>When instance was edited directly — commit first</td>
+                            </tr>
+                            <tr>
+                                <td><code>claude</code></td>
+                                <td>Start Claude Code in current project</td>
+                                <td>During development</td>
+                            </tr>
+                            <tr>
+                                <td><code>git add . &amp;&amp; git commit</code></td>
+                                <td>Save a snapshot of current state</td>
+                                <td>After each working milestone</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         APPENDIX B
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="sb">
+                <div class="section-header">
+                    <span class="section-number appendix-label">Appendix B</span>
+                    <h2><i class="fa-solid fa-book section-icon" style="color:#8b5cf6"></i> Glossary of Terms</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <div class="glossary-grid">
+                    <div class="glossary-card">
+                        <div class="glossary-term">Instance</div>
+                        <div class="glossary-def">Your company's copy of ServiceNow at a unique URL</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Scope</div>
+                        <div class="glossary-def">A namespace prefix (e.g. x_ideabox_) that isolates your app from others</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Fluent API</div>
+                        <div class="glossary-def">ServiceNow's TypeScript way to define app structure locally</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Barrel file</div>
+                        <div class="glossary-def">index.now.ts — a single file that re-exports everything in the project</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">ACL</div>
+                        <div class="glossary-def">Access Control List — defines who can read, create, write, or delete records</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Business Rule</div>
+                        <div class="glossary-def">Server-side logic that runs automatically when a record is saved</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Update Set</div>
+                        <div class="glossary-def">A package of changes deployed as a single unit in ServiceNow</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">GlideRecord</div>
+                        <div class="glossary-def">ServiceNow's API for querying and updating database tables</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">sys_id</div>
+                        <div class="glossary-def">The unique UUID of every record in ServiceNow</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">npm</div>
+                        <div class="glossary-def">Node Package Manager — installs JavaScript libraries</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">TypeScript</div>
+                        <div class="glossary-def">JavaScript with type checking — compiled to plain JavaScript before use</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Keychain</div>
+                        <div class="glossary-def">Your operating system's secure credential storage (not a project file)</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">PDI</div>
+                        <div class="glossary-def">Personal Developer Instance — a free ServiceNow sandbox for learning</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">sys_user</div>
+                        <div class="glossary-def">The built-in ServiceNow table that stores all user accounts</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         APPENDIX C
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="sc">
+                <div class="section-header">
+                    <span class="section-number appendix-label">Appendix C</span>
+                    <h2><i class="fa-solid fa-folder-tree section-icon" style="color:#ec4899"></i> Project File Map</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <div class="file-tree">
+                    <div class="tree-line"><span class="tree-dir">📁 EmployeeIdeaBox/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│</span></div>
+                    <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-dir">📁 .claude/</span><span class="tree-comment">← Claude Code intelligence</span></div>
+                    <div class="tree-line"><span class="tree-indent">│   └── </span><span class="tree-dir">📁 skills/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│       └── </span><span class="tree-md">📄 ideabox.md</span><span class="tree-comment">← Project skill: rules + context</span></div>
+                    <div class="tree-line"><span class="tree-indent">│</span></div>
+                    <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-dir">📁 docs/</span><span class="tree-comment">← Reference documentation</span></div>
+                    <div class="tree-line"><span class="tree-indent">│   └── </span><span class="tree-md">📄 field-reference.md</span><span class="tree-comment">← All table fields documented</span></div>
+                    <div class="tree-line"><span class="tree-indent">│</span></div>
+                    <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-dir">📁 src/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│   └── </span><span class="tree-dir">📁 fluent/</span><span class="tree-comment">← TypeScript structure definitions</span></div>
+                    <div class="tree-line"><span class="tree-indent">│       ├── </span><span class="tree-ts">📄 index.now.ts</span><span class="tree-comment">← BARREL: must export everything below</span></div>
+                    <div class="tree-line"><span class="tree-indent">│       ├── </span><span class="tree-dir">📁 tables/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│       │   └── </span><span class="tree-ts">📄 idea.now.ts</span><span class="tree-comment">← The idea submission table</span></div>
+                    <div class="tree-line"><span class="tree-indent">│       ├── </span><span class="tree-dir">📁 business-rules/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│       │   └── </span><span class="tree-ts">📄 set-submitted-on.now.ts</span><span class="tree-comment">← Auto-sets date on insert</span></div>
+                    <div class="tree-line"><span class="tree-indent">│       ├── </span><span class="tree-dir">📁 acls/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│       │   └── </span><span class="tree-ts">📄 idea-acls.now.ts</span><span class="tree-comment">← Read/write/create/delete rules</span></div>
+                    <div class="tree-line"><span class="tree-indent">│       ├── </span><span class="tree-dir">📁 navigation/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│       │   └── </span><span class="tree-ts">📄 app-menu.now.ts</span><span class="tree-comment">← Sidebar menus</span></div>
+                    <div class="tree-line"><span class="tree-indent">│       └── </span><span class="tree-dir">📁 generated/</span><span class="tree-comment">← Auto-generated — never edit</span></div>
+                    <div class="tree-line"><span class="tree-indent">│</span></div>
+                    <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-json">📄 now.config.json</span><span class="tree-comment">← App identity (scope, name, scopeId)</span></div>
+                    <div class="tree-line"><span class="tree-indent">└── </span><span class="tree-json">📄 package.json</span><span class="tree-comment">← Build scripts and dependencies</span></div>
+                </div>
+
+                <div class="callout callout-info" style="margin-top:24px">
+                    <span class="callout-label">Notice what's NOT here</span>
+                    <p>No <code>src/server/</code> folder. No Script Includes. No system properties. No LLM
+                        integration. This app is entirely Fluent-based — structure and rules defined in TypeScript,
+                        deployed directly. That is why it is so fast to build.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- BACK TO TOP -->
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+    <!-- FOOTER -->
+    <footer>
+        <strong>Employee Idea Box — ServiceNow SDK Documentation</strong>
+        Built with Claude Code + ServiceNow SDK 4.4.1
+    </footer>
+
+    <script src="script.js" defer></script>
+</body>
+
+</html>

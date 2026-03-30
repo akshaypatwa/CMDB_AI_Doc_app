@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMDB Health Doctor — ServiceNow SDK Documentation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="progress-bar"></div>
+
+    <!-- HERO -->
+    <header class="hero">
+        <div class="hero-inner">
+            <div class="hero-eyebrow">ServiceNow SDK · Developer Guide</div>
+            <h1>Building &amp; Deploying a ServiceNow App<br>with Claude Code + ServiceNow SDK</h1>
+            <div class="hero-subtitle">A Complete Step-by-Step Guide for Beginners — No Prior Knowledge Assumed</div>
+            <div class="hero-pills">
+                <span class="hero-pill">Version 1.0</span>
+                <span class="hero-pill">ServiceNow SDK 4.4.1</span>
+                <span class="hero-pill">March 2026</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE NAV -->
+    <div class="mobile-header">
+        <span>📘 SDK Guide</span>
+        <button class="hamburger" onclick="toggleMobileNav()" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
+    </div>
+    <div class="mobile-nav-drawer" id="mobile-nav">
+        <div class="sidebar-nav" id="mobile-nav-links"></div>
+    </div>
+
+    <!-- LAYOUT -->
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <nav class="sidebar" aria-label="Page navigation">
+            <div class="sidebar-label">Table of Contents</div>
+            <div class="sidebar-nav" id="sidebar-nav-links">
+                <a href="#s0"><span class="nav-num">00</span>Overview</a>
+                <a href="#s1"><span class="nav-num">01</span>What You Need to Install</a>
+                <a href="#s2"><span class="nav-num">02</span>ServiceNow Instance Connection</a>
+                <a href="#s3"><span class="nav-num">03</span>Creating Your Project</a>
+                <a href="#s4"><span class="nav-num">04</span>Project Structure</a>
+                <a href="#s5"><span class="nav-num">05</span>Starting Claude Code</a>
+                <a href="#s6"><span class="nav-num">06</span>Creating Your Skill File</a>
+                <a href="#s7"><span class="nav-num">07</span>Creating Reference Files</a>
+                <a href="#s8"><span class="nav-num">08</span>Building Your App</a>
+                <a href="#s9"><span class="nav-num">09</span>Build &amp; Deploy Commands</a>
+                <a href="#s10"><span class="nav-num">10</span>After Deployment</a>
+                <a href="#s11"><span class="nav-num">11</span>Two-Phase Architecture</a>
+                <a href="#s12"><span class="nav-num">12</span>Tips &amp; Common Mistakes</a>
+                <a href="#s13"><span class="nav-num">13</span>Project Lifecycle</a>
+                <a href="#sa"><span class="nav-num">A</span>Command Reference</a>
+                <a href="#sb"><span class="nav-num">B</span>Glossary</a>
+                <a href="#sc"><span class="nav-num">C</span>Project File Map</a>
+            </div>
+        </nav>
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 0
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s0">
+                <div class="section-header">
+                    <span class="section-number">Section 00</span>
+                    <h2><i class="fa-solid fa-map-location-dot section-icon" style="color:var(--accent-primary)"></i> Understanding the Big Picture First</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>Before touching any tool, understand what we are building and why.</p>
+
+                <h3>What is ServiceNow?</h3>
+                <p>ServiceNow is an enterprise software platform used by large companies to manage IT operations —
+                    tracking servers, managing incidents, handling service requests, and automating workflows. Think of
+                    it as the "operating system" for an IT department.</p>
+
+                <h3>What is a ServiceNow App?</h3>
+                <p>Just like your phone has apps from the App Store, ServiceNow has apps built on top of the platform.
+                    You can build custom apps that add new tables (databases), new screens, new automation, and new
+                    logic — all running inside your company's ServiceNow instance.</p>
+
+                <h3>What is the ServiceNow SDK?</h3>
+                <p>SDK stands for "Software Development Kit." Normally, building a ServiceNow app means clicking around
+                    in a browser inside ServiceNow's UI, which is slow, hard to version-control, and difficult to
+                    automate. The ServiceNow SDK lets you write your app as code on your laptop using modern tools
+                    (TypeScript, npm) and then deploy it to ServiceNow automatically. It is professional-grade
+                    development.</p>
+
+                <h3>What is Claude Code?</h3>
+                <p>Claude Code is an AI assistant that lives in your terminal (command line). Instead of writing code
+                    yourself, you describe what you want in plain English and Claude Code writes the code for you. It
+                    understands your project, reads your files, and makes intelligent decisions. It is not just a
+                    chatbot — it can actually read, write, edit, and run files on your computer.</p>
+
+                <h3>What is a Skill in Claude Code?</h3>
+                <p>A Skill is a Markdown document (a text file with formatting) that you write once and store in your
+                    project. It teaches Claude Code about your specific project — your table names, your rules, your
+                    preferences, your architecture. Without skills, you would have to re-explain your project every time
+                    you start a new Claude session. With skills, Claude Code remembers your project context
+                    automatically.</p>
+
+                <h3>What is a Reference File?</h3>
+                <p>A Reference File is another Markdown document — but while a Skill teaches Claude how to behave and
+                    what rules to follow, a Reference File is a dictionary or data sheet. It contains facts Claude needs
+                    to look up: field names, data structures, API contracts, configuration values. Think of a Skill as
+                    the "training manual" and a Reference File as the "product catalog."</p>
+
+                <h3>Why Use Claude Code + SDK Together?</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Without Claude Code</th>
+                                <th>With Claude Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>You write all the TypeScript, all the server-side JavaScript, set up all the
+                                    structures yourself</td>
+                                <td>You describe what you want in plain English. Claude writes the code. You review it.
+                                    You deploy it.</td>
+                            </tr>
+                            <tr>
+                                <td>Requires expert knowledge</td>
+                                <td>The SDK handles the actual push to ServiceNow</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>This guide covers BOTH: the SDK setup AND how to use Claude Code to write all the code for you using
+                    prompts.</p>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 1
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s1">
+                <div class="section-header">
+                    <span class="section-number">Section 01</span>
+                    <h2><i class="fa-solid fa-screwdriver-wrench section-icon" style="color:var(--accent-primary)"></i> What You Need to Install</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>Think of this section as "setting up your workbench." Before you build anything, you need the right
+                    tools on your laptop.</p>
+
+                <!-- TOOL 1 -->
+                <div class="tool-card reveal">
+                    <span class="tool-num">Tool 1</span>
+                    <h3>Node.js</h3>
+                    <div class="meta-pair"><span class="meta-label">What it is:</span><span class="meta-value">Node.js
+                            is a runtime that lets your laptop run JavaScript programs. The ServiceNow SDK and Claude
+                            Code CLI are both Node.js programs.</span></div>
+                    <div class="meta-pair"><span class="meta-label">Why you need it:</span><span
+                            class="meta-value">Without Node.js, you cannot run npm commands or the SDK.</span></div>
+
+                    <h4>How to install:</h4>
+                    <p><strong>Step 1</strong> — Open your Terminal application. On Mac: press Cmd+Space, type
+                        "Terminal", press Enter.</p>
+                    <p><strong>Step 2</strong> — Check if Node.js is already installed:</p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>node --version</code></pre>
+                    </div>
+                    <p>If you see something like <code>v18.17.0</code>, you are good. If you see "command not found,"
+                        continue below.</p>
+                    <p><strong>Step 3</strong> — Install nvm (Node Version Manager). nvm lets you install and switch
+                        between Node versions easily:</p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash</code></pre>
+                    </div>
+                    <p><strong>Step 4</strong> — Close and reopen your Terminal window. This is important — nvm will not
+                        work until you do this.</p>
+                    <p><strong>Step 5</strong> — Install Node.js version 18:</p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>nvm install 18
+nvm use 18</code></pre>
+                    </div>
+                    <p><strong>Step 6</strong> — Verify it worked:</p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>node --version
+npm --version</code></pre>
+                    </div>
+                    <p>You should see version numbers for both.</p>
+                </div>
+
+                <!-- TOOL 2 -->
+                <div class="tool-card reveal">
+                    <span class="tool-num">Tool 2</span>
+                    <h3>The ServiceNow SDK CLI</h3>
+                    <div class="meta-pair"><span class="meta-label">What it is:</span><span class="meta-value">A
+                            command-line tool made by ServiceNow that handles building and deploying your app. CLI
+                            stands for Command Line Interface.</span></div>
+                    <div class="meta-pair"><span class="meta-label">Why you need it:</span><span class="meta-value">The
+                            SDK does the heavy lifting — it compiles your TypeScript code, packages it, connects to your
+                            ServiceNow instance, and uploads everything.</span></div>
+                    <h4>How to install:</h4>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>npm install -g @servicenow/sdk</code></pre>
+                    </div>
+                    <p>The <code>-g</code> flag means "global" — install it so you can use it from any folder on your
+                        computer.</p>
+                    <p><strong>Verify:</strong></p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>now-sdk --version</code></pre>
+                    </div>
+                    <p>You should see a version number like <code>4.4.1</code>.</p>
+                </div>
+
+                <!-- TOOL 3 -->
+                <div class="tool-card reveal">
+                    <span class="tool-num">Tool 3</span>
+                    <h3>Claude Code CLI</h3>
+                    <div class="meta-pair"><span class="meta-label">What it is:</span><span class="meta-value">The
+                            command-line version of Claude (Anthropic's AI). It runs directly in your terminal and has
+                            access to your files.</span></div>
+                    <div class="meta-pair"><span class="meta-label">Why you need it:</span><span class="meta-value">This
+                            is your AI coding assistant. Instead of writing code, you describe what you want and Claude
+                            Code builds it.</span></div>
+                    <h4>How to install:</h4>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
+                    </div>
+                    <p><strong>Verify:</strong></p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>claude --version</code></pre>
+                    </div>
+                    <p><strong>First-time login:</strong> When you first run <code>claude</code>, it will ask you to log
+                        in with your Anthropic account. Follow the prompts — it opens a browser for authentication.</p>
+                </div>
+
+                <!-- TOOL 4 -->
+                <div class="tool-card reveal">
+                    <span class="tool-num">Tool 4</span>
+                    <h3>Git (Version Control)</h3>
+                    <div class="meta-pair"><span class="meta-label">What it is:</span><span class="meta-value">Git is a
+                            tool that tracks changes to your code over time. It is like "Track Changes" in Microsoft
+                            Word but for code.</span></div>
+                    <div class="meta-pair"><span class="meta-label">Why you need it:</span><span class="meta-value">The
+                            SDK and Claude Code work best in Git repositories. It lets you see what changed and roll
+                            back mistakes.</span></div>
+                    <h4>Check if installed:</h4>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>git --version</code></pre>
+                    </div>
+                    <p>Most Macs come with Git pre-installed. If not, install Xcode Command Line Tools:</p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>xcode-select --install</code></pre>
+                    </div>
+                </div>
+
+                <!-- TOOL 5 -->
+                <div class="tool-card reveal">
+                    <span class="tool-num">Tool 5</span>
+                    <h3>A Code Editor — VS Code (Recommended)</h3>
+                    <div class="meta-pair"><span class="meta-label">What it is:</span><span class="meta-value">A text
+                            editor designed for writing code. VS Code (Visual Studio Code) is free and made by
+                            Microsoft.</span></div>
+                    <div class="meta-pair"><span class="meta-label">Why you need it:</span><span
+                            class="meta-value">While Claude Code writes most of your code, you will still want to read
+                            and review files in a proper editor.</span></div>
+                    <p><strong>How to get it:</strong> Search "VS Code download" and download from the official
+                        Microsoft site for your operating system.</p>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 2
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s2">
+                <div class="section-header">
+                    <span class="section-number">Section 02</span>
+                    <h2><i class="fa-solid fa-link section-icon" style="color:var(--accent-secondary)"></i> Setting Up Your ServiceNow Instance Connection</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>Your ServiceNow instance is the live environment where your app will run. You need to tell the SDK
+                    how to connect to it.</p>
+
+                <h3>What is an Instance?</h3>
+                <p>When a company uses ServiceNow, they get their own private copy of the platform at a unique URL like
+                    <code>https://companyname.service-now.com</code>. This is called an "instance." You can get a free
+                    personal developer instance for testing from ServiceNow's developer program.
+                </p>
+
+                <h3>Setting Up a Free Developer Instance</h3>
+                <ol>
+                    <li>Go to <strong>developer.servicenow.com</strong></li>
+                    <li>Create a free account</li>
+                    <li>Click "Request Instance"</li>
+                    <li>Choose the latest ServiceNow version</li>
+                    <li>Your instance URL will be something like <code>https://dev123456.service-now.com</code></li>
+                    <li>Note your admin username and password</li>
+                </ol>
+
+                <h3>Connecting the SDK to Your Instance</h3>
+                <p>The SDK stores your credentials securely in your computer's keychain — the same place your Mac stores
+                    Wi-Fi passwords. You never hardcode passwords into your project files.</p>
+
+                <p>Run this command:</p>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Terminal</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>now-sdk auth add</code></pre>
+                </div>
+
+                <p>You will be asked a series of questions:</p>
+
+                <div class="callout callout-info">
+                    <span class="callout-label">Interactive Prompt</span>
+                    <p><strong>"What alias would you like to use?"</strong><br>Type a short nickname for this
+                        connection. Example: <code>my-dev-instance</code><br>This alias is just for YOUR laptop — it is
+                        how you will refer to this connection in future commands.</p>
+                    <p><strong>"What is your instance URL?"</strong><br>Type your full instance URL. Example:
+                        <code>https://dev123456.service-now.com</code>
+                    </p>
+                    <p><strong>"What is your username?"</strong><br>Type: <code>admin</code></p>
+                    <p><strong>"What is your password?"</strong><br>Type your password. It will not show as you type —
+                        that is normal and means it is secure.</p>
+                </div>
+
+                <p><strong>Verify it saved:</strong></p>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Terminal</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>now-sdk auth list</code></pre>
+                </div>
+                <p>You should see your alias listed.</p>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 3
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s3">
+                <div class="section-header">
+                    <span class="section-number">Section 03</span>
+                    <h2><i class="fa-solid fa-folder-open section-icon" style="color:var(--accent-tertiary)"></i> Creating Your Project from Scratch</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <h3>Step 3.1: Create a Project Folder</h3>
+                <p>In your Terminal, decide where on your computer you want this project to live. Then:</p>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Terminal</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>mkdir MyServiceNowApp
+cd MyServiceNowApp</code></pre>
+                </div>
+                <p><code>mkdir</code> creates a new folder. <code>cd</code> moves you into it. All future commands
+                    should be run from inside this folder.</p>
+
+                <h3>Step 3.2: Initialize the SDK Project</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Terminal</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>now-sdk init</code></pre>
+                </div>
+                <p>This is the most important setup command. It will ask you several questions:</p>
+                <div class="callout callout-info">
+                    <span class="callout-label">Interactive Prompts</span>
+                    <p><strong>"App Name"</strong> — The human-readable name of your app. Example:
+                        <code>CMDB Health Doctor</code>
+                    </p>
+                    <p><strong>"Scope prefix"</strong> — A short unique identifier for your app. ServiceNow uses this
+                        prefix on all your table names and fields to avoid conflicts with other apps. Example:
+                        <code>x_mycompany_myapp</code><br>Rules: must start with <code>x_</code>, lowercase letters and
+                        underscores only, maximum 18 characters total.
+                    </p>
+                    <p><strong>"Auth alias"</strong> — Type the alias you created in Section 2. Example:
+                        <code>my-dev-instance</code>
+                    </p>
+                </div>
+                <p>What happens after you answer:</p>
+                <ul>
+                    <li>The SDK logs into your ServiceNow instance</li>
+                    <li>It creates a scoped application record on your instance</li>
+                    <li>It writes a <code>now.config.json</code> file with your app's identity</li>
+                    <li>It creates the basic project folder structure</li>
+                </ul>
+
+                <h3>Step 3.3: Install Project Dependencies</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Terminal</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>npm install</code></pre>
+                </div>
+                <p>This reads the <code>package.json</code> file created by <code>now-sdk init</code> and downloads all
+                    the code libraries your project needs into a <code>node_modules</code> folder. This takes 1 to 2
+                    minutes.</p>
+
+                <h3>Step 3.4: Fetch Type Definitions</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Terminal</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>npm run types</code></pre>
+                </div>
+                <p>This connects to your ServiceNow instance and downloads descriptions of all its built-in tables —
+                    like <code>cmdb_ci</code>, <code>sys_user</code>, <code>incident</code>. This gives Claude Code and
+                    TypeScript accurate information about what already exists in ServiceNow. Output goes to <span
+                        class="filepath">src/fluent/generated/</span> — never edit files in that folder because they get
+                    overwritten every time you run this command.</p>
+
+                <h3>Step 3.5: Initialize Git</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Terminal</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>git init
+git add .
+git commit -m "Initial project setup"</code></pre>
+                </div>
+                <p>This creates a Git repository so your changes are tracked from the very beginning.</p>
+
+                <h3>Step 3.6: Open the Project in VS Code</h3>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Terminal</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>code .</code></pre>
+                </div>
+                <p>The dot means "open the current folder." VS Code will open and you will see your project structure in
+                    the sidebar.</p>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 4
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s4">
+                <div class="section-header">
+                    <span class="section-number">Section 04</span>
+                    <h2><i class="fa-solid fa-diagram-project section-icon" style="color:#10b981"></i> Understanding Your Project Structure</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>After <code>now-sdk init</code> and <code>npm install</code>, your project looks like this:</p>
+
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Project Structure (Initial)</span></div>
+                    </div>
+                    <pre><code>MyServiceNowApp/
+│
+├── src/                         ← All your source code lives here
+│   └── fluent/                  ← TypeScript files that DEFINE your app structure
+│       └── index.now.ts         ← The master list of everything in your app
+│
+├── node_modules/                ← Downloaded libraries (never touch this)
+│
+├── package.json                 ← Project settings and build commands
+├── now.config.json              ← Your app identity (scope, name, scopeId)
+└── .eslintrc                    ← Code quality rules</code></pre>
+                </div>
+
+                <p>As you build your app, you will add these folders:</p>
+
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Project Structure (Full)</span></div>
+                    </div>
+                    <pre><code>src/
+├── fluent/                      ← Structure definitions (TypeScript .now.ts files)
+│   ├── tables/                  ← Your database tables
+│   ├── script-includes/         ← Reusable server-side code modules
+│   ├── scheduled-job/           ← Automated background jobs
+│   ├── acls/                    ← Security rules (who can see and edit what)
+│   ├── properties/              ← App configuration settings
+│   └── navigation/              ← Menu items in the ServiceNow sidebar
+└── server/                      ← The actual logic (JavaScript .server.js files)
+    ├── MyEvaluator.server.js
+    ├── MyWriter.server.js
+    └── MyJob.server.js</code></pre>
+                </div>
+
+                <div class="callout callout-info">
+                    <span class="callout-label">Key Concept</span>
+                    <p><strong>Fluent files (.now.ts)</strong> are blueprints — they describe the shape of your app.
+                        <strong>Server files (.server.js)</strong> are the engine — they contain the actual business
+                        logic. Think of Fluent as the architect's drawings and Server as the actual construction.
+                    </p>
+                </div>
+
+                <div class="callout callout-warning">
+                    <span class="callout-label">Important — The Barrel File</span>
+                    <p><strong>The barrel file (index.now.ts):</strong> This single file must export everything else in
+                        the fluent folder. Think of it as a table of contents. If you create a new Fluent file but
+                        forget to add it here, that piece of your app will not get deployed.</p>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 5
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s5">
+                <div class="section-header">
+                    <span class="section-number">Section 05</span>
+                    <h2><i class="fa-solid fa-robot section-icon" style="color:#6366f1"></i> Starting Claude Code</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <h3>Step 5.1: Launch Claude Code</h3>
+                <p>From your project folder in the terminal:</p>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Terminal</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>claude</code></pre>
+                </div>
+                <p>Claude Code starts up and shows you a prompt. It automatically reads your project files to understand
+                    what you are working with.</p>
+
+                <h3>Step 5.2: Understanding the Claude Code Interface</h3>
+                <p>When you type a message and press Enter, Claude Code:</p>
+                <ol>
+                    <li>Reads your request</li>
+                    <li>Decides what files to read, create, or edit</li>
+                    <li>Shows you what it plans to do and asks for permission</li>
+                    <li>Makes the changes after you approve</li>
+                    <li>Shows you a summary of what it did</li>
+                </ol>
+                <p>You interact with it entirely in plain English. No coding required on your part.</p>
+
+                <h3>Step 5.3: How Prompts Work</h3>
+                <p>A prompt is simply what you type to Claude Code to tell it what to do. Good prompts are:</p>
+                <ul>
+                    <li><strong>Specific</strong> — "Create a table with these exact fields" not just "make a table"
+                    </li>
+                    <li><strong>Contextual</strong> — Reference your app's actual names and requirements</li>
+                    <li><strong>Purposeful</strong> — Explain what the thing should DO, not just what it should BE named
+                    </li>
+                    <li><strong>Scoped</strong> — Tell Claude where to put the file and what other files to update</li>
+                </ul>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 6
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s6">
+                <div class="section-header">
+                    <span class="section-number">Section 06</span>
+                    <h2><i class="fa-solid fa-brain section-icon" style="color:#ec4899"></i> Creating Your Skill File</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <h3>What Is a Skill and Why Create It First?</h3>
+                <p>A Skill file is like giving Claude Code a project briefing document. Without it, Claude Code is a
+                    smart but uninformed assistant — it knows how to code but does not know your specific requirements,
+                    table names, rules, or architecture.</p>
+                <p>With a Skill file, every time you start a new Claude Code session, it automatically loads this
+                    context. Claude behaves like an expert on your specific project from the very first message.</p>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">Real-World Analogy</span>
+                    <p>Imagine hiring a contractor. Without a briefing, they would ask you basic questions every single
+                        day. With a proper briefing document, they show up already knowing your requirements,
+                        preferences, and constraints.</p>
+                </div>
+
+                <h3>Where Skills Are Stored</h3>
+                <p>Skills go in a hidden folder in your project:</p>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Directory</span></div>
+                    </div>
+                    <pre><code>.claude/
+└── skills/
+    └── your-skill-name.md</code></pre>
+                </div>
+                <p>The <code>.claude/</code> folder is created automatically when you first run <code>claude</code> in
+                    your project.</p>
+
+                <h3>Prompt to Create Your Core SDK Skill</h3>
+                <p>Start Claude Code and type this:</p>
+
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create a skill file at .claude/skills/sndev.md for this ServiceNow SDK project.
+The skill should teach future Claude sessions everything they need to know to
+work on this app effectively. Include:
+
+1. Project identity section: app name, scope prefix from now.config.json,
+   SDK version from package.json, auth alias name
+
+2. SDK command reference: what each npm script does (build, deploy, transform, types)
+   with plain English explanation of when to use each one
+
+3. Critical coding rules for server-side JavaScript:
+   - Must be ES5 only (no arrow functions, no const/let, no template literals)
+   - All variables must use var
+   - Class pattern must use Class.create() with prototype object
+   - Explain WHY: ServiceNow server-side engine is Rhino which only supports ES5
+
+4. File structure rules:
+   - Fluent files (.now.ts) are for structure/metadata only
+   - Server files (.server.js) are for business logic
+   - Every fluent file MUST be exported from src/fluent/index.now.ts
+
+5. The table and field naming convention using the scope prefix
+
+6. A section referencing the docs/ folder for field reference and other documentation</code></pre>
+                    </div>
+                </div>
+
+                <div class="callout callout-info">
+                    <span class="callout-label">What Claude Code will do</span>
+                    <p>Read your <code>package.json</code> and <code>now.config.json</code>, extract the real values
+                        from YOUR project, and generate a complete skill file with accurate project-specific
+                        information.</p>
+                </div>
+
+                <h3>How to Activate a Skill</h3>
+                <p>Skills in <code>.claude/skills/</code> are loaded automatically in every session. You can also
+                    explicitly reference one:</p>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Claude Code</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>Use the sndev skill for this session</code></pre>
+                </div>
+                <p>Or reference it inline in a prompt:</p>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Claude Code</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>Following the rules in my sndev skill, create a script include for...</code></pre>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 7
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s7">
+                <div class="section-header">
+                    <span class="section-number">Section 07</span>
+                    <h2><i class="fa-solid fa-book-open section-icon" style="color:#0ea5e9"></i> Creating Your Reference Files</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <h3>What Is a Reference File and How Is It Different from a Skill?</h3>
+                <div class="table-wrap">
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th>Skill File</th>
+                                <th>Reference File</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Teaches Claude HOW to work</td>
+                                <td>Gives Claude FACTS to look up</td>
+                            </tr>
+                            <tr>
+                                <td>Contains rules and instructions</td>
+                                <td>Contains data: field names, schemas, structures</td>
+                            </tr>
+                            <tr>
+                                <td>Behavioral guidance</td>
+                                <td>Technical specifications</td>
+                            </tr>
+                            <tr>
+                                <td>Example: "Always use ES5"</td>
+                                <td>Example: "The table has these 40 fields"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>Reference files go in the <span class="filepath">docs/</span> folder and are plain Markdown files.
+                    You create them once, keep them updated as your project grows, and reference them in prompts using
+                    <code>@docs/filename.md</code>.
+                </p>
+
+                <h3>Prompt to Create a Field Reference Document</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Based on the table definition in src/fluent/tables/ and the server scripts
+in src/server/, create a comprehensive field reference document at
+docs/field-reference.md.
+
+Organize into clear sections:
+
+1. Table identity: full table name, scope prefix, purpose of the table
+
+2. For each field category (Identity, Run Lifecycle, Health Scores,
+   LLM Output, Action Tracking, Review Status), create a table showing:
+   - Short field name without prefix
+   - Full field name with prefix
+   - Data type
+   - Allowed values or max length
+   - Plain English description of what this field stores
+
+3. The complete JSON structure for action objects stored in
+   autofix_actions and review_actions fields — show every property
+   with its type and allowed values
+
+4. The scoring formula: how overall score is calculated from the
+   three dimension scores, including the weights
+
+5. The health status thresholds: what score range maps to each status label
+
+Format everything as clean Markdown tables for easy scanning.</code></pre>
+                    </div>
+                </div>
+
+                <h3>Prompt to Create a System Properties Reference</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create a reference document at docs/system-properties-reference.md that
+documents every system property used by this app.
+
+For each property include:
+- The full property name
+- Data type (string, password2, boolean, etc.)
+- Default value if any
+- Plain English explanation of what it controls
+- Example valid values
+- Whether it is required or optional
+- Security notes (e.g., which ones are sensitive and should use password2 type)
+
+Also add a section explaining HOW to set these properties in ServiceNow after
+deployment: the navigation path and what to look for in the UI.</code></pre>
+                    </div>
+                </div>
+
+                <h3>Prompt to Create an LLM Integration Reference</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create a reference document at docs/llm-integration-reference.md that
+documents the LLM integration for this app.
+
+Include:
+1. The exact JSON request payload structure sent to the LLM
+2. The exact JSON response structure expected back from the LLM
+3. What each field in the response means and how it is used by the app
+4. The system prompt structure and what each part instructs the LLM to do
+5. Error handling: what happens if the LLM call fails
+6. The retry logic: how many times it retries and under what conditions
+
+Base this on the actual code in src/server/CMDBHealthLLM.server.js</code></pre>
+                    </div>
+                </div>
+
+                <h3>How to Reference These Documents in Prompts</h3>
+                <p>Once created, reference them naturally in any future prompt:</p>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Claude Code</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>Looking at @docs/field-reference.md, add a new field called assessment_notes
+to the health record table</code></pre>
+                </div>
+                <div class="code-block">
+                    <div class="code-label">
+                        <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                style="color:#888">Claude Code</span></div><button class="copy-btn"
+                            onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>Using the LLM response structure in @docs/llm-integration-reference.md,
+update the writer to also save the new confidence_score field</code></pre>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 8
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s8">
+                <div class="section-header">
+                    <span class="section-number">Section 08</span>
+                    <h2><i class="fa-solid fa-gears section-icon" style="color:#8b5cf6"></i> Building Your App with Claude Code Prompts</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>This is the core section. Instead of writing any code yourself, you use prompts to have Claude Code
+                    build everything. Here is the complete sequence of prompts in the order you would use them.</p>
+
+                <!-- PROMPT A -->
+                <h3>Prompt A — Create the Main Database Table</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt — A</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create the main database table for this app following the sndev skill rules.
+
+Table purpose: Store one health evaluation record per Configuration Item (CI)
+in ServiceNow's CMDB. Each CI gets evaluated for health across three dimensions:
+Correctness (is the data accurate?), Completeness (is all required data present?),
+and Compliance (does it meet IT governance rules?).
+
+Create the Fluent table definition at src/fluent/tables/health-record.now.ts
+with these field groups:
+
+GROUP 1 - CI Identity:
+- ci: Reference to cmdb_ci table, mandatory
+- ci_class: String, the class of the CI like "cmdb_ci_server"
+- environment: String, like "Production" or "Development"
+- analysis_date: DateTime, when this record was last evaluated
+
+GROUP 2 - Job Lifecycle:
+- run_status: Choice field with options: new, evaluating, evaluated, complete, failed
+- retry_count: Integer, how many times we retried a failed evaluation
+- error_log: String max 4000 chars, error details if something went wrong
+- last_stage: String max 500 chars, which step were we on when it stopped
+- job_started_at: DateTime
+- job_completed_at: DateTime
+
+GROUP 3 - Health Scores (all Integer, 0-100 range):
+- overall_health_score
+- correctness_score
+- completeness_score
+- compliance_score
+- health_status: Choice with options: critical, moderate, minor, healthy
+- previous_score: Integer, score from the previous evaluation run
+- score_delta: Integer, difference between current and previous score (can be negative)
+
+GROUP 4 - Quick Problem Flags (all Boolean):
+- is_stale: Has this CI not been updated in 30 or more days?
+- is_orphan: Does this CI have no relationships to other CIs?
+- has_duplicates: Are there other CIs that appear to be the same item?
+- duplicate_count: Integer, how many duplicates were found
+
+GROUP 5 - LLM Output (all String):
+- llm_summary: Max 1000 chars, AI-generated plain English summary
+- priority_action: Max 500 chars, the single most important thing to fix
+- autofix_actions: Max 8000 chars, JSON array of automated fixes the system can apply
+- review_actions: Max 8000 chars, JSON array of items needing human review
+- raw_payload_json: Max 8000 chars, the full evaluation data sent to the LLM
+
+GROUP 6 - Review Tracking:
+- review_status: Choice with options: pending, in_progress, resolved
+- reviewed_by: Reference to sys_user
+- review_date: DateTime
+
+Add a database index on the ci field for query performance.
+
+After creating the table file, add the export to src/fluent/index.now.ts</code></pre>
+                    </div>
+                </div>
+
+                <!-- PROMPT B -->
+                <h3>Prompt B — Create the Evaluation Engine</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt — B</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create a ServiceNow Script Include that evaluates a single CI's CMDB health
+across three dimensions. This is the core analysis engine.
+
+Create two files:
+1. src/server/CMDBHealthEvaluator.server.js — the actual logic
+2. src/fluent/script-includes/cmdb-health-evaluator.now.ts — the Fluent wrapper
+
+STRICT REQUIREMENT: The server.js file must be ES5 only. Use var not const/let.
+Use function() {} not arrow functions. Use string concatenation not template literals.
+Use the Class.create() pattern.
+
+The class is named CMDBHealthEvaluator with these methods:
+
+METHOD: initialize()
+Sets up configuration constants:
+- STALE_THRESHOLD_DAYS = 30 (a CI not updated in 30+ days is considered stale)
+- INCIDENT_LOOKBACK_DAYS = 365 (look back 1 year for related incidents)
+- W_CORRECTNESS = 0.40 (correctness contributes 40% to overall score)
+- W_COMPLETENESS = 0.30 (completeness contributes 30%)
+- W_COMPLIANCE = 0.30 (compliance contributes 30%)
+
+METHOD: evaluate(ciSysId)
+Main entry point. Takes a CI sys_id and returns an object with:
+- scores: { overall, correctness, completeness, compliance, healthStatus }
+- mergedPayload: all the detailed data from each dimension for sending to LLM
+
+Calls the three private methods below and combines results.
+Overall score formula: (correctness * 0.40) + (completeness * 0.30) + (compliance * 0.30)
+If a regulatory violation is found, cap the overall score at 40.
+
+METHOD: _runCompleteness(ciSysId)
+Checks if all recommended fields are populated.
+- Query ServiceNow's cmdb_recommended_fields table for this CI's class
+- For each recommended field, check if it has a value on the actual CI record
+- Calculate score as: (fields_with_values / total_recommended_fields) * 100
+- Return the score and list of missing fields
+
+METHOD: _runCorrectness(ciSysId)
+Checks if the data is accurate and up-to-date.
+- STALENESS: Check the sys_updated_on field. If older than STALE_THRESHOLD_DAYS,
+  subtract 25 points from starting score of 100.
+- ORPHAN: Check if this CI has any relationships in cmdb_rel_ci table.
+  A CI with no relationships is suspicious. Subtract 20 points.
+- DUPLICATES: Look for other CIs with the same serial_number or fqdn or ip_address.
+  Subtract 10 points per duplicate found, maximum -30 points.
+- Return the score plus flags: isStale, isOrphan, hasDuplicates, duplicateCount
+
+METHOD: _runCompliance(ciSysId)
+Checks against IT governance certification templates.
+- Query cert_template table for templates that apply to this CI's class
+- For each template, evaluate all conditions from cert_attr_cond table
+- Count how many conditions are violated
+- Check if any violation involves these regulatory keywords: pci, sox, hipaa, gdpr
+- If regulatory violation found, set a regulatoryRisk flag to true
+- Return score, violations list, and regulatory risk flag
+
+IMPORTANT: This class must NOT write to the database and must NOT call the LLM.
+It only evaluates and returns data. Other classes handle saving and LLM calls.
+
+After creating both files, add the script include export to src/fluent/index.now.ts</code></pre>
+                    </div>
+                </div>
+
+                <!-- PROMPT C -->
+                <h3>Prompt C — Create the LLM Integration Module</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt — C</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create a ServiceNow Script Include that handles all communication with an
+external AI/LLM service.
+
+Create two files:
+1. src/server/CMDBHealthLLM.server.js — the actual logic
+2. src/fluent/script-includes/cmdb-health-llm.now.ts — the Fluent wrapper
+
+ES5 rules apply strictly. Class name: CMDBHealthLLM
+
+METHOD: initialize()
+No setup needed. Configuration is read from system properties at call time.
+
+METHOD: call(mergedPayload)
+Takes the evaluation payload from the Evaluator and sends it to an LLM API.
+
+Steps:
+1. Read configuration from ServiceNow system properties using gs.getProperty():
+   - cmdb_health.llm.endpoint (the API URL)
+   - cmdb_health.llm.api_key (the bearer token)
+   - cmdb_health.llm.system_prompt (instructions for the LLM)
+   - cmdb_health.llm.model (model identifier)
+
+2. Build the request body:
+   - contents array with the system prompt and JSON-stringified payload as text parts
+   - generationConfig with temperature 0.1 (low = more deterministic) and maxOutputTokens 16384
+
+3. Make the HTTP REST call:
+   - Use ServiceNow's RESTMessageV2 API
+   - Set Authorization header as "Bearer " + api_key
+   - Set Content-Type as application/json
+   - POST the request body to the endpoint
+
+4. Parse the response:
+   - Extract text from candidates[0].content.parts[0].text
+   - Strip any markdown code fences such as ```json and ```
+   - Parse the cleaned string as JSON
+   - Return the parsed object
+
+5. Error handling:
+   - If HTTP status is not 200, log the error with gs.error() and throw an exception
+   - If JSON parsing fails, log the raw response and throw an exception
+
+Expected LLM response structure that the LLM must return:
+{
+  "llm_summary": "2-3 sentence summary of CI health",
+  "priority_action": "The single most important fix",
+  "review_required": [array of action objects needing human approval],
+  "auto_fix_actions": [array of action objects that can be automated],
+  "correctness_notes": { staleness and duplicate details },
+  "completeness_notes": { missing fields summary },
+  "compliance_notes": { violations summary, regulatory_risk boolean }
+}
+
+Each action object has:
+dimension, title, target_ci_sys_id, action, risk (MEDIUM/HIGH/CRITICAL),
+reason, requires_approval (boolean)
+
+After creating both files, add to src/fluent/index.now.ts</code></pre>
+                    </div>
+                </div>
+
+                <!-- PROMPT D -->
+                <h3>Prompt D — Create the Database Writer</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt — D</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create a ServiceNow Script Include that handles all database writes for
+health evaluation results.
+
+Create two files:
+1. src/server/CMDBHealthWriter.server.js — the actual logic
+2. src/fluent/script-includes/cmdb-health-writer.now.ts — the Fluent wrapper
+
+ES5 rules apply strictly. Class name: CMDBHealthWriter
+
+METHOD: initialize()
+Read the app scope from gs.getCurrentScopeName() and store as this.scope.
+Set the table name and field prefix as class properties.
+
+METHOD: save(ciSysId, mergedPayload, llmResponse, targetStatus)
+The main write method. Does an upsert: updates existing record or inserts new one.
+
+PHASE 1 DATA from mergedPayload — write these fields:
+- ci reference, ci_class, environment
+- analysis_date set to now
+- all three dimension scores (correctness, completeness, compliance)
+- calculated overall score: (correctness*0.4) + (completeness*0.3) + (compliance*0.3)
+- health_status mapped from score: 80+ = healthy, 60-79 = minor, 40-59 = moderate, 0-39 = critical
+- is_stale, is_orphan, has_duplicates, duplicate_count flags
+- raw_payload_json: store the JSON-stringified mergedPayload for LLM retry capability
+- SCORE DELTA: before writing the new score, read the current overall_health_score from
+  the existing record. Set previous_score = that old value. Set score_delta = new - old.
+
+PHASE 2 DATA from llmResponse — write these fields:
+- llm_summary and priority_action
+- autofix_actions: JSON.stringify(llmResponse.auto_fix_actions)
+- review_actions: JSON.stringify(llmResponse.review_required)
+- Count review_required array length and store as review_actions_count
+- Count auto_fix_actions length and store as autofix_actions_count
+- Count items where risk is CRITICAL or HIGH and store as high_risk_count
+- compliance_notes.regulatory_risk stores to the regulatory_risk boolean field
+- run_status = targetStatus (passed in as parameter)
+- job_completed_at = now if targetStatus equals complete
+
+METHOD: markFailed(ciSysId, errorMessage)
+Set run_status to failed, write errorMessage to error_log, increment retry_count by 1.
+
+METHOD: markEvaluating(ciSysId)
+Set run_status to evaluating, set job_started_at to now, clear error_log.
+
+METHOD: updateStage(ciSysId, stage)
+Set last_stage to the stage value and set stage_updated_at to now.
+Use this to track progress at key checkpoints during evaluation.
+
+After creating both files, add to src/fluent/index.now.ts</code></pre>
+                    </div>
+                </div>
+
+                <!-- PROMPT E -->
+                <h3>Prompt E — Create the Scheduled Job</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt — E</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create a ServiceNow Scheduled Script Execution that orchestrates the nightly
+health evaluation for all CIs.
+
+Create two files:
+1. src/server/CMDBHealthJob.server.js — the job logic (standalone script, not a class)
+2. src/fluent/scheduled-job/cmdb-health-job.now.ts — the Fluent wrapper
+
+ES5 rules apply strictly.
+
+The job runs in two sequential phases:
+
+PHASE 1 — EVALUATION:
+Query the health record table for records matching these conditions:
+- run_status equals new
+- OR run_status equals failed AND retry_count is less than 3
+- OR run_status equals complete AND today is Sunday (weekly full re-evaluation)
+
+For each record found:
+1. Log with gs.info(): "Starting evaluation for CI: " + ciName
+2. Call writer.markEvaluating(ciSysId)
+3. Call writer.updateStage(ciSysId, 'phase1_evaluating')
+4. Instantiate CMDBHealthEvaluator and call evaluate(ciSysId)
+5. If evaluate() succeeds: call writer.save() with status 'evaluated'
+6. If evaluate() throws: call writer.markFailed() with the error message
+7. Log the result (success or failure) with timing
+
+After all records: log "Phase 1 complete: X succeeded, Y failed out of Z total"
+
+PHASE 2 — LLM ENRICHMENT:
+Query for records where run_status equals evaluated.
+
+For each record found:
+1. Log: "Starting LLM enrichment for CI: " + ciName
+2. Call writer.updateStage(ciSysId, 'phase2_llm')
+3. Parse the raw_payload_json field back into an object using JSON.parse
+4. Instantiate CMDBHealthLLM and call llm.call(mergedPayload)
+5. If call() succeeds: call writer.save() with the LLM response and status 'complete'
+6. If call() throws: call writer.markFailed() with error message (will retry next run)
+7. Log the result
+
+After all records: log "Phase 2 complete: X succeeded, Y failed out of Z total"
+
+At the very end: log total elapsed time for the entire job.
+
+For the Fluent wrapper:
+- Name: "CMDB Health Doctor — Nightly Run"
+- Schedule: daily at 2:00 AM
+- active: true
+
+After creating both files, add the job export to src/fluent/index.now.ts</code></pre>
+                    </div>
+                </div>
+
+                <!-- PROMPT F -->
+                <h3>Prompt F — Create Security Rules (ACLs)</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt — F</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create Access Control Lists (ACLs) for the health record table.
+
+Create: src/fluent/acls/health-record-acls.now.ts
+
+ACLs to create:
+1. READ permission: Users with roles itil, admin, or cmdb_read can read records
+   Plain English: ITIL practitioners like helpdesk and service desk staff can VIEW
+   health data to understand CI status during incident handling.
+
+2. WRITE permission: Only users with admin role can update records
+   Plain English: Only administrators can modify health records to prevent
+   accidental data tampering.
+
+3. CREATE permission: Only users with admin role can create records
+   Plain English: Only admins can create new health records. The scheduled job
+   runs as admin and creates records programmatically.
+
+Add the ACL export to src/fluent/index.now.ts</code></pre>
+                    </div>
+                </div>
+
+                <!-- PROMPT G -->
+                <h3>Prompt G — Create System Properties</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt — G</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create System Properties for configuring this app after deployment.
+
+Create: src/fluent/properties/system-properties.now.ts
+
+Properties to create:
+
+LLM CONFIGURATION GROUP (title: "CMDB Health Doctor - LLM Configuration"):
+
+1. cmdb_health.llm.endpoint
+   Type: string
+   Description: "Full URL of the LLM API endpoint"
+   Default: empty
+
+2. cmdb_health.llm.api_key
+   Type: password2 (this type encrypts the value in the database automatically)
+   Description: "API key or bearer token for LLM authentication"
+   Default: empty
+
+3. cmdb_health.llm.model
+   Type: string
+   Description: "Model identifier to use"
+   Default: "claude-sonnet-4-6"
+
+4. cmdb_health.llm.system_prompt
+   Type: string
+   Description: "System prompt that instructs the LLM on how to evaluate CMDB health"
+   Default: empty
+
+GOVERNANCE CONFIGURATION GROUP (title: "CMDB Health Doctor - Governance"):
+
+5. cmdb_health.governance.restricted_fields
+   Type: string
+   Description: "Comma-separated field names the LLM cannot auto-fix, require human approval"
+   Default: "owned_by,business_criticality"
+
+6. cmdb_health.governance.safe_autofix_fields
+   Type: string
+   Description: "Comma-separated field names the LLM is allowed to auto-fix without approval"
+   Default: "operational_status"
+
+Add the properties export to src/fluent/index.now.ts</code></pre>
+                    </div>
+                </div>
+
+                <!-- PROMPT H -->
+                <h3>Prompt H — Create Navigation Menus</h3>
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt — H</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create the application navigation menu so users can find this app in
+ServiceNow's left sidebar.
+
+Create: src/fluent/navigation/app-menu.now.ts
+
+Application menu settings:
+- Title: "CMDB Health Doctor"
+- Roles required to see it: itil, admin
+
+Menu items to create:
+1. "All Health Records" at order 100
+   Shows all records in the health record table as a list view
+
+2. "Critical CIs" at order 200
+   Shows only records where health_status equals critical
+   This helps users immediately see the most urgent problems
+
+3. "Pending Review" at order 300
+   Shows records where review_status equals pending
+   This is the queue for human review and approval tasks
+
+Add the navigation export to src/fluent/index.now.ts</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 9
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s9">
+                <div class="section-header">
+                    <span class="section-number">Section 09</span>
+                    <h2><i class="fa-solid fa-rocket section-icon" style="color:#f43f5e"></i> Understanding the Build and Deploy Commands</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>Now that your code is written, here is exactly what each command does and when to use it.</p>
+
+                <div class="content-card reveal">
+                    <h3 style="margin-top:0">Command: <code>npm run build</code></h3>
+                    <div class="callout callout-info" style="margin-bottom:12px">
+                        <span class="callout-label">What it does</span>
+                        <p>Compiles your TypeScript Fluent files (.now.ts) into ServiceNow XML format. Checks for
+                            errors. Does NOT touch your instance — nothing is sent anywhere.</p>
+                    </div>
+                    <div class="callout callout-info">
+                        <span class="callout-label">When to use it</span>
+                        <p>Every time before deploying. Think of it as proofreading before sending an email. It catches
+                            mistakes locally before they fail on the server.</p>
+                    </div>
+                    <p><strong>What success looks like:</strong></p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal Output</span></div>
+                        </div>
+                        <pre><code><span class="s">✔ Compiled 8 modules
+✔ No errors found
+Build completed in 3.2s</span></code></pre>
+                    </div>
+                    <p><strong>What failure looks like:</strong></p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal Output (Error)</span></div>
+                        </div>
+                        <pre><code>✗ Error in src/fluent/tables/health-record.now.ts line 45
+  Unknown column type 'blob' — did you mean 'string'?</code></pre>
+                    </div>
+                    <p>Fix the error in the indicated file, then build again.</p>
+                </div>
+
+                <div class="content-card reveal">
+                    <h3 style="margin-top:0">Command: <code>npm run types</code></h3>
+                    <div class="callout callout-info" style="margin-bottom:12px">
+                        <span class="callout-label">What it does</span>
+                        <p>Connects to your ServiceNow instance and downloads descriptions of all existing tables and
+                            fields. Updates files in <span class="filepath">src/fluent/generated/</span>.</p>
+                    </div>
+                    <div class="callout callout-info">
+                        <span class="callout-label">When to use it</span>
+                        <ul>
+                            <li>After someone adds a new table or field directly on the instance</li>
+                            <li>When you get TypeScript errors about unknown table names</li>
+                            <li>At the start of a new project to get the latest metadata</li>
+                            <li>After a ServiceNow platform upgrade</li>
+                        </ul>
+                    </div>
+                    <div class="callout callout-warning">
+                        <span class="callout-label">Important</span>
+                        <p>Never edit files in <span class="filepath">src/fluent/generated/</span> — they are always
+                            overwritten by this command.</p>
+                    </div>
+                </div>
+
+                <div class="content-card reveal">
+                    <h3 style="margin-top:0">Command: <code>npm run transform</code></h3>
+                    <div class="callout callout-info" style="margin-bottom:12px">
+                        <span class="callout-label">What it does</span>
+                        <p>Pulls the CURRENT STATE of your app from the ServiceNow instance and converts it to local
+                            Fluent files. This is the reverse of deploy.</p>
+                    </div>
+                    <div class="callout callout-info" style="margin-bottom:12px">
+                        <span class="callout-label">When to use it</span>
+                        <ul>
+                            <li>When you or a colleague made changes directly on the ServiceNow instance via the browser
+                            </li>
+                            <li>When you want to start local development from the current instance state</li>
+                            <li>To keep your local code in sync with any instance changes</li>
+                        </ul>
+                    </div>
+                    <div class="callout callout-warning">
+                        <span class="callout-label">Warning</span>
+                        <p>This will overwrite your local files with what is on the instance. Always commit your local
+                            changes to Git first before running this command.</p>
+                    </div>
+                </div>
+
+                <div class="content-card reveal">
+                    <h3 style="margin-top:0">Command: <code>npm run deploy</code></h3>
+                    <div class="callout callout-info" style="margin-bottom:12px">
+                        <span class="callout-label">What it does</span>
+                        <p>The main deployment command. Internally it:</p>
+                        <ol>
+                            <li>Runs <code>npm run build</code> to compile everything</li>
+                            <li>Packages the compiled output into a ServiceNow Update Set</li>
+                            <li>Authenticates to your instance using the stored keychain credentials</li>
+                            <li>Uploads and commits the Update Set to your instance</li>
+                            <li>Your app changes are now live</li>
+                        </ol>
+                    </div>
+                    <p><strong>What success looks like:</strong></p>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal Output</span></div>
+                        </div>
+                        <pre><code><span class="s">✔ Table:           x_myapp_health_record
+✔ ScriptInclude:   CMDBHealthEvaluator
+✔ ScriptInclude:   CMDBHealthLLM
+✔ ScriptInclude:   CMDBHealthWriter
+✔ ScheduledJob:    CMDB Health Doctor — Nightly Run
+✔ SystemProperty:  cmdb_health.llm.endpoint (4 properties)
+✔ ACL:             x_myapp_health_record.read
+✔ AppMenu:         CMDB Health Doctor
+✔ Deployed successfully in 18.4s</span></code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 10
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s10">
+                <div class="section-header">
+                    <span class="section-number">Section 10</span>
+                    <h2><i class="fa-solid fa-gears section-icon" style="color:#8b5cf6"></i> After Deployment — Final Configuration on the Instance</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>After your first successful deploy, you need to configure the app on ServiceNow itself.</p>
+
+                <h3>Step 10.1: Navigate to Your App</h3>
+                <p>In ServiceNow, look at the left sidebar. You should now see "CMDB Health Doctor" as a navigation
+                    group with the three menu items you defined. If you do not see it, type your app name in the
+                    Navigator search bar at the top of the sidebar.</p>
+
+                <h3>Step 10.2: Set the LLM System Properties</h3>
+                <ol>
+                    <li>In the ServiceNow Navigator search bar, type: <code>sys_properties.list</code> and press Enter
+                    </li>
+                    <li>In the search filter, type <code>cmdb_health</code></li>
+                    <li>You will see all 6 properties you defined</li>
+                </ol>
+                <p>Set these values by clicking each one and editing the Value field:</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Value to Set</th>
+                                <th>Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>cmdb_health.llm.endpoint</code></td>
+                                <td>Your LLM API URL</td>
+                                <td>Example: Google Gemini URL</td>
+                            </tr>
+                            <tr>
+                                <td><code>cmdb_health.llm.api_key</code></td>
+                                <td>Your actual API key</td>
+                                <td>Encrypted immediately (password2 type)</td>
+                            </tr>
+                            <tr>
+                                <td><code>cmdb_health.llm.model</code></td>
+                                <td>Model identifier</td>
+                                <td>Example: <code>claude-sonnet-4-6</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>cmdb_health.llm.system_prompt</code></td>
+                                <td>Detailed analysis prompt</td>
+                                <td>Instructs the AI on CMDB evaluation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout callout-warning">
+                    <span class="callout-label">Security Note</span>
+                    <p>The <code>cmdb_health.llm.api_key</code> will be encrypted immediately because you defined it as
+                        <code>password2</code> type. Once saved you will not be able to read it back — only the system
+                        can use it.
+                    </p>
+                </div>
+
+                <h3>Step 10.3: Seed Initial Health Records</h3>
+                <p>The scheduled job only processes CIs that already have a health record with
+                    <code>run_status = new</code>. For the very first run, you need to create these records. Use this
+                    prompt in Claude Code to generate a seeding script:
+                </p>
+
+                <div class="prompt-box reveal">
+                    <div class="prompt-header">Claude Code Prompt — Seeding Script</div>
+                    <div class="code-block">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#c586c0">Prompt</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Create a one-time setup script (just show me the JavaScript code to copy,
+do not create a permanent file) that I can run in ServiceNow's
+Scripts - Background tool.
+
+The script should:
+1. Query the top 50 servers from cmdb_ci_server table
+2. For each server, check if a health record already exists for it
+3. If not, create a health record with run_status = 'new'
+4. Log how many records were created
+
+I will copy this code and paste it into ServiceNow's Scripts - Background
+tool (navigate there via: System Definition > Scripts - Background).</code></pre>
+                    </div>
+                </div>
+
+                <h3>Step 10.4: Test the Job Manually</h3>
+                <p>Do not wait for 2:00 AM on the first test. Trigger it immediately:</p>
+                <ol>
+                    <li>Navigate to: <strong>System Definition &gt; Scheduled Jobs</strong></li>
+                    <li>Search for: <strong>CMDB Health Doctor — Nightly Run</strong></li>
+                    <li>Open the record</li>
+                    <li>Click the <strong>Execute Now</strong> button at the top</li>
+                    <li>Watch progress in real time: <strong>System Log &gt; All</strong> (filter by Source = CMDB
+                        Health Doctor)</li>
+                </ol>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 11
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s11">
+                <div class="section-header">
+                    <span class="section-number">Section 11</span>
+                    <h2><i class="fa-solid fa-building-columns section-icon" style="color:#f59e0b"></i> Understanding the Two-Phase Architecture</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <p>This section explains WHY the job is split into two phases, for anyone who wants to understand the
+                    design.</p>
+
+                <h3>Why Phase 1 and Phase 2 are separate</h3>
+
+                <div class="content-card reveal">
+                    <h4>Phase 1 — Pure Data Evaluation</h4>
+                    <p>The Evaluator reads CI data from ServiceNow tables (<code>cmdb_ci</code>,
+                        <code>cmdb_rel_ci</code>, <code>cert_template</code>, etc.) and calculates scores using pure
+                        logic. This is fast, reliable, and deterministic — it always gives the same answer for the same
+                        input. If this phase fails, it is usually a data or query issue and is safe to retry
+                        immediately.
+                    </p>
+                </div>
+
+                <div class="content-card reveal">
+                    <h4>Phase 2 — AI Enrichment</h4>
+                    <p>The LLM call sends the Phase 1 results to an external AI service and gets back human-readable
+                        summaries, specific action recommendations, and risk assessments. This involves a network call
+                        to an external service, which can fail due to rate limits, network issues, or API quota limits.
+                        If Phase 2 fails, the Phase 1 data is safely stored in <code>raw_payload_json</code> so the LLM
+                        call can be retried independently without re-running the evaluation.</p>
+                </div>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">The Benefit</span>
+                    <p>If 100 CIs are evaluated in Phase 1 and then the LLM service goes down, only Phase 2 needs to
+                        re-run the next day. Phase 1 results are preserved.</p>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 12
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s12">
+                <div class="section-header">
+                    <span class="section-number">Section 12</span>
+                    <h2><i class="fa-solid fa-triangle-exclamation section-icon" style="color:#ef4444"></i> Tips, Common Mistakes, and How to Fix Them</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <h3>Tips</h3>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">Tip 1 — Always Review Claude's Changes Before Approving</span>
+                    <p>When Claude Code proposes a file change, read it before clicking Approve. Check:</p>
+                    <ul>
+                        <li>Does it use <code>var</code> not <code>const</code>/<code>let</code> in
+                            <code>.server.js</code> files?
+                        </li>
+                        <li>Does it reference the correct table names with the scope prefix?</li>
+                        <li>Did it remember to add the export to <code>index.now.ts</code>?</li>
+                    </ul>
+                </div>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">Tip 2 — Commit After Each Working Section</span>
+                    <div class="code-block" style="margin-top:10px">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>git add .
+git commit -m "Add health evaluator and writer"</code></pre>
+                    </div>
+                    <p>This gives you a restore point if something breaks later.</p>
+                </div>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">Tip 3 — Build Before You Deploy</span>
+                    <p>Always run <code>npm run build</code> before <code>npm run deploy</code>. This catches errors
+                        locally before they fail on the instance.</p>
+                </div>
+
+                <div class="callout callout-tip">
+                    <span class="callout-label">Tip 4 — Reference Your Docs in Prompts</span>
+                    <p>When asking Claude Code to modify something, always point it to the relevant reference file:</p>
+                    <div class="code-block" style="margin-top:10px">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Claude Code</span></div>
+                        </div>
+                        <pre><code>Looking at @docs/field-reference.md, add the new assessment_notes field</code></pre>
+                    </div>
+                    <p>This prevents Claude from guessing field names or inventing structure that conflicts with what
+                        already exists.</p>
+                </div>
+
+                <h3>Common Mistakes</h3>
+
+                <div class="callout callout-critical">
+                    <span class="callout-label">Common Mistake 1 — ES6 Syntax in Server Files</span>
+                    <p><strong>What went wrong:</strong> The generated code uses <code>const</code>, <code>let</code>,
+                        arrow functions, or template literals in a <code>.server.js</code> file.</p>
+                    <p><strong>What you see at runtime:</strong> The Script Include throws vague JavaScript errors like
+                        "undefined is not a function" when the scheduled job runs.</p>
+                    <p><strong>How to fix it:</strong> Prompt Claude Code:</p>
+                    <div class="code-block" style="margin-top:10px">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Claude Code</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Review src/server/CMDBHealthEvaluator.server.js and convert any ES6 syntax
+to ES5. Replace const/let with var, replace arrow functions with function() {},
+replace template literals with string concatenation using the + operator.</code></pre>
+                    </div>
+                </div>
+
+                <div class="callout callout-critical">
+                    <span class="callout-label">Common Mistake 2 — Forgot to Export from index.now.ts</span>
+                    <p><strong>What went wrong:</strong> You created a new Fluent file but did not add it to the barrel
+                        export file.</p>
+                    <p><strong>What you see:</strong> The deploy succeeds without errors but the record does not appear
+                        on the instance — it was silently skipped.</p>
+                    <p><strong>How to fix it:</strong> Prompt Claude Code:</p>
+                    <div class="code-block" style="margin-top:10px">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Claude Code</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>Check src/fluent/index.now.ts and compare it against all .now.ts files in
+the src/fluent/ directory and its subdirectories. Add exports for any files
+that are missing.</code></pre>
+                    </div>
+                </div>
+
+                <div class="callout callout-warning">
+                    <span class="callout-label">Common Mistake 3 — Credentials Not Set After Deploy</span>
+                    <p><strong>What went wrong:</strong> The system properties were deployed as empty strings
+                        (intentional — you never store credentials in code) but you forgot to fill them in on the
+                        instance.</p>
+                    <p><strong>What you see:</strong> The scheduled job runs Phase 1 successfully but Phase 2 fails
+                        immediately for every CI with a message like "LLM endpoint property is empty."</p>
+                    <p><strong>How to fix it:</strong> Follow Section 10.2 to set the properties on the instance.</p>
+                </div>
+
+                <div class="callout callout-warning">
+                    <span class="callout-label">Common Mistake 4 — Running transform and Losing Local Changes</span>
+                    <p><strong>What went wrong:</strong> You ran <code>npm run transform</code> without committing local
+                        changes first, and it overwrote your work with the instance state.</p>
+                    <p><strong>How to fix it:</strong></p>
+                    <div class="code-block" style="margin-top:10px">
+                        <div class="code-label">
+                            <div class="code-label-left"><span class="code-dot dot-red"></span><span
+                                    class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span><span
+                                    style="color:#888">Terminal</span></div><button class="copy-btn"
+                                onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code>git status       ← see what files changed
+git diff         ← see the actual line-by-line differences
+git checkout .   ← undo all unstaged changes and restore your files</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         SECTION 13
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="s13">
+                <div class="section-header">
+                    <span class="section-number">Section 13</span>
+                    <h2><i class="fa-solid fa-rotate section-icon" style="color:#14b8a6"></i> The Full Project Lifecycle — Summary</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <!-- WORKFLOW 1 -->
+                <div class="workflow reveal">
+                    <div class="workflow-title">One-Time Setup</div>
+                    <div class="flow-steps navy">
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 1</span>Install Node.js →
+                                Install SDK CLI → Install Claude Code</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 2</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">now-sdk auth add</code> —
+                                Connect to your ServiceNow instance</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 3</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">now-sdk init</code> — Create
+                                project scaffold, register app on instance</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 4</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">npm install</code> — Download
+                                libraries</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 5</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">npm run types</code> — Fetch
+                                ServiceNow table type definitions</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 6</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">git init + git commit</code> —
+                                Start tracking changes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WORKFLOW 2 -->
+                <div class="workflow reveal" style="margin-top:32px">
+                    <div class="workflow-title teal">Development Cycle (Repeated for Each Feature)</div>
+                    <div class="flow-steps teal">
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 1</span>Launch Claude Code:
+                                <code style="background:rgba(255,255,255,0.15);color:white">claude</code>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 2</span>Give prompts in
+                                plain English → Claude writes code → Review → Approve</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 3</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">npm run build</code> — Check
+                                for errors locally</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 4</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">npm run deploy</code> — Push
+                                to ServiceNow</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 5</span>Test on instance
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 6</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">git commit</code> — Save your
+                                progress
+                                <div><span class="cycle-badge">↩ Repeat from Step 1</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WORKFLOW 3 -->
+                <div class="workflow reveal" style="margin-top:32px">
+                    <div class="workflow-title green">Maintenance Cycle</div>
+                    <div class="flow-steps green">
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 1</span><code
+                                    style="background:rgba(255,255,255,0.15);color:white">npm run transform</code> —
+                                Pull any instance-side changes back to local</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 2</span>Review what changed
+                                with <code style="background:rgba(255,255,255,0.15);color:white">git diff</code></div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-content"><span class="flow-step-num">Step 3</span>Continue with
+                                development cycle above</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         APPENDIX A
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="sa">
+                <div class="section-header">
+                    <span class="section-number appendix-label">Appendix A</span>
+                    <h2><i class="fa-solid fa-list-check section-icon" style="color:#0ea5e9"></i> Complete Command Reference</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Command</th>
+                                <th>What It Does</th>
+                                <th>When to Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>now-sdk auth add</code></td>
+                                <td>Save instance credentials to keychain</td>
+                                <td>Once per instance</td>
+                            </tr>
+                            <tr>
+                                <td><code>now-sdk auth list</code></td>
+                                <td>Show saved credentials</td>
+                                <td>To verify auth is configured</td>
+                            </tr>
+                            <tr>
+                                <td><code>now-sdk init</code></td>
+                                <td>Create new project scaffold</td>
+                                <td>Once at project start</td>
+                            </tr>
+                            <tr>
+                                <td><code>npm install</code></td>
+                                <td>Download project libraries</td>
+                                <td>After cloning or first setup</td>
+                            </tr>
+                            <tr>
+                                <td><code>npm run types</code></td>
+                                <td>Fetch type defs from instance</td>
+                                <td>After schema changes on instance</td>
+                            </tr>
+                            <tr>
+                                <td><code>npm run build</code></td>
+                                <td>Compile TypeScript, check for errors</td>
+                                <td>Before every deploy</td>
+                            </tr>
+                            <tr>
+                                <td><code>npm run deploy</code></td>
+                                <td>Build + push to instance</td>
+                                <td>When ready to deploy changes</td>
+                            </tr>
+                            <tr>
+                                <td><code>npm run transform</code></td>
+                                <td>Pull instance state to local</td>
+                                <td>When instance was edited directly</td>
+                            </tr>
+                            <tr>
+                                <td><code>claude</code></td>
+                                <td>Start Claude Code in current project</td>
+                                <td>During development</td>
+                            </tr>
+                            <tr>
+                                <td><code>git add .</code></td>
+                                <td>Stage all changed files</td>
+                                <td>Before committing</td>
+                            </tr>
+                            <tr>
+                                <td><code>git commit -m ""</code></td>
+                                <td>Save a snapshot of current state</td>
+                                <td>After each working milestone</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         APPENDIX B
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="sb">
+                <div class="section-header">
+                    <span class="section-number appendix-label">Appendix B</span>
+                    <h2><i class="fa-solid fa-book section-icon" style="color:#8b5cf6"></i> Glossary of Terms</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <div class="glossary-grid">
+                    <div class="glossary-card">
+                        <div class="glossary-term">Instance</div>
+                        <div class="glossary-def">Your company's copy of ServiceNow at a unique URL</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Scope</div>
+                        <div class="glossary-def">A namespace prefix that isolates your app from others</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Fluent API</div>
+                        <div class="glossary-def">ServiceNow's TypeScript way to define app structure</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Script Include</div>
+                        <div class="glossary-def">A reusable server-side JavaScript module in ServiceNow</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Scheduled Job</div>
+                        <div class="glossary-def">A script that runs automatically on a timer</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">ACL</div>
+                        <div class="glossary-def">Access Control List — defines who can see or change data</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Update Set</div>
+                        <div class="glossary-def">A package of changes deployed as a single unit in ServiceNow</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">GlideRecord</div>
+                        <div class="glossary-def">ServiceNow's API for querying and updating database tables</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">sys_id</div>
+                        <div class="glossary-def">The unique identifier (UUID) of every record in ServiceNow</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">ES5</div>
+                        <div class="glossary-def">An older version of JavaScript that ServiceNow's server engine uses
+                        </div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">npm</div>
+                        <div class="glossary-def">Node Package Manager — installs JavaScript libraries</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">TypeScript</div>
+                        <div class="glossary-def">JavaScript with type checking — compiled to plain JavaScript</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Barrel export</div>
+                        <div class="glossary-def">A single file that re-exports everything from a folder</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">Keychain</div>
+                        <div class="glossary-def">Your operating system's secure password storage</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">CCC</div>
+                        <div class="glossary-def">Correctness, Completeness, Compliance — the three health dimensions
+                        </div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">password2</div>
+                        <div class="glossary-def">A ServiceNow field type that automatically encrypts stored values
+                        </div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">sys_properties</div>
+                        <div class="glossary-def">ServiceNow's table for storing application configuration values</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">cmdb_ci</div>
+                        <div class="glossary-def">The main ServiceNow table that stores all Configuration Items</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">cert_template</div>
+                        <div class="glossary-def">ServiceNow's compliance template table</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════
+         APPENDIX C
+    ═══════════════════════════════════════════ -->
+            <section class="section reveal" id="sc">
+                <div class="section-header">
+                    <span class="section-number appendix-label">Appendix C</span>
+                    <h2><i class="fa-solid fa-folder-tree section-icon" style="color:#ec4899"></i> Project File Map — Where Everything Lives</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <div class="file-tree">
+                    <div class="tree-line"><span class="tree-dir">📁 MyServiceNowApp/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│</span></div>
+                    <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-dir">📁
+                            .claude/</span><span class="tree-comment">← Claude Code project intelligence</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ └── </span><span class="tree-dir">📁
+                            skills/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ └── </span><span class="tree-md">📄
+                            sndev.md</span><span class="tree-comment">← SDK skill: teaches Claude your project
+                            rules</span></div>
+                    <div class="tree-line"><span class="tree-indent">│</span></div>
+                    <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-dir">📁
+                            docs/</span><span class="tree-comment">← Reference documentation</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ ├── </span><span class="tree-md">📄
+                            field-reference.md</span><span class="tree-comment">← All table fields documented</span>
+                    </div>
+                    <div class="tree-line"><span class="tree-indent">│ ├── </span><span class="tree-md">📄
+                            system-properties-reference.md</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ └── </span><span class="tree-md">📄
+                            llm-integration-reference.md</span></div>
+                    <div class="tree-line"><span class="tree-indent">│</span></div>
+                    <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-dir">📁 src/</span>
+                    </div>
+                    <div class="tree-line"><span class="tree-indent">│ ├── </span><span class="tree-dir">📁
+                            fluent/</span><span class="tree-comment">← TypeScript structure definitions</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ ├── </span><span class="tree-ts">📄
+                            index.now.ts</span><span class="tree-comment">← BARREL: must export everything below</span>
+                    </div>
+                    <div class="tree-line"><span class="tree-indent">│ │ ├── </span><span class="tree-dir">📁
+                            tables/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ │ └── </span><span class="tree-ts">📄
+                            health-record.now.ts</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ ├── </span><span class="tree-dir">📁
+                            script-includes/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ │ ├── </span><span class="tree-ts">📄
+                            cmdb-health-evaluator.now.ts</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ │ ├── </span><span class="tree-ts">📄
+                            cmdb-health-llm.now.ts</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ │ └── </span><span class="tree-ts">📄
+                            cmdb-health-writer.now.ts</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ ├── </span><span class="tree-dir">📁
+                            scheduled-job/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ │ └── </span><span class="tree-ts">📄
+                            cmdb-health-job.now.ts</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ ├── </span><span class="tree-dir">📁
+                            acls/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ │ └── </span><span class="tree-ts">📄
+                            health-record-acls.now.ts</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ ├── </span><span class="tree-dir">📁
+                            properties/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ │ └── </span><span class="tree-ts">📄
+                            system-properties.now.ts</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ ├── </span><span class="tree-dir">📁
+                            navigation/</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ │ └── </span><span class="tree-ts">📄
+                            app-menu.now.ts</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │ └── </span><span class="tree-dir">📁
+                            generated/</span><span class="tree-comment">← Auto-generated, never edit</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ │</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ └── </span><span class="tree-dir">📁
+                            server/</span><span class="tree-comment">← ES5 JavaScript logic</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ ├── </span><span class="tree-js">📄
+                            CMDBHealthEvaluator.server.js</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ ├── </span><span class="tree-js">📄
+                            CMDBHealthLLM.server.js</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ ├── </span><span class="tree-js">📄
+                            CMDBHealthWriter.server.js</span></div>
+                    <div class="tree-line"><span class="tree-indent">│ └── </span><span class="tree-js">📄
+                            CMDBHealthJob.server.js</span></div>
+                    <div class="tree-line"><span class="tree-indent">│</span></div>
+                    <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-json">📄
+                            now.config.json</span><span class="tree-comment">← App identity (scope, name,
+                            scopeId)</span></div>
+                    <div class="tree-line"><span class="tree-indent">├── </span><span class="tree-json">📄
+                            package.json</span><span class="tree-comment">← Build scripts and dependencies</span></div>
+                    <div class="tree-line"><span class="tree-indent">└── </span><span class="tree-special">📄
+                            .eslintrc</span><span class="tree-comment">← Code quality rules</span></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- BACK TO TOP -->
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+    <!-- FOOTER -->
+    <footer>
+        <strong>CMDB Health Doctor — ServiceNow SDK Documentation</strong>
+        Built with Claude Code + ServiceNow SDK 4.4.1
+    </footer>
+
+    <script src="script.js" defer></script>
+</body>
+
+</html>

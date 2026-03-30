@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Setup Wizard — Claude Code × ServiceNow</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="quick_setup.css">
+    <style>
+        /* ── Prompt Actions Bar ── */
+        .prompt-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid;
+            transition: opacity 0.15s, transform 0.1s;
+            background: rgba(5,150,105,0.1);
+            color: #059669;
+            border-color: rgba(5,150,105,0.3);
+        }
+        .btn-download:active { transform: scale(0.97); }
+        .btn-download:hover { background: rgba(5,150,105,0.2); }
+
+
+    </style>
+</head>
+<body data-theme="servicenow">
+
+    <div class="wizard-container">
+        
+        <!-- ========================================== -->
+        <!-- FLOW 1: SERVICENOW SDK -->
+        <!-- ========================================== -->
+        <div id="flow-servicenow" class="flow-container active">
+            <!-- Sidebar -->
+            <aside class="wizard-sidebar">
+                <div class="sidebar-toggles">
+                    <button class="side-btn active" onclick="switchTheme('servicenow')">
+                        <i class="fa-solid fa-cloud"></i> SN SDK Workflow
+                    </button>
+                    <button class="side-btn" onclick="switchTheme('claude')">
+                        <i class="fa-solid fa-spider"></i> Claude Mastery
+                    </button>
+                </div>
+                <ul class="step-list" id="sidebar-servicenow">
+                    <!-- Populated by JS -->
+                </ul>
+            </aside>
+
+            <main class="wizard-main">
+                <div id="steps-container-sn">
+
+                    <!-- STEP 1: Prerequisites -->
+                    <div class="wizard-step active" data-flow="sn" data-step="1" data-title="Prerequisites">
+                        <span class="step-eyebrow">Step 1 of 7</span>
+                        <div class="step-header stagger-1">
+                            <h1>Tooling Prerequisites</h1>
+                            <p class="step-desc">Install Node.js via NVM, the ServiceNow SDK CLI, and Claude Code. These three tools are the entire foundation of the workflow.</p>
+                        </div>
+                        <div class="step-content stagger-2">
+                            <div class="command-group">
+                                <div class="command-label"><i class="fa-brands fa-node-js text-accent"></i> Node.js via NVM</div>
+                                <p class="command-desc">Install using NVM (Node Version Manager), not the direct Node installer — this avoids OS permission errors and lets you manage Node versions cleanly.</p>
+                                <div class="tabs-header">
+                                    <button class="tab-btn active" onclick="switchTab('seq-mac')"><i class="fa-brands fa-apple"></i> Mac/Linux</button>
+                                    <button class="tab-btn" onclick="switchTab('seq-win')"><i class="fa-brands fa-windows"></i> Windows</button>
+                                </div>
+                                <div id="seq-mac" class="tab-content active">
+                                    <div class="cmd-list">
+                                        <div class="cmd-item type-sys">
+                                            <div class="cmd-meta">
+                                                <div class="cmd-title"><i class="fa-solid fa-microchip"></i> 1. Install NVM</div>
+                                                <div class="cmd-description">Open Terminal (Cmd+Space → "Terminal"). This downloads and installs NVM.</div>
+                                            </div>
+                                            <div class="code-block">
+                                                <pre><code>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash</code></pre>
+                                                <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                            </div>
+                                        </div>
+                                        <div class="cmd-item type-sys">
+                                            <div class="cmd-meta">
+                                                <div class="cmd-title"><i class="fa-solid fa-rotate-right"></i> 2. Restart Terminal, then install Node 18</div>
+                                                <div class="cmd-description">Close and reopen Terminal after the step above, then run both commands.</div>
+                                            </div>
+                                            <div class="code-block">
+                                                <pre><code>nvm install 18
+nvm use 18</code></pre>
+                                                <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="seq-win" class="tab-content">
+                                    <div class="info-card"><i class="fa-brands fa-windows"></i> Download <strong>nvm-setup.exe</strong> from coreybutler/nvm-windows releases. Run the installer, then open Command Prompt and run: <code>nvm install 18</code> then <code>nvm use 18</code></div>
+                                </div>
+                            </div>
+
+                            <div class="command-group stagger-3">
+                                <div class="command-label"><i class="fa-solid fa-terminal text-accent"></i> Install CLIs</div>
+                                <div class="cmd-list">
+                                    <div class="cmd-item type-sn">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-cloud"></i> ServiceNow SDK</div>
+                                            <div class="cmd-description">The official SDK CLI. Handles building, compiling TypeScript to XML, and deploying your app to ServiceNow — no browser clicking required.</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>npm install -g @servicenow/sdk</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                    <div class="cmd-item type-cl">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-robot"></i> Claude Code</div>
+                                            <div class="cmd-description">Your AI coding assistant in the terminal. You describe what you want, Claude writes the Fluent files for you and asks permission before touching anything.</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="command-desc" style="margin-top:24px;"><strong>Verify everything is installed:</strong></p>
+                                <table class="data-table">
+                                    <thead><tr><th>Tool</th><th>Command</th><th>Expected Output</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>Node.js</td><td><code>node --version</code></td><td>v18.x.x or higher</td></tr>
+                                        <tr><td>SN SDK</td><td><code style="color:#059669;background:rgba(5,150,105,0.1);">now-sdk --version</code></td><td>4.4.x</td></tr>
+                                        <tr><td>Claude Code</td><td><code style="color:#d97757;background:rgba(217,119,87,0.1);">claude --version</code></td><td>Valid build</td></tr>
+                                    </tbody>
+                                </table>
+                                <div class="info-card" style="margin-top:16px;">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <div>First time running <code>claude</code>? It opens a browser for authentication. Log in with your Anthropic account to activate it.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: Instance Connection -->
+                    <div class="wizard-step" data-flow="sn" data-step="2" data-title="Instance Connection">
+                        <span class="step-eyebrow">Step 2 of 7</span>
+                        <div class="step-header stagger-1">
+                            <h1>Connect to Your Instance</h1>
+                            <p class="step-desc">Register your ServiceNow instance with the SDK once. Credentials are stored in your OS keychain — never in project files — so you never type a password again.</p>
+                        </div>
+                        <div class="step-content stagger-2">
+                            <div class="command-group">
+                                <div class="command-label"><i class="fa-solid fa-link text-accent"></i> Find Your Instance URL</div>
+                                <p class="command-desc">Your instance URL looks like: <code>https://yourcompany.service-now.com</code></p>
+                                <div class="info-card">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <div><strong>Using a Personal Developer Instance (PDI)?</strong> Log in to <strong>developer.servicenow.com</strong> to find your URL and credentials. You need <strong>admin</strong> role on the instance to deploy apps — verify you see "Admin" in the top-right corner of the ServiceNow UI.</div>
+                                </div>
+                            </div>
+
+                            <div class="command-group stagger-3">
+                                <div class="command-label"><i class="fa-solid fa-key text-accent"></i> Add Instance to SDK Keychain</div>
+                                <div class="cmd-list">
+                                    <div class="cmd-item type-sn">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-plus"></i> Register Your Instance</div>
+                                            <div class="cmd-description">The SDK prompts for an alias name, instance URL, username, and password. Use <code>dev</code> as the alias — you’ll reference it during project init and deploy.</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>now-sdk auth add</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                    <div class="cmd-item type-sn">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-list-check"></i> Verify the Connection</div>
+                                            <div class="cmd-description">Should list your alias and instance URL. If it shows, you’re ready.</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>now-sdk auth list</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: Scaffold Project -->
+                    <div class="wizard-step" data-flow="sn" data-step="3" data-title="Scaffold Project">
+                        <span class="step-eyebrow">Step 3 of 7</span>
+                        <div class="step-header stagger-1">
+                            <h1>Create &amp; Scaffold the Project</h1>
+                            <p class="step-desc">Initialize the Employee Idea Box project folder, scaffold the SDK structure, install dependencies, and pull type definitions from your instance.</p>
+                        </div>
+                        <div class="step-content stagger-2">
+                            <div class="command-group">
+                                <div class="command-label"><i class="fa-regular fa-folder-open text-accent"></i> Project Setup Sequence</div>
+                                <div class="cmd-list">
+                                    <div class="cmd-item type-sys">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-folder-plus"></i> 1. Create &amp; Enter Project Folder</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>mkdir EmployeeIdeaBox
+cd EmployeeIdeaBox</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                    <div class="cmd-item type-sn">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-wand-magic-sparkles"></i> 2. Initialize SDK Project</div>
+                                            <div class="cmd-description">The SDK prompts you for three things — use exactly these values:</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>now-sdk init</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                        <table class="data-table" style="margin-top:12px;">
+                                            <thead><tr><th>Prompt</th><th>Enter This</th><th>Why</th></tr></thead>
+                                            <tbody>
+                                                <tr><td>App name</td><td><code>Employee Idea Box</code></td><td>Display name in ServiceNow</td></tr>
+                                                <tr><td>Scope prefix</td><td><code>x_ideabox</code></td><td>Namespace to prevent conflicts with other apps</td></tr>
+                                                <tr><td>Auth alias</td><td><code>dev</code></td><td>The alias you registered in Step 2</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="cmd-item type-sn">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-box-open"></i> 3. Install Dependencies</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>npm install</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                    <div class="cmd-item type-sn">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-cloud-arrow-down"></i> 4. Fetch Type Definitions</div>
+                                            <div class="cmd-description">Downloads type info for all ServiceNow tables and APIs from your instance. TypeScript won’t compile correctly without this.</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>npm run types</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                    <div class="cmd-item type-sys">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-brands fa-git-alt"></i> 5. Initialize Git &amp; Open in VS Code</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>git init
+git add .
+git commit -m "Initial project setup"
+code .</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="command-group stagger-3">
+                                <div class="command-label"><i class="fa-solid fa-diagram-project text-accent"></i> Your Project Structure</div>
+                                <p class="command-desc">After init, your project looks like this. You’ll add Fluent files under <code>src/fluent/</code> in the next steps.</p>
+                                <div class="code-block">
+                                    <pre><code>EmployeeIdeaBox/
+│
+├── src/
+│   └── fluent/               ← TypeScript files that DEFINE your app
+│       ├── index.now.ts      ← Master export — every file must be listed here
+│       ├── tables/           ← Database table definitions
+│       ├── acls/             ← Security rules (who can read/write/delete)
+│       └── navigation/       ← Sidebar menu items
+│
+├── package.json              ← Project settings and build commands
+├── now.config.json           ← App identity (scope, name, scopeId)
+└── .eslintrc                 ← Code quality rules</code></pre>
+                                </div>
+                                <div class="info-card warning-card" style="margin-top:16px;">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <div><strong>The Barrel File Rule:</strong> <code>src/fluent/index.now.ts</code> must export every Fluent file in your project. If you create a file and forget to add it here, that piece of your app will be <em>silently skipped</em> at deploy time — no error, just missing.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: AI Context Files -->
+                    <div class="wizard-step" data-flow="sn" data-step="4" data-title="AI Context Files">
+                        <span class="step-eyebrow">Step 4 of 7</span>
+                        <div class="step-header stagger-1">
+                            <h1>Create AI Context Files</h1>
+                            <p class="step-desc">Start Claude Code and give it a briefing document. Without this, Claude starts each session knowing nothing about your project.</p>
+                        </div>
+                        <div class="step-content stagger-2">
+                            <div class="command-group">
+                                <div class="command-label"><i class="fa-solid fa-robot text-accent"></i> Launch Claude Code</div>
+                                <div class="cmd-list">
+                                    <div class="cmd-item type-cl">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-terminal"></i> Run from inside your project folder</div>
+                                            <div class="cmd-description">Claude reads your project files automatically on startup and shows an interactive prompt.</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>claude</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="command-group stagger-3">
+                                <div class="command-label"><i class="fa-solid fa-brain text-accent"></i> Prompt 1 — Create the Skill File</div>
+                                <p class="command-desc">A <strong>Skill file</strong> at <code>.claude/skills/ideabox.md</code> is a persistent briefing — it stores your project identity, SDK commands, and structure rules. Claude loads it automatically at the start of every session so you never have to re-explain your project.</p>
+                                <div class="cmd-item type-cl">
+                                    <div class="cmd-meta">
+                                        <div class="cmd-title"><i class="fa-regular fa-comment-dots"></i> Paste into Claude Code</div>
+                                    </div>
+                                    <div class="prompt-block" id="skill-prompt-block">
+                                        <div class="prompt-header"><i class="fa-solid fa-asterisk"></i> Claude Code Prompt:</div>
+                                        <pre><code>Create a skill file at .claude/skills/ideabox.md for this project.
+
+Read now.config.json and package.json to get the real app values, then write a
+skill that covers:
+
+1. Project identity: app name, scope prefix, SDK version, auth alias
+
+2. SDK command reference:
+   - npm run build: compiles TypeScript to XML, checks for errors, does NOT touch instance
+   - npm run deploy: builds + pushes everything to ServiceNow
+   - npm run types: fetches type definitions from instance (run when schema changes on instance)
+   - npm run transform: pulls current instance state to local files (always commit first)
+
+3. File structure rules:
+   - Fluent files (.now.ts) define structure: tables, columns, ACLs, menus
+   - Every Fluent file MUST be exported from src/fluent/index.now.ts
+   - If you create a file and forget to export it, it will be silently skipped at deploy time
+
+4. App context:
+   This is the Employee Idea Box — employees submit improvement ideas, colleagues
+   upvote them, and managers review and approve. The app has one table (idea),
+   ACLs controlling who can create and edit, and navigation menus.
+   All Fluent-only app — no server-side JavaScript needed.</code></pre>
+                                        <div class="prompt-actions">
+                                            <button class="btn-download" onclick="downloadPrompt('skill-prompt-block', 'skill-file-prompt.txt')"><i class="fa-solid fa-download"></i> Download</button>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="command-group stagger-4">
+                                <div class="command-label"><i class="fa-solid fa-book-open text-accent"></i> Prompt 2 — Create the Field Reference (run after Step 5)</div>
+                                <p class="command-desc">After the table is built in Step 5, run this to generate a lookup doc at <code>docs/field-reference.md</code>. Claude can reference it in future prompts so it always uses the correct field names.</p>
+                                <div class="cmd-item type-cl">
+                                    <div class="prompt-block" id="ref-prompt-block">
+                                        <div class="prompt-header"><i class="fa-solid fa-asterisk"></i> Claude Code Prompt:</div>
+                                        <pre><code>Read src/fluent/tables/idea.now.ts and create a reference document at
+docs/field-reference.md.
+
+For each field include: short field name, full scoped field name, data type,
+allowed values or max length, and a one-line plain English description.
+
+Also document the status workflow at the bottom:
+new → under_review → approved or rejected → implemented</code></pre>
+                                        <div class="prompt-actions">
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5: Build the App -->
+                    <div class="wizard-step" data-flow="sn" data-step="5" data-title="Build the App">
+                        <span class="step-eyebrow">Step 5 of 7</span>
+                        <div class="step-header stagger-1">
+                            <h1>Build the App with Claude</h1>
+                            <p class="step-desc">One prompt creates all four Fluent files for the complete Employee Idea Box — table, business rule, security rules, and navigation. Review what Claude creates and approve each file.</p>
+                        </div>
+                        <div class="step-content stagger-2">
+                            <div class="command-group">
+                                <div class="command-label"><i class="fa-solid fa-layer-group text-accent"></i> What Gets Built</div>
+                                <table class="data-table">
+                                    <thead><tr><th>File Created</th><th>What It Does</th></tr></thead>
+                                    <tbody>
+                                        <tr><td><code>tables/idea.now.ts</code></td><td>The data table — stores each idea with fields for title, status, votes, reviewer notes, impact, etc.</td></tr>
+                                        <tr><td><code>business-rules/set-submitted-on.now.ts</code></td><td>Auto-fills <code>submitted_on</code> date when a new idea is inserted — submitters don’t fill it manually</td></tr>
+                                        <tr><td><code>acls/idea-acls.now.ts</code></td><td>4 security rules: everyone can read &amp; create, only reviewers/admins can edit, only admin can delete</td></tr>
+                                        <tr><td><code>navigation/app-menu.now.ts</code></td><td>Sidebar menu with All Ideas, My Ideas, Under Review, Approved Ideas views</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="command-group stagger-3">
+                                <div class="command-label"><i class="fa-solid fa-bullseye text-accent"></i> The Complete Build Prompt</div>
+                                <div class="cmd-item type-cl">
+                                    <div class="cmd-meta">
+                                        <div class="cmd-title"><i class="fa-regular fa-comment-dots"></i> Paste into Claude Code</div>
+                                        <div class="cmd-description">This is a large prompt. Use <strong>Download</strong> as a .txt file so you can open and copy it easily.</div>
+                                    </div>
+                                    <div class="prompt-block" id="build-prompt-block">
+                                        <div class="prompt-header"><i class="fa-solid fa-asterisk"></i> Claude Code Prompt:</div>
+                                        <pre><code>Create the complete Employee Idea Box app in one pass.
+
+Create the necessary Fluent files for the components below, then add each one’s export to
+src/fluent/index.now.ts.
+
+───────────────────────────────────────────────────────────────
+COMPONENT 1 — Table
+───────────────────────────────────────────────────────────────
+Table purpose: store one record per employee idea submission.
+Employees submit ideas, colleagues upvote them, managers review and approve.
+
+Fields:
+
+IDEA CONTENT:
+- title: String max 200 chars, mandatory — the idea headline
+- description: String max 4000 chars — full explanation of the idea
+- category: Choice field with options:
+    process_improvement, technology, cost_saving, culture, customer_experience, other
+  Default: other
+
+WORKFLOW:
+- status: Choice field with options: new, under_review, approved, rejected, implemented
+  Default: new
+- submitted_by: Reference to sys_user, mandatory — who submitted the idea
+- submitted_on: Date — when the idea was submitted
+- reviewer: Reference to sys_user — the manager evaluating this idea
+- review_notes: String max 2000 chars — feedback from the reviewer
+- reviewed_on: Date — when the review was completed
+
+ENGAGEMENT:
+- votes: Integer, default 0 — number of upvotes from colleagues
+- impact: Choice field with options: low, medium, high
+  Description: estimated business impact if implemented
+
+───────────────────────────────────────────────────────────────
+COMPONENT 2 — Business Rule
+───────────────────────────────────────────────────────────────
+Rule: when a new idea record is inserted (on insert only), automatically set
+the submitted_on field to today’s date if it is not already populated.
+
+───────────────────────────────────────────────────────────────
+COMPONENT 3 — ACLs
+───────────────────────────────────────────────────────────────
+ACL 1 — READ: Any authenticated user can read all ideas.
+ACL 2 — CREATE: Any authenticated user can submit a new idea.
+ACL 3 — WRITE: Users with idea_reviewer or admin role can update ideas
+  (change status, add review notes, modify other people’s submissions).
+ACL 4 — DELETE: Only admin can delete ideas.
+
+───────────────────────────────────────────────────────────────
+COMPONENT 4 — Navigation
+───────────────────────────────────────────────────────────────
+Application menu:
+- Title: "Employee Idea Box"
+- Visible to all authenticated users (no special role required)
+
+Menu items:
+1. "All Ideas" at order 100 — shows every record in the idea table
+2. "My Ideas" at order 200 — shows only ideas where submitted_by is the
+   current logged-in user
+3. "Under Review" at order 300 — shows ideas where status equals under_review
+4. "Approved Ideas" at order 400 — shows ideas where status is approved or
+   implemented</code></pre>
+                                        <div class="prompt-actions">
+                                            <button class="btn-download" onclick="downloadPrompt('build-prompt-block', 'build-app-prompt.txt')"><i class="fa-solid fa-download"></i> Download</button>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="info-card stagger-4">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <div>Claude shows each file it plans to create and asks for approval before writing. Review each one. Once done, run the Field Reference prompt from Step 4 before deploying.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 6: Build & Deploy -->
+                    <div class="wizard-step" data-flow="sn" data-step="6" data-title="Build &amp; Deploy">
+                        <span class="step-eyebrow">Step 6 of 7</span>
+                        <div class="step-header stagger-1">
+                            <h1>Build &amp; Deploy to ServiceNow</h1>
+                            <p class="step-desc">Exit Claude Code (<code>Ctrl+C</code>), then compile and push your app. Two commands — first build to verify no errors, then deploy to go live.</p>
+                        </div>
+                        <div class="step-content stagger-2">
+                            <div class="command-group">
+                                <div class="command-label"><i class="fa-solid fa-hammer text-accent"></i> Step 1 — Build (compile only, nothing sent to instance)</div>
+                                <div class="cmd-list">
+                                    <div class="cmd-item type-sn">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-boxes-packing"></i> Compile TypeScript → ServiceNow XML</div>
+                                            <div class="cmd-description">Checks for errors. Does not touch your instance. Always run this before deploying to catch problems early.</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>npm run build</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                        <div class="info-card" style="margin-top:12px; background:rgba(5,150,105,0.07);">
+                                            <i class="fa-solid fa-circle-check" style="color:#059669;"></i>
+                                            <div><strong>Success:</strong> <code>✔ Compiled 4 modules &nbsp;✔ No errors found &nbsp;Build completed in 2.1s</code></div>
+                                        </div>
+                                        <div class="info-card warning-card" style="margin-top:8px;">
+                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                            <div><strong>Got an error?</strong> The message tells you the exact file and line. Copy it, paste into Claude: <em>"Fix this build error: [paste error]"</em>. Then build again.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="command-group stagger-3">
+                                <div class="command-label"><i class="fa-solid fa-rocket text-accent"></i> Step 2 — Deploy (builds + pushes to ServiceNow)</div>
+                                <div class="cmd-list">
+                                    <div class="cmd-item type-sn">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-cloud-arrow-up"></i> Deploy the app live</div>
+                                            <div class="cmd-description">Internally runs build, packages everything into a ServiceNow Update Set, authenticates via the stored keychain alias, and uploads. Your app goes live.</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>npm run deploy</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                        <div class="info-card" style="margin-top:12px; background:rgba(5,150,105,0.07);">
+                                            <i class="fa-solid fa-circle-check" style="color:#059669;"></i>
+                                            <div><strong>Success looks like:</strong><br>
+                                            <code>✔ Table: x_ideabox_idea</code><br>
+                                            <code>✔ BusinessRule: Set submitted_on on insert</code><br>
+                                            <code>✔ ACL: x_ideabox_idea.read (4 rules)</code><br>
+                                            <code>✔ AppMenu: Employee Idea Box</code><br>
+                                            <code>✔ Deployed successfully in 11.3s</code></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="command-group stagger-4">
+                                <div class="command-label"><i class="fa-solid fa-table-list text-accent"></i> Other Useful Commands</div>
+                                <table class="data-table">
+                                    <thead><tr><th>Command</th><th>What It Does</th><th>When to Use</th></tr></thead>
+                                    <tbody>
+                                        <tr><td><code>npm run types</code></td><td>Re-fetches type definitions from instance</td><td>When schema was changed directly in the ServiceNow browser UI</td></tr>
+                                        <tr><td><code>npm run transform</code></td><td>Pulls current instance state to local files</td><td>To import changes made via Studio — always commit your local work first</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 7: Complete -->
+                    <div class="wizard-step" data-flow="sn" data-step="7" data-title="Workflow Complete">
+                        <span class="step-eyebrow">Step 7 of 7</span>
+                        <div class="step-header stagger-1">
+                            <h1 style="text-align:center; width:100%;">Employee Idea Box is Live!</h1>
+                        </div>
+                        <div class="step-content stagger-2" style="text-align:center; padding-top:40px;">
+                            <i class="fa-solid fa-check-circle" style="font-size:80px; color:var(--success); margin-bottom:24px; filter:drop-shadow(0 0 20px rgba(5,150,105,0.4));"></i>
+                            <p style="font-size:18px; color:var(--text-muted); max-width:600px; margin:0 auto 32px;">Log in to ServiceNow and look for <strong>Employee Idea Box</strong> in the left sidebar. Your table, menus, ACLs, and business rule are all deployed and live.</p>
+                            <div class="info-card" style="text-align:left; max-width:600px; margin:0 auto;">
+                                <i class="fa-solid fa-lightbulb"></i>
+                                <div><strong>What to try next:</strong> Submit a test idea — verify <code>submitted_on</code> auto-fills. Log in as a non-admin and confirm you can’t change the status. Switch to <strong>Claude Mastery</strong> in the sidebar to go deeper on AI workflows.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer SN -->
+                <div class="wizard-controls" id="controls-sn">
+                    <button class="btn btn-secondary" onclick="snCtrl.prev()" id="btn-prev-sn"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                    <button class="btn btn-primary" onclick="snCtrl.next()" id="btn-next-sn">Next <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </main>
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- FLOW 2: CLAUDE CODE MASTERY -->
+        <!-- ========================================== -->
+        <div id="flow-claude" class="flow-container">
+            <!-- Sidebar -->
+            <aside class="wizard-sidebar">
+                
+                <!-- Master Sidebar Toggles -->
+                <div class="sidebar-toggles">
+                    <button class="side-btn" onclick="switchTheme('servicenow')">
+                        <i class="fa-solid fa-cloud"></i> SN SDK Workflow
+                    </button>
+                    <button class="side-btn active" onclick="switchTheme('claude')">
+                        <i class="fa-solid fa-spider"></i> Claude Mastery
+                    </button>
+                </div>
+
+                <ul class="step-list" id="sidebar-claude">
+                    <!-- Populated by JS -->
+                </ul>
+            </aside>
+
+            <main class="wizard-main">
+                <div id="steps-container-cl">
+                    
+                    <!-- STEP 1: Project Structure -->
+                    <div class="wizard-step active" data-flow="cl" data-step="1" data-title="Project Structure">
+                        <span class="step-eyebrow">Step 1 of 5</span>
+                        <div class="step-header stagger-1">
+                            <h1>Best Practice Project Structure</h1>
+                            <p class="step-desc">Claude operates in a loop: Plan &rarr; Write &rarr; Test &rarr; Fix. It requires a predictable and cleanly isolated folder structure to maintain architectural momentum without getting confused.</p>
+                        </div>
+                        <div class="step-content stagger-2">
+                            
+                            <div class="folder-struct command-group">
+                                <div class="folder-tree">
+                                    <div><i class="fa-solid fa-folder-open dir"></i><span class="dir">your-app-root/</span></div>
+                                    <div style="margin-left: 20px;"><i class="fa-solid fa-folder dir"></i><span class="dir">.claude/</span></div>
+                                    <div style="margin-left: 40px; margin-top: 10px; margin-bottom: 10px; border-left: 2px dashed rgba(0,0,0,0.1); padding-left:14px;">
+                                        <div><i class="fa-solid fa-file-lines core"></i><span class="core">claude.md</span></div>
+                                        <div><i class="fa-solid fa-bookmark file"></i><span class="file">reference.md</span></div>
+                                        <div><i class="fa-solid fa-code file"></i><span class="file">mcp.json</span></div>
+                                        <div><i class="fa-solid fa-folder dir"></i><span class="dir">skills/</span></div>
+                                        <div style="margin-left:20px;"><i class="fa-solid fa-gear file"></i><span class="file">style-checks.md</span></div>
+                                        <div><i class="fa-solid fa-folder dir"></i><span class="dir">hooks/</span></div>
+                                        <div style="margin-left:20px;"><i class="fa-brands fa-js file"></i><span class="file">lint-check.js</span></div>
+                                    </div>
+                                    <div style="margin-left: 20px;"><i class="fa-solid fa-folder dir"></i><span class="dir">src/</span></div>
+                                    <div style="margin-left: 40px;"><i class="fa-brands fa-js file"></i><span class="file">index.now.ts</span></div>
+                                    <div style="margin-left: 40px;"><i class="fa-solid fa-code file"></i><span class="file">package.json</span></div>
+                                </div>
+                                
+                                <div class="folder-desc">
+                                    <h3><i class="fa-solid fa-circle-info"></i> Why this structure?</h3>
+                                    <p style="margin-top: 10px; margin-bottom: 10px;">The <strong>.claude/</strong> directory acts as an isolated "brain" folder. 
+                                    By strictly separating AI rules, hooks, and subagent configs from your <strong>src/</strong> logic code, you ensure the AI reads configurations deterministically on every launch without injecting AI metadata into your actual ServiceNow deployment bundles.</p>
+                                    <p>Never place logic code alongside project instructions.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: Agentic Concepts -->
+                    <div class="wizard-step" data-flow="cl" data-step="2" data-title="System Concepts">
+                        <span class="step-eyebrow">Step 2 of 5</span>
+                        <div class="step-header stagger-1">
+                            <h1>Core Agentic Layers</h1>
+                            <p class="step-desc">There are five critical components that dictact how Claude "thinks" and engages with the world outside of its prompt box.</p>
+                        </div>
+                        <div class="step-content stagger-2">
+                            
+                            <div class="bento-grid">
+                                <div class="bento-card">
+                                    <div class="bento-title"><div class="bento-icon"><i class="fa-solid fa-bullseye"></i></div> claude.md</div>
+                                    <div class="bento-body"><strong>The Project Governor.</strong> Resides in `.claude/`. Dictates the absolute unbreakable rules of the application (e.g. "Never use Tailwind", "Always write tests"). <strong>Use when:</strong> Establishing permanent architectural tones.</div>
+                                </div>
+                                <div class="bento-card">
+                                    <div class="bento-title"><div class="bento-icon"><i class="fa-solid fa-brain"></i></div> skills/ (& *.md)</div>
+                                    <div class="bento-body"><strong>Executable Workflows.</strong> Individual markdown files holding exact terminal scripts and validation logic (e.g., `test-skill.md`). <strong>Use when:</strong> You want Claude to run a validation script before moving on.</div>
+                                </div>
+                                <div class="bento-card">
+                                    <div class="bento-title"><div class="bento-icon"><i class="fa-solid fa-plug-circle-bolt"></i></div> MCP Protocol</div>
+                                    <div class="bento-body"><strong>The External Bridge.</strong> A standardized connection allowing Claude to seamlessly read live SQL Databases, execute GitHub PRs, or ping internal Cloud APIs. <strong>Use when:</strong> Your AI needs live external context.</div>
+                                </div>
+                                <div class="bento-card">
+                                    <div class="bento-title"><div class="bento-icon"><i class="fa-solid fa-users-gear"></i></div> Subagents</div>
+                                    <div class="bento-body"><strong>Parallel Mini-Minds.</strong> Claude can secretly spin up smaller child agents to read massive files or hunt for errors in the background while main logic proceeds. <strong>Use when:</strong> Processing heavy contextual tracking.</div>
+                                </div>
+                                <div class="bento-card">
+                                    <div class="bento-title"><div class="bento-icon"><i class="fa-solid fa-anchor"></i></div> Hooks & Plugins</div>
+                                    <div class="bento-body"><strong>Execution Modifications.</strong> Hooks are local scripts run natively on execution. Plugins are external node wrappers injecting logic securely. <strong>Use when:</strong> Modifying the project environment formatting dynamically.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: Context vs Prompts -->
+                    <div class="wizard-step" data-flow="cl" data-step="3" data-title="Context vs Prompts">
+                        <span class="step-eyebrow">Step 3 of 5</span>
+                        <div class="step-header stagger-1">
+                            <h1>Context Files vs Prompts</h1>
+                            <p class="step-desc">Mastering token bandwidth: Knowing when to rely on a dynamic Prompt versus hardcoding data into Context Files will save API costs and prevent Hallucinations.</p>
+                        </div>
+                        <div class="step-content stagger-2">
+                            
+                            <div class="split-table">
+                                <!-- Panel 1: Prompts -->
+                                <div class="split-panel" style="background: rgba(30, 41, 59, 0.03);">
+                                    <h3><i class="fa-regular fa-comment-dots text-accent"></i> Dynamic Prompts</h3>
+                                    <p style="margin-bottom:20px; font-size:14px; opacity:0.8;">Conversational strings sent directly in the terminal interface currently used to tell the Agentic Loop what exact task to execute immediately.</p>
+                                    <ul>
+                                        <li><strong>When refactoring</strong> a single localized function or method.</li>
+                                        <li><strong>When brainstorming</strong> or debugging a highly specific stack trace.</li>
+                                        <li><strong>One-off instructions</strong> like <em>"Push this to github with message X"</em> that do not define application architecture globally.</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Panel 2: Context -->
+                                <div class="split-panel">
+                                    <h3><i class="fa-solid fa-book-bookmark text-accent"></i> Persistent Context (.md)</h3>
+                                    <p style="margin-bottom:20px; font-size:14px; opacity:0.8;">Hardcoded rules inside <code>claude.md</code>, <code>skills</code>, and <code>reference.md</code> that the AI loops over and digests automatically to establish permanent truths.</p>
+                                    <ul>
+                                        <li><strong>Enforcing framework choices</strong> (e.g. Always use standard ServiceNow classes instead of custom wrappers).</li>
+                                        <li><strong>Supplying large Vendor Documentation</strong> (e.g. Pasting SDK release notes for correct API consumption).</li>
+                                        <li><strong>Global Linting Rules</strong> that must apply unilaterally to every file outputted.</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="info-card warning-card stagger-3">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <div><strong>The Overload Rule:</strong> Avoid turning <code>claude.md</code> into a dump. If the persistent context spans past 200 lines, abstract it into smaller <code>skills.md</code> chunks. Heavy context drowns out immediate prompt efficacy!</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: Slash Commands -->
+                    <div class="wizard-step" data-flow="cl" data-step="4" data-title="Slash Commands">
+                        <span class="step-eyebrow">Step 4 of 5</span>
+                        <div class="step-header stagger-1">
+                            <h1>Important Slash Commands</h1>
+                            <p class="step-desc">Utilize standard forward slashes to trigger massive system states instantly from the chat terminal.</p>
+                        </div>
+                        <div class="step-content stagger-2">
+                            
+                            <div class="info-card" style="margin-bottom: 24px;">
+                                <i class="fa-solid fa-keyboard" style="padding-top:2px;"></i>
+                                <div><strong>Terminal Shortcut: Shift + 1 (Fast Bash Escape)</strong><br/>When using Claude CLI, press <code>Shift + 1</code> to immediately drop back into standard Bash mode. Run your OS commands natively, then press <code>Esc</code> to return. Claude instantly sees your output!</div>
+                            </div>
+                            
+                            <div class="command-group">
+                                <table class="data-table" style="margin-bottom: 0; box-shadow: none; border: none;">
+                                    <thead>
+                                        <tr>
+                                            <th>Command</th>
+                                            <th>Primary Usage & Scenario</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="row-highlight">
+                                            <td><code>/rename [name]</code></td>
+                                            <td>Rename the active chat session (e.g., <code>/rename header-bug-fix</code>). Critical for pausing work on Friday and resuming exactly next week.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>claude -r</code></td>
+                                            <td><em>Bash execution</em>. Presents an interactive terminal list of every previous chat session across the system to instantly resurrect and continue.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/btw [question]</code></td>
+                                            <td><strong>"By The Way"</strong>. Asks a totally isolated question ("What is the git tag command?") that won't append to the current logic context tree. Press Space to instantly zip back.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/model</code></td>
+                                            <td>Instantly switch the intelligence layer (e.g., jump from Haiku to Sonnet) on the fly mid-conversation when hitting a devastating code roadblock requiring more IQ.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/usage</code></td>
+                                            <td>Monitors token consumption and quota limits, vital for Team/API scaling thresholds.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/insights</code></td>
+                                            <td>Generates an incredibly rich visual HTML report tracking exactly how efficiently you are utilizing prompts vs context vs subagents.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/voice</code></td>
+                                            <td>Enters Voice-Dictation mode. Hold <code>Space</code> to speak long complex architecture demands directly to Claude naturally.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>/config</code></td>
+                                            <td>Opens graphical CLI prompts setting deep system variables visually instead of manually editing raw OS json configurations.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5: Configuration Guide -->
+                    <div class="wizard-step" data-flow="cl" data-step="5" data-title="Setup Guide">
+                        <span class="step-eyebrow">Step 5 of 5</span>
+                        <div class="step-header stagger-1">
+                            <h1>Setup & Configuration Guide</h1>
+                            <p class="step-desc">A comprehensive methodology on how to actually configure Skills, Context, and Hooks inside your ServiceNow project to successfully govern Claude.</p>
+                        </div>
+                        <div class="step-content stagger-2">
+                            
+                            <div class="command-group">
+                                <div class="command-label"><i class="fa-solid fa-code-merge text-accent"></i> Project Brain Setup</div>
+                                <div class="cmd-list">
+                                    
+                                    <!-- Setup Reference.md -->
+                                    <div class="cmd-item type-cl">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-book-open text-accent"></i> 1. Building 'reference.md' (Global Context)</div>
+                                            <div class="cmd-description">This file holds permanent ServiceNow-specific rules ensuring Claude writes accurate platform schema natively without trying to guess.</div>
+                                        </div>
+                                        <div class="cmd-use"><i class="fa-solid fa-circle-check"></i> <strong>Use:</strong> Forcing Claude to always use `GlideRecordSecure` instead of regular `GlideRecord` preventing major instance security breaches.</div>
+                                        <div class="prompt-block">
+                                             <div class="prompt-header"><i class="fa-solid fa-asterisk"></i> Ask Claude to generate it:</div>
+                                             <pre><code>I am deploying a 'Wellness Tracker' via SN SDK. Create a '.claude/reference.md'. Add a strict rule: "All database table queries must use 'GlideRecordSecure()' to enforce ACLs immediately. All logging must explicitly use 'gs.info("[WellnessApp]")'."</code></pre>
+                                             <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Setup Plugins -->
+                                    <div class="cmd-item type-cl">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-plug text-accent"></i> 2. Auto-Generate UI Modules</div>
+                                            <div class="cmd-description">Prompt Claude to automatically construct frontend visual components linking directly to the backend strict architectures you downloaded in Step 1.</div>
+                                        </div>
+                                        <div class="cmd-use"><i class="fa-solid fa-circle-check"></i> <strong>Use:</strong> Safely creates ServiceNow UI Pages and backend module hooks using your `sys_metadata` logic without making manual mistakes.</div>
+                                        <div class="prompt-block">
+                                             <div class="prompt-header"><i class="fa-solid fa-asterisk"></i> Ask Claude to generate it:</div>
+                                             <pre><code>Referencing our 'wellness-tracker' fluent-patterns.md rules, please build a scoped frontend UiPage showing a metric dashboard of all currently approved 'x_acme_wellness_activity' rows.</code></pre>
+                                             <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Setup Hooks -->
+                                    <div class="cmd-item type-cl">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-anchor text-accent"></i> 3. Configuring Execution Hooks</div>
+                                            <div class="cmd-description">Hooks are scripts that run automatically <i>immediately after</i> Claude modifies a file, ensuring local environment uniformity.</div>
+                                        </div>
+                                        <div class="cmd-use"><i class="fa-solid fa-circle-check"></i> <strong>Use:</strong> Ideal for automatically firing Prettier / ESLint fixing tools immediately after Claude generates a new ServiceNow Business Rule locally.</div>
+                                        <div class="prompt-block" style="border-style: solid;">
+                                             <div class="prompt-header" style="background: rgba(0,0,0,0.05); color: var(--text-muted); border-color: var(--border);"><i class="fa-brands fa-js"></i> Example post-hook execution in bash:</div>
+                                             <pre><code>{
+  "post-file-write": "npm run lint -- --fix" // Automatically fixes ServiceNow Fluent syntax spaces
+}</code></pre>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer CL -->
+                <div class="wizard-controls" id="controls-cl">
+                    <button class="btn btn-secondary" onclick="clCtrl.prev()" id="btn-prev-cl"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                    <button class="btn btn-primary" onclick="clCtrl.next()" id="btn-next-cl">Next <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </main>
+        </div>
+
+    </div>
+
+
+
+    <script src="quick_setup.js"></script>
+</body>
+</html>
