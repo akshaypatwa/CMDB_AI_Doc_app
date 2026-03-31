@@ -33,25 +33,70 @@ declare global {
                         table: 'sys_properties'
                         id: '1bf9626687f37a90a5d8ddbabbbb35cb'
                     }
+                    '237308cb87b37e90a5d8ddbabbbb3550': {
+                        table: 'sys_ui_element'
+                        id: '237308cb87b37e90a5d8ddbabbbb3550'
+                    }
+                    '237308cb87b37e90a5d8ddbabbbb3557': {
+                        table: 'sys_ui_element'
+                        id: '237308cb87b37e90a5d8ddbabbbb3557'
+                    }
                     '23d7187a87f7ba90a5d8ddbabbbb356f': {
                         table: 'sys_ui_element'
                         id: '23d7187a87f7ba90a5d8ddbabbbb356f'
+                        deleted: true
                     }
                     '23d7187a87f7ba90a5d8ddbabbbb3576': {
                         table: 'sys_ui_element'
                         id: '23d7187a87f7ba90a5d8ddbabbbb3576'
+                        deleted: true
+                    }
+                    '277308cb87b37e90a5d8ddbabbbb354e': {
+                        table: 'sys_ui_element'
+                        id: '277308cb87b37e90a5d8ddbabbbb354e'
+                    }
+                    '277308cb87b37e90a5d8ddbabbbb3555': {
+                        table: 'sys_ui_element'
+                        id: '277308cb87b37e90a5d8ddbabbbb3555'
+                    }
+                    '277308cb87b37e90a5d8ddbabbbb355c': {
+                        table: 'sys_ui_element'
+                        id: '277308cb87b37e90a5d8ddbabbbb355c'
                     }
                     '27d7187a87f7ba90a5d8ddbabbbb3574': {
                         table: 'sys_ui_element'
                         id: '27d7187a87f7ba90a5d8ddbabbbb3574'
+                        deleted: true
+                    }
+                    '2b7308cb87b37e90a5d8ddbabbbb354c': {
+                        table: 'sys_ui_element'
+                        id: '2b7308cb87b37e90a5d8ddbabbbb354c'
+                    }
+                    '2b7308cb87b37e90a5d8ddbabbbb3553': {
+                        table: 'sys_ui_element'
+                        id: '2b7308cb87b37e90a5d8ddbabbbb3553'
+                    }
+                    '2b7308cb87b37e90a5d8ddbabbbb355a': {
+                        table: 'sys_ui_element'
+                        id: '2b7308cb87b37e90a5d8ddbabbbb355a'
                     }
                     '2bd7187a87f7ba90a5d8ddbabbbb3572': {
                         table: 'sys_ui_element'
                         id: '2bd7187a87f7ba90a5d8ddbabbbb3572'
+                        deleted: true
                     }
                     '2bd7187a87f7ba90a5d8ddbabbbb3579': {
                         table: 'sys_ui_element'
                         id: '2bd7187a87f7ba90a5d8ddbabbbb3579'
+                        deleted: true
+                    }
+                    '2f7308cb87b37e90a5d8ddbabbbb3551': {
+                        table: 'sys_ui_element'
+                        id: '2f7308cb87b37e90a5d8ddbabbbb3551'
+                    }
+                    '2f7308cb87b37e90a5d8ddbabbbb3558': {
+                        table: 'sys_ui_element'
+                        id: '2f7308cb87b37e90a5d8ddbabbbb3558'
                     }
                     '2fcf726687f77a90a5d8ddbabbbb3585': {
                         table: 'sys_ui_section'
@@ -60,26 +105,76 @@ declare global {
                     '2fd7187a87f7ba90a5d8ddbabbbb3570': {
                         table: 'sys_ui_element'
                         id: '2fd7187a87f7ba90a5d8ddbabbbb3570'
+                        deleted: true
                     }
                     '2fd7187a87f7ba90a5d8ddbabbbb3577': {
                         table: 'sys_ui_element'
                         id: '2fd7187a87f7ba90a5d8ddbabbbb3577'
+                        deleted: true
+                    }
+                    '4383c8cb87b37e90a5d8ddbabbbb35bd': {
+                        table: 'sys_ui_element'
+                        id: '4383c8cb87b37e90a5d8ddbabbbb35bd'
                     }
                     '461892ae87ff3a90a5d8ddbabbbb3599': {
                         table: 'sys_scope_privilege'
                         id: '461892ae87ff3a90a5d8ddbabbbb3599'
                     }
+                    '4783c8cb87b37e90a5d8ddbabbbb35bb': {
+                        table: 'sys_ui_element'
+                        id: '4783c8cb87b37e90a5d8ddbabbbb35bb'
+                    }
+                    '4b83c8cb87b37e90a5d8ddbabbbb35b9': {
+                        table: 'sys_ui_element'
+                        id: '4b83c8cb87b37e90a5d8ddbabbbb35b9'
+                    }
+                    '4b83c8cb87b37e90a5d8ddbabbbb35c0': {
+                        table: 'sys_ui_element'
+                        id: '4b83c8cb87b37e90a5d8ddbabbbb35c0'
+                    }
+                    '4f83c8cb87b37e90a5d8ddbabbbb35be': {
+                        table: 'sys_ui_element'
+                        id: '4f83c8cb87b37e90a5d8ddbabbbb35be'
+                    }
                     '513a2a6687f37a90a5d8ddbabbbb35ef': {
                         table: 'sys_properties'
                         id: '513a2a6687f37a90a5d8ddbabbbb35ef'
+                    }
+                    '5773c4cb87b37e90a5d8ddbabbbb35d5': {
+                        table: 'sys_ui_form'
+                        id: '5773c4cb87b37e90a5d8ddbabbbb35d5'
+                    }
+                    '5b73c4cb87b37e90a5d8ddbabbbb357a': {
+                        table: 'sys_ui_section'
+                        id: '5b73c4cb87b37e90a5d8ddbabbbb357a'
                     }
                     '5ca3be6287777a90a5d8ddbabbbb3595': {
                         table: 'sys_properties'
                         id: '5ca3be6287777a90a5d8ddbabbbb3595'
                     }
+                    '5f73c4cb87b37e90a5d8ddbabbbb35dd': {
+                        table: 'sys_ui_form_section'
+                        id: '5f73c4cb87b37e90a5d8ddbabbbb35dd'
+                    }
                     '60376e2e87b37a90a5d8ddbabbbb350f': {
                         table: 'sys_properties'
                         id: '60376e2e87b37a90a5d8ddbabbbb350f'
+                    }
+                    '637308cb87b37e90a5d8ddbabbbb354b': {
+                        table: 'sys_ui_element'
+                        id: '637308cb87b37e90a5d8ddbabbbb354b'
+                    }
+                    '637308cb87b37e90a5d8ddbabbbb359d': {
+                        table: 'sys_ui_element'
+                        id: '637308cb87b37e90a5d8ddbabbbb359d'
+                    }
+                    '637308cb87b37e90a5d8ddbabbbb35a4': {
+                        table: 'sys_ui_element'
+                        id: '637308cb87b37e90a5d8ddbabbbb35a4'
+                    }
+                    '637308cb87b37e90a5d8ddbabbbb35c3': {
+                        table: 'sys_ui_element'
+                        id: '637308cb87b37e90a5d8ddbabbbb35c3'
                     }
                     '63cf7ea687f77a90a5d8ddbabbbb3531': {
                         table: 'sys_ui_element'
@@ -89,18 +184,34 @@ declare global {
                     '63d7187a87f7ba90a5d8ddbabbbb3532': {
                         table: 'sys_ui_element'
                         id: '63d7187a87f7ba90a5d8ddbabbbb3532'
+                        deleted: true
                     }
                     '63d7187a87f7ba90a5d8ddbabbbb3539': {
                         table: 'sys_ui_element'
                         id: '63d7187a87f7ba90a5d8ddbabbbb3539'
+                        deleted: true
                     }
                     '63d7187a87f7ba90a5d8ddbabbbb3558': {
                         table: 'sys_ui_element'
                         id: '63d7187a87f7ba90a5d8ddbabbbb3558'
+                        deleted: true
                     }
                     '63d7187a87f7ba90a5d8ddbabbbb355f': {
                         table: 'sys_ui_element'
                         id: '63d7187a87f7ba90a5d8ddbabbbb355f'
+                        deleted: true
+                    }
+                    '677308cb87b37e90a5d8ddbabbbb359b': {
+                        table: 'sys_ui_element'
+                        id: '677308cb87b37e90a5d8ddbabbbb359b'
+                    }
+                    '677308cb87b37e90a5d8ddbabbbb35a2': {
+                        table: 'sys_ui_element'
+                        id: '677308cb87b37e90a5d8ddbabbbb35a2'
+                    }
+                    '677308cb87b37e90a5d8ddbabbbb35c1': {
+                        table: 'sys_ui_element'
+                        id: '677308cb87b37e90a5d8ddbabbbb35c1'
                     }
                     '67cf7ea687f77a90a5d8ddbabbbb352f': {
                         table: 'sys_ui_element'
@@ -110,14 +221,25 @@ declare global {
                     '67d7187a87f7ba90a5d8ddbabbbb3537': {
                         table: 'sys_ui_element'
                         id: '67d7187a87f7ba90a5d8ddbabbbb3537'
+                        deleted: true
                     }
                     '67d7187a87f7ba90a5d8ddbabbbb3556': {
                         table: 'sys_ui_element'
                         id: '67d7187a87f7ba90a5d8ddbabbbb3556'
+                        deleted: true
                     }
                     '67d7187a87f7ba90a5d8ddbabbbb355d': {
                         table: 'sys_ui_element'
                         id: '67d7187a87f7ba90a5d8ddbabbbb355d'
+                        deleted: true
+                    }
+                    '6b7308cb87b37e90a5d8ddbabbbb35a0': {
+                        table: 'sys_ui_element'
+                        id: '6b7308cb87b37e90a5d8ddbabbbb35a0'
+                    }
+                    '6b7308cb87b37e90a5d8ddbabbbb35a7': {
+                        table: 'sys_ui_element'
+                        id: '6b7308cb87b37e90a5d8ddbabbbb35a7'
                     }
                     '6bcf7ea687f77a90a5d8ddbabbbb352d': {
                         table: 'sys_ui_element'
@@ -127,14 +249,29 @@ declare global {
                     '6bd7187a87f7ba90a5d8ddbabbbb3535': {
                         table: 'sys_ui_element'
                         id: '6bd7187a87f7ba90a5d8ddbabbbb3535'
+                        deleted: true
                     }
                     '6bd7187a87f7ba90a5d8ddbabbbb355b': {
                         table: 'sys_ui_element'
                         id: '6bd7187a87f7ba90a5d8ddbabbbb355b'
+                        deleted: true
                     }
                     '6bd7187a87f7ba90a5d8ddbabbbb3588': {
                         table: 'sys_ui_element'
                         id: '6bd7187a87f7ba90a5d8ddbabbbb3588'
+                        deleted: true
+                    }
+                    '6f7308cb87b37e90a5d8ddbabbbb359e': {
+                        table: 'sys_ui_element'
+                        id: '6f7308cb87b37e90a5d8ddbabbbb359e'
+                    }
+                    '6f7308cb87b37e90a5d8ddbabbbb35a5': {
+                        table: 'sys_ui_element'
+                        id: '6f7308cb87b37e90a5d8ddbabbbb35a5'
+                    }
+                    '6f7308cb87b37e90a5d8ddbabbbb35c4': {
+                        table: 'sys_ui_element'
+                        id: '6f7308cb87b37e90a5d8ddbabbbb35c4'
                     }
                     '6fcf7ea687f77a90a5d8ddbabbbb3532': {
                         table: 'sys_ui_element'
@@ -144,18 +281,22 @@ declare global {
                     '6fd7187a87f7ba90a5d8ddbabbbb3533': {
                         table: 'sys_ui_element'
                         id: '6fd7187a87f7ba90a5d8ddbabbbb3533'
+                        deleted: true
                     }
                     '6fd7187a87f7ba90a5d8ddbabbbb353a': {
                         table: 'sys_ui_element'
                         id: '6fd7187a87f7ba90a5d8ddbabbbb353a'
+                        deleted: true
                     }
                     '6fd7187a87f7ba90a5d8ddbabbbb3559': {
                         table: 'sys_ui_element'
                         id: '6fd7187a87f7ba90a5d8ddbabbbb3559'
+                        deleted: true
                     }
                     '6fd7187a87f7ba90a5d8ddbabbbb3560': {
                         table: 'sys_ui_element'
                         id: '6fd7187a87f7ba90a5d8ddbabbbb3560'
+                        deleted: true
                     }
                     '711892ae87ff3a90a5d8ddbabbbb358f': {
                         table: 'sys_scope_privilege'
@@ -272,41 +413,86 @@ declare global {
                         table: 'sys_scope_privilege'
                         id: '8e1892ae87ff3a90a5d8ddbabbbb35bd'
                     }
+                    a37308cb87b37e90a5d8ddbabbbb354f: {
+                        table: 'sys_ui_element'
+                        id: 'a37308cb87b37e90a5d8ddbabbbb354f'
+                    }
+                    a37308cb87b37e90a5d8ddbabbbb3556: {
+                        table: 'sys_ui_element'
+                        id: 'a37308cb87b37e90a5d8ddbabbbb3556'
+                    }
                     a3d7187a87f7ba90a5d8ddbabbbb356e: {
                         table: 'sys_ui_element'
                         id: 'a3d7187a87f7ba90a5d8ddbabbbb356e'
+                        deleted: true
                     }
                     a3d7187a87f7ba90a5d8ddbabbbb3575: {
                         table: 'sys_ui_element'
                         id: 'a3d7187a87f7ba90a5d8ddbabbbb3575'
+                        deleted: true
+                    }
+                    a77308cb87b37e90a5d8ddbabbbb354d: {
+                        table: 'sys_ui_element'
+                        id: 'a77308cb87b37e90a5d8ddbabbbb354d'
+                    }
+                    a77308cb87b37e90a5d8ddbabbbb3554: {
+                        table: 'sys_ui_element'
+                        id: 'a77308cb87b37e90a5d8ddbabbbb3554'
+                    }
+                    a77308cb87b37e90a5d8ddbabbbb355b: {
+                        table: 'sys_ui_element'
+                        id: 'a77308cb87b37e90a5d8ddbabbbb355b'
                     }
                     a7d7187a87f7ba90a5d8ddbabbbb3573: {
                         table: 'sys_ui_element'
                         id: 'a7d7187a87f7ba90a5d8ddbabbbb3573'
+                        deleted: true
                     }
                     a7d7187a87f7ba90a5d8ddbabbbb357a: {
                         table: 'sys_ui_element'
                         id: 'a7d7187a87f7ba90a5d8ddbabbbb357a'
+                        deleted: true
+                    }
+                    ab7308cb87b37e90a5d8ddbabbbb3552: {
+                        table: 'sys_ui_element'
+                        id: 'ab7308cb87b37e90a5d8ddbabbbb3552'
+                    }
+                    ab7308cb87b37e90a5d8ddbabbbb3559: {
+                        table: 'sys_ui_element'
+                        id: 'ab7308cb87b37e90a5d8ddbabbbb3559'
                     }
                     abd7187a87f7ba90a5d8ddbabbbb3530: {
                         table: 'sys_ui_element'
                         id: 'abd7187a87f7ba90a5d8ddbabbbb3530'
+                        deleted: true
                     }
                     abd7187a87f7ba90a5d8ddbabbbb3571: {
                         table: 'sys_ui_element'
                         id: 'abd7187a87f7ba90a5d8ddbabbbb3571'
+                        deleted: true
                     }
                     abd7187a87f7ba90a5d8ddbabbbb3578: {
                         table: 'sys_ui_element'
                         id: 'abd7187a87f7ba90a5d8ddbabbbb3578'
+                        deleted: true
+                    }
+                    af7308cb87b37e90a5d8ddbabbbb3550: {
+                        table: 'sys_ui_element'
+                        id: 'af7308cb87b37e90a5d8ddbabbbb3550'
+                    }
+                    af7308cb87b37e90a5d8ddbabbbb3557: {
+                        table: 'sys_ui_element'
+                        id: 'af7308cb87b37e90a5d8ddbabbbb3557'
                     }
                     afd7187a87f7ba90a5d8ddbabbbb356f: {
                         table: 'sys_ui_element'
                         id: 'afd7187a87f7ba90a5d8ddbabbbb356f'
+                        deleted: true
                     }
                     afd7187a87f7ba90a5d8ddbabbbb3576: {
                         table: 'sys_ui_element'
                         id: 'afd7187a87f7ba90a5d8ddbabbbb3576'
+                        deleted: true
                     }
                     all_health_records_module: {
                         table: 'sys_app_module'
@@ -319,6 +505,26 @@ declare global {
                     c21892ae87ff3a90a5d8ddbabbbb3594: {
                         table: 'sys_scope_privilege'
                         id: 'c21892ae87ff3a90a5d8ddbabbbb3594'
+                    }
+                    c383c8cb87b37e90a5d8ddbabbbb35bc: {
+                        table: 'sys_ui_element'
+                        id: 'c383c8cb87b37e90a5d8ddbabbbb35bc'
+                    }
+                    c783c8cb87b37e90a5d8ddbabbbb35ba: {
+                        table: 'sys_ui_element'
+                        id: 'c783c8cb87b37e90a5d8ddbabbbb35ba'
+                    }
+                    cb83c8cb87b37e90a5d8ddbabbbb35b8: {
+                        table: 'sys_ui_element'
+                        id: 'cb83c8cb87b37e90a5d8ddbabbbb35b8'
+                    }
+                    cb83c8cb87b37e90a5d8ddbabbbb35bf: {
+                        table: 'sys_ui_element'
+                        id: 'cb83c8cb87b37e90a5d8ddbabbbb35bf'
+                    }
+                    cf83c8cb87b37e90a5d8ddbabbbb35bd: {
+                        table: 'sys_ui_element'
+                        id: 'cf83c8cb87b37e90a5d8ddbabbbb35bd'
                     }
                     cmdb_health_app_menu: {
                         table: 'sys_app_application'
@@ -344,6 +550,22 @@ declare global {
                         table: 'sys_app_module'
                         id: 'b23e4c6782c743398e8faadf5e0d4033'
                     }
+                    d773c4cb87b37e90a5d8ddbabbbb35df: {
+                        table: 'sys_ui_form_section'
+                        id: 'd773c4cb87b37e90a5d8ddbabbbb35df'
+                    }
+                    e37308cb87b37e90a5d8ddbabbbb359c: {
+                        table: 'sys_ui_element'
+                        id: 'e37308cb87b37e90a5d8ddbabbbb359c'
+                    }
+                    e37308cb87b37e90a5d8ddbabbbb35a3: {
+                        table: 'sys_ui_element'
+                        id: 'e37308cb87b37e90a5d8ddbabbbb35a3'
+                    }
+                    e37308cb87b37e90a5d8ddbabbbb35c2: {
+                        table: 'sys_ui_element'
+                        id: 'e37308cb87b37e90a5d8ddbabbbb35c2'
+                    }
                     e3cf7ea687f77a90a5d8ddbabbbb3530: {
                         table: 'sys_ui_element'
                         id: 'e3cf7ea687f77a90a5d8ddbabbbb3530'
@@ -352,14 +574,21 @@ declare global {
                     e3d7187a87f7ba90a5d8ddbabbbb3538: {
                         table: 'sys_ui_element'
                         id: 'e3d7187a87f7ba90a5d8ddbabbbb3538'
+                        deleted: true
                     }
                     e3d7187a87f7ba90a5d8ddbabbbb3557: {
                         table: 'sys_ui_element'
                         id: 'e3d7187a87f7ba90a5d8ddbabbbb3557'
+                        deleted: true
                     }
                     e3d7187a87f7ba90a5d8ddbabbbb355e: {
                         table: 'sys_ui_element'
                         id: 'e3d7187a87f7ba90a5d8ddbabbbb355e'
+                        deleted: true
+                    }
+                    e77308cb87b37e90a5d8ddbabbbb35a1: {
+                        table: 'sys_ui_element'
+                        id: 'e77308cb87b37e90a5d8ddbabbbb35a1'
                     }
                     e7cf7ea687f77a90a5d8ddbabbbb352e: {
                         table: 'sys_ui_element'
@@ -369,14 +598,29 @@ declare global {
                     e7d7187a87f7ba90a5d8ddbabbbb3536: {
                         table: 'sys_ui_element'
                         id: 'e7d7187a87f7ba90a5d8ddbabbbb3536'
+                        deleted: true
                     }
                     e7d7187a87f7ba90a5d8ddbabbbb3555: {
                         table: 'sys_ui_element'
                         id: 'e7d7187a87f7ba90a5d8ddbabbbb3555'
+                        deleted: true
                     }
                     e7d7187a87f7ba90a5d8ddbabbbb355c: {
                         table: 'sys_ui_element'
                         id: 'e7d7187a87f7ba90a5d8ddbabbbb355c'
+                        deleted: true
+                    }
+                    eb7308cb87b37e90a5d8ddbabbbb359f: {
+                        table: 'sys_ui_element'
+                        id: 'eb7308cb87b37e90a5d8ddbabbbb359f'
+                    }
+                    eb7308cb87b37e90a5d8ddbabbbb35a6: {
+                        table: 'sys_ui_element'
+                        id: 'eb7308cb87b37e90a5d8ddbabbbb35a6'
+                    }
+                    eb7308cb87b37e90a5d8ddbabbbb35c5: {
+                        table: 'sys_ui_element'
+                        id: 'eb7308cb87b37e90a5d8ddbabbbb35c5'
                     }
                     ebcf7ea687f77a90a5d8ddbabbbb352c: {
                         table: 'sys_ui_element'
@@ -391,18 +635,34 @@ declare global {
                     ebd7187a87f7ba90a5d8ddbabbbb3534: {
                         table: 'sys_ui_element'
                         id: 'ebd7187a87f7ba90a5d8ddbabbbb3534'
+                        deleted: true
                     }
                     ebd7187a87f7ba90a5d8ddbabbbb353b: {
                         table: 'sys_ui_element'
                         id: 'ebd7187a87f7ba90a5d8ddbabbbb353b'
+                        deleted: true
                     }
                     ebd7187a87f7ba90a5d8ddbabbbb355a: {
                         table: 'sys_ui_element'
                         id: 'ebd7187a87f7ba90a5d8ddbabbbb355a'
+                        deleted: true
                     }
                     ebd7187a87f7ba90a5d8ddbabbbb3587: {
                         table: 'sys_ui_element'
                         id: 'ebd7187a87f7ba90a5d8ddbabbbb3587'
+                        deleted: true
+                    }
+                    ef7308cb87b37e90a5d8ddbabbbb359d: {
+                        table: 'sys_ui_element'
+                        id: 'ef7308cb87b37e90a5d8ddbabbbb359d'
+                    }
+                    ef7308cb87b37e90a5d8ddbabbbb35a4: {
+                        table: 'sys_ui_element'
+                        id: 'ef7308cb87b37e90a5d8ddbabbbb35a4'
+                    }
+                    ef7308cb87b37e90a5d8ddbabbbb35c3: {
+                        table: 'sys_ui_element'
+                        id: 'ef7308cb87b37e90a5d8ddbabbbb35c3'
                     }
                     efcf7ea687f77a90a5d8ddbabbbb352a: {
                         table: 'sys_ui_element'
@@ -417,18 +677,22 @@ declare global {
                     efd7187a87f7ba90a5d8ddbabbbb3532: {
                         table: 'sys_ui_element'
                         id: 'efd7187a87f7ba90a5d8ddbabbbb3532'
+                        deleted: true
                     }
                     efd7187a87f7ba90a5d8ddbabbbb3539: {
                         table: 'sys_ui_element'
                         id: 'efd7187a87f7ba90a5d8ddbabbbb3539'
+                        deleted: true
                     }
                     efd7187a87f7ba90a5d8ddbabbbb3558: {
                         table: 'sys_ui_element'
                         id: 'efd7187a87f7ba90a5d8ddbabbbb3558'
+                        deleted: true
                     }
                     efd7187a87f7ba90a5d8ddbabbbb355f: {
                         table: 'sys_ui_element'
                         id: 'efd7187a87f7ba90a5d8ddbabbbb355f'
+                        deleted: true
                     }
                     f053722287777a90a5d8ddbabbbb357b: {
                         table: 'sys_properties'

@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             this.btnPrev.disabled = this.currentStep === 1;
             
-            // Note: The UI logic customizes finish buttons if needed. SN has 6 steps, Claude has 4.
+            // Note: The UI logic customizes finish buttons if needed. SN has 7 steps, Claude has 5.
             if (this.currentStep === this.totalSteps) {
                 // If the flow specifically ends with a 'celebration' step (like SN), we hide controls.
                 // We'll hide controls on SN step 6, but for Claude Step 4 maybe keep it or label "Finish".

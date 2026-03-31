@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Setup Wizard — Claude Code × ServiceNow</title>
+    <title>Society Management System — Setup Wizard | Claude Code × ServiceNow</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
@@ -135,18 +135,55 @@ nvm use 18</code></pre>
                                         </div>
                                     </div>
                                 </div>
-                                <p class="command-desc" style="margin-top:24px;"><strong>Verify everything is installed:</strong></p>
+                                <p class="command-desc" style="margin-top:24px;"><strong>Verify all three tools are installed and reachable from your terminal:</strong></p>
                                 <table class="data-table">
-                                    <thead><tr><th>Tool</th><th>Command</th><th>Expected Output</th></tr></thead>
+                                    <thead><tr><th>Tool</th><th>Command</th><th>Expected Output</th><th>Min Version</th></tr></thead>
                                     <tbody>
-                                        <tr><td>Node.js</td><td><code>node --version</code></td><td>v18.x.x or higher</td></tr>
-                                        <tr><td>SN SDK</td><td><code style="color:#059669;background:rgba(5,150,105,0.1);">now-sdk --version</code></td><td>4.4.x</td></tr>
-                                        <tr><td>Claude Code</td><td><code style="color:#d97757;background:rgba(217,119,87,0.1);">claude --version</code></td><td>Valid build</td></tr>
+                                        <tr>
+                                            <td>Node.js</td>
+                                            <td><code>node --version</code></td>
+                                            <td><code>v18.20.4</code> or higher</td>
+                                            <td>v18.x.x</td>
+                                        </tr>
+                                        <tr>
+                                            <td>npm</td>
+                                            <td><code>npm --version</code></td>
+                                            <td><code>9.x.x</code> or higher</td>
+                                            <td>9.x.x</td>
+                                        </tr>
+                                        <tr>
+                                            <td>SN SDK</td>
+                                            <td><code style="color:#059669;background:rgba(5,150,105,0.1);">now-sdk --version</code></td>
+                                            <td><code>4.4.x</code></td>
+                                            <td>4.4.x</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Claude Code</td>
+                                            <td><code style="color:#d97757;background:rgba(217,119,87,0.1);">claude --version</code></td>
+                                            <td>Any valid build string</td>
+                                            <td>Latest</td>
+                                        </tr>
                                     </tbody>
                                 </table>
+                                <div class="cmd-list" style="margin-top:16px;">
+                                    <div class="cmd-item type-sys">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-triangle-exclamation"></i> <code>now-sdk: command not found</code> after install?</div>
+                                            <div class="cmd-description">This means the npm global bin folder isn't on your <code>PATH</code>. Find where npm installs globals, then add it to your shell config.</div>
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code>npm config get prefix</code></pre>
+                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                        <div class="info-card warning-card" style="margin-top:10px;">
+                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                            <div>Take the output path (e.g. <code>/Users/you/.nvm/versions/node/v18.20.4</code>) and add <code>/bin</code> to your <code>~/.zshrc</code> or <code>~/.bashrc</code>:<br><code>export PATH="$(npm config get prefix)/bin:$PATH"</code><br>Then run <code>source ~/.zshrc</code> and retry.</div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="info-card" style="margin-top:16px;">
                                     <i class="fa-solid fa-circle-info"></i>
-                                    <div>First time running <code>claude</code>? It opens a browser for authentication. Log in with your Anthropic account to activate it.</div>
+                                    <div><strong>First time running <code>claude</code>?</strong> It automatically opens your default browser and prompts you to log in with your Anthropic account. Once you approve the OAuth grant, it stores a session token locally — you won't need to authenticate again. If the browser window doesn't appear, check your terminal output for a manual auth URL you can open directly.</div>
                                 </div>
                             </div>
                         </div>
@@ -170,26 +207,144 @@ nvm use 18</code></pre>
                             </div>
 
                             <div class="command-group stagger-3">
-                                <div class="command-label"><i class="fa-solid fa-key text-accent"></i> Add Instance to SDK Keychain</div>
-                                <div class="cmd-list">
-                                    <div class="cmd-item type-sn">
-                                        <div class="cmd-meta">
-                                            <div class="cmd-title"><i class="fa-solid fa-plus"></i> Register Your Instance</div>
-                                            <div class="cmd-description">The SDK prompts for an alias name, instance URL, username, and password. Use <code>dev</code> as the alias — you’ll reference it during project init and deploy.</div>
+                                <div class="command-label"><i class="fa-solid fa-key text-accent"></i> Authenticate with Your Instance</div>
+                                <p class="command-desc">The SDK stores credentials securely in your OS keychain — nothing is written to project files. Choose your authentication method below. <strong>Basic</strong> is the fastest to set up; <strong>OAuth</strong> is recommended for SSO environments, CI/CD pipelines, or shared team setups.</p>
+
+                                <div class="tabs-header">
+                                    <button class="tab-btn active" onclick="switchTab(‘auth-basic’)"><i class="fa-solid fa-user-lock"></i> Basic Auth</button>
+                                    <button class="tab-btn" onclick="switchTab(‘auth-oauth’)"><i class="fa-solid fa-shield-halved"></i> OAuth</button>
+                                </div>
+
+                                <!-- ── BASIC AUTH TAB ── -->
+                                <div id="auth-basic" class="tab-content active">
+                                    <div class="cmd-list">
+                                        <div class="cmd-item type-sn">
+                                            <div class="cmd-meta">
+                                                <div class="cmd-title"><i class="fa-solid fa-plus"></i> Register Your Instance</div>
+                                                <div class="cmd-description">Run the command below. The CLI guides you through four prompts interactively — nothing is pre-typed for you.</div>
+                                            </div>
+                                            <div class="code-block">
+                                                <pre><code>now-sdk auth add</code></pre>
+                                                <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                            </div>
+                                            <table class="data-table" style="margin-top:12px;">
+                                                <thead><tr><th>Prompt</th><th>What to Enter</th><th>Notes</th></tr></thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Profile name (alias)</td>
+                                                        <td><code>dev</code></td>
+                                                        <td>A short label — you’ll reference it during <code>now-sdk init</code> and deploy. You can have multiple aliases for different instances.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Instance URL</td>
+                                                        <td><code>https://yourcompany.service-now.com</code></td>
+                                                        <td>No trailing slash. PDI users: copy your URL from <strong>developer.servicenow.com → My Instances</strong>.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Username</td>
+                                                        <td>Your ServiceNow admin username</td>
+                                                        <td>Must have the <strong>admin</strong> role to deploy scoped apps. Verify by checking for "Admin" in the ServiceNow top-right corner.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Password</td>
+                                                        <td>Your ServiceNow password</td>
+                                                        <td>Stored encrypted in your OS keychain (Keychain Access on Mac, Credential Manager on Windows) — never written to disk or project files.</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
-                                        <div class="code-block">
-                                            <pre><code>now-sdk auth add</code></pre>
-                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        <div class="cmd-item type-sn">
+                                            <div class="cmd-meta">
+                                                <div class="cmd-title"><i class="fa-solid fa-list-check"></i> Verify the Connection</div>
+                                                <div class="cmd-description">Prints all registered profiles. You should see your alias, instance URL, and auth type. If it appears, you’re ready for Step 3.</div>
+                                            </div>
+                                            <div class="code-block">
+                                                <pre><code>now-sdk auth list</code></pre>
+                                                <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                            </div>
+                                            <div class="info-card" style="margin-top:10px; background:rgba(5,150,105,0.07);">
+                                                <i class="fa-solid fa-circle-check" style="color:#059669;"></i>
+                                                <div><strong>Expected output:</strong> <code>dev → https://yourcompany.service-now.com (basic)</code></div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="cmd-item type-sn">
-                                        <div class="cmd-meta">
-                                            <div class="cmd-title"><i class="fa-solid fa-list-check"></i> Verify the Connection</div>
-                                            <div class="cmd-description">Should list your alias and instance URL. If it shows, you’re ready.</div>
+                                    <div class="info-card warning-card" style="margin-top:16px;">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        <div><strong>Authentication failed?</strong> The most common causes are: (1) Your instance enforces <strong>SSO or MFA</strong> — use the OAuth tab instead, or ask your admin to create a dedicated service account with basic auth enabled under System Security → Users. (2) You have <strong>IP allowlisting</strong> on the instance — ensure your machine’s IP is permitted. (3) Your <strong>PDI instance is hibernating</strong> — log in to developer.servicenow.com and wake it up first.</div>
+                                    </div>
+                                </div>
+
+                                <!-- ── OAUTH TAB ── -->
+                                <div id="auth-oauth" class="tab-content">
+                                    <div class="info-card" style="margin-bottom:16px;">
+                                        <i class="fa-solid fa-shield-halved"></i>
+                                        <div><strong>When to use OAuth:</strong> OAuth is the right choice when your organization enforces SSO/MFA, when you’re setting up automated CI/CD deployments, or when you want to avoid storing a personal password. Instead of a username and password, the SDK exchanges a short-lived access token that auto-refreshes — your actual credentials are never stored.</div>
+                                    </div>
+                                    <div class="cmd-list">
+                                        <!-- Step 1: Create OAuth App in ServiceNow -->
+                                        <div class="cmd-item type-sn">
+                                            <div class="cmd-meta">
+                                                <div class="cmd-title"><i class="fa-solid fa-gears"></i> 1. Register an OAuth Application in ServiceNow</div>
+                                                <div class="cmd-description">Before running any CLI commands, you need to create a dedicated OAuth application entry in your ServiceNow instance. This gives the SDK a client identity it can exchange tokens with.</div>
+                                            </div>
+                                            <div class="info-card" style="margin-top:10px;">
+                                                <i class="fa-solid fa-arrow-pointer"></i>
+                                                <div>
+                                                    <strong>In your ServiceNow browser UI:</strong>
+                                                    <ol style="margin-top:8px; padding-left:18px; display:flex; flex-direction:column; gap:6px;">
+                                                        <li>Open the App Navigator (top-left filter icon) → type <strong>"Application Registry"</strong> → open <strong>System OAuth → Application Registry</strong></li>
+                                                        <li>Click <strong>New</strong> → select <strong>"Create an OAuth API endpoint for external clients"</strong></li>
+                                                        <li>Set <strong>Name</strong> to <code>SN SDK CLI</code> (or any recognizable label)</li>
+                                                        <li>Set <strong>Redirect URL</strong> to <code>http://localhost:9999/oauth_redirect</code> — this is the local callback address the SDK listens on during the auth flow</li>
+                                                        <li>Set <strong>Access Token Lifespan</strong> to <code>7776000</code> (90 days in seconds)</li>
+                                                        <li>Set <strong>Refresh Token Lifespan</strong> to <code>8640000</code> (100 days — must be longer than access token)</li>
+                                                        <li>Click <strong>Submit</strong> to save the record</li>
+                                                    </ol>
+                                                </div>
+                                            </div>
+                                            <div class="info-card warning-card" style="margin-top:10px;">
+                                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                                <div><strong>Important:</strong> After the record saves, open it again — ServiceNow auto-generates the <strong>Client ID</strong> and <strong>Client Secret</strong> on first save and they’re only visible once you reopen the record. Copy both values to a safe place before continuing.</div>
+                                            </div>
                                         </div>
-                                        <div class="code-block">
-                                            <pre><code>now-sdk auth list</code></pre>
-                                            <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        <!-- Step 2: Run auth add with OAuth -->
+                                        <div class="cmd-item type-sn">
+                                            <div class="cmd-meta">
+                                                <div class="cmd-title"><i class="fa-solid fa-terminal"></i> 2. Register the OAuth Profile with the SDK CLI</div>
+                                                <div class="cmd-description">Run the command below. The CLI will prompt for your instance URL and the Client ID/Secret from the Application Registry record you just created. At the end, a browser window opens for you to approve the initial OAuth grant.</div>
+                                            </div>
+                                            <div class="code-block">
+                                                <pre><code>now-sdk auth add --auth-type oauth</code></pre>
+                                                <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                            </div>
+                                            <table class="data-table" style="margin-top:12px;">
+                                                <thead><tr><th>Prompt</th><th>What to Enter</th></tr></thead>
+                                                <tbody>
+                                                    <tr><td>Profile name (alias)</td><td><code>dev</code></td></tr>
+                                                    <tr><td>Instance URL</td><td><code>https://yourcompany.service-now.com</code></td></tr>
+                                                    <tr><td>Client ID</td><td>The auto-generated value from the Application Registry record</td></tr>
+                                                    <tr><td>Client Secret</td><td>The auto-generated secret from the Application Registry record</td></tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="info-card" style="margin-top:10px;">
+                                                <i class="fa-solid fa-circle-info"></i>
+                                                <div>After you enter the credentials, the CLI starts a temporary local server on port <code>9999</code> and opens a browser window pointing to your ServiceNow instance’s login page. Log in with your normal SSO/password, then click <strong>Allow</strong> on the OAuth consent screen. The browser redirects back to <code>localhost:9999</code>, the CLI captures the token, stores the access token and refresh token in your OS keychain, and exits. You won’t need to re-authorize as long as the refresh token remains valid.</div>
+                                            </div>
+                                        </div>
+                                        <!-- Step 3: Verify -->
+                                        <div class="cmd-item type-sn">
+                                            <div class="cmd-meta">
+                                                <div class="cmd-title"><i class="fa-solid fa-list-check"></i> 3. Verify the OAuth Profile</div>
+                                                <div class="cmd-description">Confirm the profile was saved with OAuth auth type before moving on.</div>
+                                            </div>
+                                            <div class="code-block">
+                                                <pre><code>now-sdk auth list</code></pre>
+                                                <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                            </div>
+                                            <div class="info-card" style="margin-top:10px; background:rgba(5,150,105,0.07);">
+                                                <i class="fa-solid fa-circle-check" style="color:#059669;"></i>
+                                                <div><strong>Expected output:</strong> <code>dev → https://yourcompany.service-now.com (oauth)</code></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -202,7 +357,7 @@ nvm use 18</code></pre>
                         <span class="step-eyebrow">Step 3 of 7</span>
                         <div class="step-header stagger-1">
                             <h1>Create &amp; Scaffold the Project</h1>
-                            <p class="step-desc">Initialize the Employee Idea Box project folder, scaffold the SDK structure, install dependencies, and pull type definitions from your instance.</p>
+                            <p class="step-desc">Initialize the Society Management System project folder, scaffold the SDK structure, install dependencies, and pull type definitions from your instance.</p>
                         </div>
                         <div class="step-content stagger-2">
                             <div class="command-group">
@@ -213,8 +368,8 @@ nvm use 18</code></pre>
                                             <div class="cmd-title"><i class="fa-solid fa-folder-plus"></i> 1. Create &amp; Enter Project Folder</div>
                                         </div>
                                         <div class="code-block">
-                                            <pre><code>mkdir EmployeeIdeaBox
-cd EmployeeIdeaBox</code></pre>
+                                            <pre><code>mkdir SocietyMgmt
+cd SocietyMgmt</code></pre>
                                             <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
                                         </div>
                                     </div>
@@ -230,8 +385,8 @@ cd EmployeeIdeaBox</code></pre>
                                         <table class="data-table" style="margin-top:12px;">
                                             <thead><tr><th>Prompt</th><th>Enter This</th><th>Why</th></tr></thead>
                                             <tbody>
-                                                <tr><td>App name</td><td><code>Employee Idea Box</code></td><td>Display name in ServiceNow</td></tr>
-                                                <tr><td>Scope prefix</td><td><code>x_ideabox</code></td><td>Namespace to prevent conflicts with other apps</td></tr>
+                                                <tr><td>App name</td><td><code>Society Management System</code></td><td>Display name in ServiceNow</td></tr>
+                                                <tr><td>Scope prefix</td><td><code>x_society</code></td><td>Namespace to prevent conflicts with other apps</td></tr>
                                                 <tr><td>Auth alias</td><td><code>dev</code></td><td>The alias you registered in Step 2</td></tr>
                                             </tbody>
                                         </table>
@@ -239,20 +394,33 @@ cd EmployeeIdeaBox</code></pre>
                                     <div class="cmd-item type-sn">
                                         <div class="cmd-meta">
                                             <div class="cmd-title"><i class="fa-solid fa-box-open"></i> 3. Install Dependencies</div>
+                                            <div class="cmd-description">Installs the SDK build tools, TypeScript compiler, and ESLint. This reads <code>package.json</code> and creates a <code>node_modules/</code> folder. Expect 20–60 seconds on first run.</div>
                                         </div>
                                         <div class="code-block">
                                             <pre><code>npm install</code></pre>
                                             <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
                                         </div>
+                                        <div class="info-card" style="margin-top:10px; background:rgba(5,150,105,0.07);">
+                                            <i class="fa-solid fa-circle-check" style="color:#059669;"></i>
+                                            <div><strong>Success:</strong> <code>added 312 packages, and audited 313 packages in 28s</code>. If you see <code>npm warn deprecated</code> lines, those are safe to ignore — they come from the SDK’s own dependencies.</div>
+                                        </div>
                                     </div>
                                     <div class="cmd-item type-sn">
                                         <div class="cmd-meta">
-                                            <div class="cmd-title"><i class="fa-solid fa-cloud-arrow-down"></i> 4. Fetch Type Definitions</div>
-                                            <div class="cmd-description">Downloads type info for all ServiceNow tables and APIs from your instance. TypeScript won’t compile correctly without this.</div>
+                                            <div class="cmd-title"><i class="fa-solid fa-cloud-arrow-down"></i> 4. Fetch Type Definitions from Instance</div>
+                                            <div class="cmd-description">Connects to your ServiceNow instance and downloads type declarations for every table, field, and API available to your scope. The TypeScript compiler uses these to validate your Fluent files — without them, every ServiceNow-specific reference will show as a type error and the build will fail.</div>
                                         </div>
                                         <div class="code-block">
                                             <pre><code>npm run types</code></pre>
                                             <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                        <div class="info-card" style="margin-top:10px;">
+                                            <i class="fa-solid fa-circle-info"></i>
+                                            <div><strong>Takes 1–3 minutes</strong> on first run — it’s downloading declarations for thousands of platform tables. Progress is shown in the terminal. Types are written to a <code>.types/</code> folder in your project and should be committed to git so teammates don’t need to fetch them individually.</div>
+                                        </div>
+                                        <div class="info-card warning-card" style="margin-top:8px;">
+                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                            <div><strong>Re-run this any time you:</strong> add a new table directly in the ServiceNow browser UI, modify an existing table’s columns outside the SDK, or upgrade the SDK to a new major version. Types go stale when the instance schema changes.</div>
                                         </div>
                                     </div>
                                     <div class="cmd-item type-sys">
@@ -274,13 +442,16 @@ code .</code></pre>
                                 <div class="command-label"><i class="fa-solid fa-diagram-project text-accent"></i> Your Project Structure</div>
                                 <p class="command-desc">After init, your project looks like this. You’ll add Fluent files under <code>src/fluent/</code> in the next steps.</p>
                                 <div class="code-block">
-                                    <pre><code>EmployeeIdeaBox/
+                                    <pre><code>SocietyMgmt/
 │
 ├── src/
 │   └── fluent/               ← TypeScript files that DEFINE your app
 │       ├── index.now.ts      ← Master export — every file must be listed here
-│       ├── tables/           ← Database table definitions
-│       ├── acls/             ← Security rules (who can read/write/delete)
+│       ├── tables/           ← flat, maintenance_bill, service_request, visitor_log
+│       ├── business-rules/   ← set-dates, prevent-double-booking
+│       ├── script-includes/  ← SocietyUtils, MaintenanceBillingEngine
+│       ├── scheduled-jobs/   ← mark-overdue-bills, generate-monthly-bills
+│       ├── acls/             ← Security rules (resident, committee_member, admin)
 │       └── navigation/       ← Sidebar menu items
 │
 ├── package.json              ← Project settings and build commands
@@ -321,14 +492,14 @@ code .</code></pre>
 
                             <div class="command-group stagger-3">
                                 <div class="command-label"><i class="fa-solid fa-brain text-accent"></i> Prompt 1 — Create the Skill File</div>
-                                <p class="command-desc">A <strong>Skill file</strong> at <code>.claude/skills/ideabox.md</code> is a persistent briefing — it stores your project identity, SDK commands, and structure rules. Claude loads it automatically at the start of every session so you never have to re-explain your project.</p>
+                                <p class="command-desc">A <strong>Skill file</strong> at <code>.claude/skills/society.md</code> is a persistent briefing — it stores your project identity, SDK commands, and structure rules. Claude loads it automatically at the start of every session so you never have to re-explain your project.</p>
                                 <div class="cmd-item type-cl">
                                     <div class="cmd-meta">
                                         <div class="cmd-title"><i class="fa-regular fa-comment-dots"></i> Paste into Claude Code</div>
                                     </div>
                                     <div class="prompt-block" id="skill-prompt-block">
                                         <div class="prompt-header"><i class="fa-solid fa-asterisk"></i> Claude Code Prompt:</div>
-                                        <pre><code>Create a skill file at .claude/skills/ideabox.md for this project.
+                                        <pre><code>Create a skill file at .claude/skills/society.md for this project.
 
 Read now.config.json and package.json to get the real app values, then write a
 skill that covers:
@@ -347,10 +518,25 @@ skill that covers:
    - If you create a file and forget to export it, it will be silently skipped at deploy time
 
 4. App context:
-   This is the Employee Idea Box — employees submit improvement ideas, colleagues
-   upvote them, and managers review and approve. The app has one table (idea),
-   ACLs controlling who can create and edit, and navigation menus.
-   All Fluent-only app — no server-side JavaScript needed.</code></pre>
+   Society & Apartment Management System (India-Focused).
+   Replaces WhatsApp groups and Excel sheets with a proper ServiceNow app.
+
+   4 core tables:
+   - flat: master flat/unit registry — all other tables reference this
+   - maintenance_bill: one record per flat per month, auto-generated by scheduled job
+   - service_request: unified table for complaints, facility bookings, and notices
+     distinguished by request_type choice field
+   - visitor_log: gate entry log maintained by security staff
+
+   Server-side automation:
+   - Business Rule "set-dates": auto-fills opened_on on insert, resolved_on on resolve
+   - Business Rule "prevent-double-booking": aborts facility booking if slot already taken
+   - Script Include SocietyUtils: isSlotAvailable(), getUnpaidBillsByFlat(), getOpenRequestsByType()
+   - Script Include MaintenanceBillingEngine: generateMonthlyBills(), markOverdueBills()
+   - Scheduled Job (daily 1AM): marks unpaid past-due bills as overdue
+   - Scheduled Job (monthly 1st): auto-creates bill records for all active flats
+
+   Roles: resident, committee_member, admin.</code></pre>
                                         <div class="prompt-actions">
                                             <button class="btn-download" onclick="downloadPrompt('skill-prompt-block', 'skill-file-prompt.txt')"><i class="fa-solid fa-download"></i> Download</button>
                                             <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
@@ -361,18 +547,36 @@ skill that covers:
 
                             <div class="command-group stagger-4">
                                 <div class="command-label"><i class="fa-solid fa-book-open text-accent"></i> Prompt 2 — Create the Field Reference (run after Step 5)</div>
-                                <p class="command-desc">After the table is built in Step 5, run this to generate a lookup doc at <code>docs/field-reference.md</code>. Claude can reference it in future prompts so it always uses the correct field names.</p>
+                                <p class="command-desc">After the tables are built in Step 5, run this to generate a lookup doc at <code>docs/field-reference.md</code>. Claude can reference it in future prompts so it always uses the correct field names.</p>
                                 <div class="cmd-item type-cl">
                                     <div class="prompt-block" id="ref-prompt-block">
                                         <div class="prompt-header"><i class="fa-solid fa-asterisk"></i> Claude Code Prompt:</div>
-                                        <pre><code>Read src/fluent/tables/idea.now.ts and create a reference document at
-docs/field-reference.md.
+                                        <pre><code>Read the following Fluent files and create a reference document at docs/field-reference.md:
+- src/fluent/tables/flat.now.ts
+- src/fluent/tables/maintenance_bill.now.ts
+- src/fluent/tables/service_request.now.ts
+- src/fluent/tables/visitor_log.now.ts
 
-For each field include: short field name, full scoped field name, data type,
-allowed values or max length, and a one-line plain English description.
+For each table and each field include: short field name, full scoped field name,
+data type, allowed values or max length, and a one-line plain English description.
 
-Also document the status workflow at the bottom:
-new → under_review → approved or rejected → implemented</code></pre>
+Also document at the bottom:
+1. request_type values and which fields are relevant to each:
+   complaint → category, priority, assigned_to, vendor_name, resolution_notes
+   facility_booking → facility, booking_date, start_time, end_time, charges
+   notice → pinned, expires_on
+
+2. Status workflows:
+   Maintenance Bill: unpaid → paid | overdue (auto-set by scheduled job)
+   Complaint: open → in_progress → resolved | rejected
+   Facility Booking: requested → confirmed | cancelled
+   Notice: active → expired (auto on expires_on date)
+
+3. Script Include public methods:
+   SocietyUtils.isSlotAvailable(facility, date, start, end) → boolean
+   SocietyUtils.getUnpaidBillsByFlat(flat_sys_id) → GlideRecord
+   MaintenanceBillingEngine.generateMonthlyBills(month_year) → void
+   MaintenanceBillingEngine.markOverdueBills() → number of records updated</code></pre>
                                         <div class="prompt-actions">
                                             <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
                                         </div>
@@ -387,18 +591,26 @@ new → under_review → approved or rejected → implemented</code></pre>
                         <span class="step-eyebrow">Step 5 of 7</span>
                         <div class="step-header stagger-1">
                             <h1>Build the App with Claude</h1>
-                            <p class="step-desc">One prompt creates all four Fluent files for the complete Employee Idea Box — table, business rule, security rules, and navigation. Review what Claude creates and approve each file.</p>
+                            <p class="step-desc">One prompt creates all Fluent files — 4 smart tables, 2 business rules, 2 script includes, 2 scheduled jobs, ACLs, and navigation. Review what Claude creates and approve each file.</p>
                         </div>
                         <div class="step-content stagger-2">
                             <div class="command-group">
                                 <div class="command-label"><i class="fa-solid fa-layer-group text-accent"></i> What Gets Built</div>
                                 <table class="data-table">
-                                    <thead><tr><th>File Created</th><th>What It Does</th></tr></thead>
+                                    <thead><tr><th>File Created</th><th>Type</th><th>What It Does</th></tr></thead>
                                     <tbody>
-                                        <tr><td><code>tables/idea.now.ts</code></td><td>The data table — stores each idea with fields for title, status, votes, reviewer notes, impact, etc.</td></tr>
-                                        <tr><td><code>business-rules/set-submitted-on.now.ts</code></td><td>Auto-fills <code>submitted_on</code> date when a new idea is inserted — submitters don’t fill it manually</td></tr>
-                                        <tr><td><code>acls/idea-acls.now.ts</code></td><td>4 security rules: everyone can read &amp; create, only reviewers/admins can edit, only admin can delete</td></tr>
-                                        <tr><td><code>navigation/app-menu.now.ts</code></td><td>Sidebar menu with All Ideas, My Ideas, Under Review, Approved Ideas views</td></tr>
+                                        <tr><td><code>tables/flat.now.ts</code></td><td>Table</td><td>Master flat/unit registry — flat number, block, resident reference, ownership type (owner/tenant)</td></tr>
+                                        <tr><td><code>tables/maintenance_bill.now.ts</code></td><td>Table</td><td>Monthly maintenance billing — references flat, tracks amount, due date, payment status &amp; mode</td></tr>
+                                        <tr><td><code>tables/service_request.now.ts</code></td><td>Table</td><td>Unified table for complaints, facility bookings, and notices via <code>request_type</code> choice field</td></tr>
+                                        <tr><td><code>tables/visitor_log.now.ts</code></td><td>Table</td><td>Visitor entry log — name, purpose, host flat reference, entry/exit timestamps, logged by security</td></tr>
+                                        <tr><td><code>business-rules/set-dates.now.ts</code></td><td>Business Rule</td><td>On insert: auto-sets <code>opened_on</code> to today. On status→resolved: auto-sets <code>resolved_on</code></td></tr>
+                                        <tr><td><code>business-rules/prevent-double-booking.now.ts</code></td><td>Business Rule</td><td>Before insert/update on booking type: aborts if the same facility has a confirmed slot overlap</td></tr>
+                                        <tr><td><code>script-includes/SocietyUtils.now.ts</code></td><td>Script Include</td><td>Helpers: <code>isSlotAvailable()</code>, <code>getUnpaidBillsByFlat()</code>, <code>getOpenRequestsByType()</code></td></tr>
+                                        <tr><td><code>script-includes/MaintenanceBillingEngine.now.ts</code></td><td>Script Include</td><td><code>generateMonthlyBills(month_year)</code> — creates bill records for all active flats. <code>markOverdueBills()</code> — flags unpaid past-due bills</td></tr>
+                                        <tr><td><code>scheduled-jobs/mark-overdue-bills.now.ts</code></td><td>Scheduled Job</td><td>Runs daily at 1 AM — calls <code>MaintenanceBillingEngine.markOverdueBills()</code></td></tr>
+                                        <tr><td><code>scheduled-jobs/generate-monthly-bills.now.ts</code></td><td>Scheduled Job</td><td>Runs 1st of every month — calls <code>MaintenanceBillingEngine.generateMonthlyBills()</code></td></tr>
+                                        <tr><td><code>acls/society-acls.now.ts</code></td><td>ACLs</td><td>Residents read/create own records; committee_member can update all; admin can delete</td></tr>
+                                        <tr><td><code>navigation/app-menu.now.ts</code></td><td>Navigation</td><td>Sidebar: Dashboard, My Bills, Complaints, Facility Booking, Notices, Visitor Log, Flat Registry</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -412,69 +624,195 @@ new → under_review → approved or rejected → implemented</code></pre>
                                     </div>
                                     <div class="prompt-block" id="build-prompt-block">
                                         <div class="prompt-header"><i class="fa-solid fa-asterisk"></i> Claude Code Prompt:</div>
-                                        <pre><code>Create the complete Employee Idea Box app in one pass.
+                                        <pre><code>Create the complete Society Management System app in one pass.
 
-Create the necessary Fluent files for the components below, then add each one’s export to
-src/fluent/index.now.ts.
+Create the necessary Fluent files for every component below, then add each export to
+src/fluent/index.now.ts. Scope prefix is x_society.
 
 ───────────────────────────────────────────────────────────────
-COMPONENT 1 — Table
+TABLE 1 — flat  (master flat/unit registry)
 ───────────────────────────────────────────────────────────────
-Table purpose: store one record per employee idea submission.
-Employees submit ideas, colleagues upvote them, managers review and approve.
+Purpose: single source of truth for every flat in the society.
+Other tables reference this instead of storing flat_number as raw text.
 
 Fields:
-
-IDEA CONTENT:
-- title: String max 200 chars, mandatory — the idea headline
-- description: String max 4000 chars — full explanation of the idea
-- category: Choice field with options:
-    process_improvement, technology, cost_saving, culture, customer_experience, other
-  Default: other
-
-WORKFLOW:
-- status: Choice field with options: new, under_review, approved, rejected, implemented
-  Default: new
-- submitted_by: Reference to sys_user, mandatory — who submitted the idea
-- submitted_on: Date — when the idea was submitted
-- reviewer: Reference to sys_user — the manager evaluating this idea
-- review_notes: String max 2000 chars — feedback from the reviewer
-- reviewed_on: Date — when the review was completed
-
-ENGAGEMENT:
-- votes: Integer, default 0 — number of upvotes from colleagues
-- impact: Choice field with options: low, medium, high
-  Description: estimated business impact if implemented
+- flat_number: String max 10 chars, mandatory — e.g. A-101, B-204
+- block: String max 5 chars — e.g. A, B, C
+- floor: Integer — floor number
+- resident: Reference to sys_user, mandatory — current resident
+- ownership: Choice — owner, tenant. Default: owner
+- move_in_date: Date
+- contact_phone: String max 15 chars
+- active: Boolean, default true — false when flat is vacant
 
 ───────────────────────────────────────────────────────────────
-COMPONENT 2 — Business Rule
+TABLE 2 — maintenance_bill
 ───────────────────────────────────────────────────────────────
-Rule: when a new idea record is inserted (on insert only), automatically set
-the submitted_on field to today’s date if it is not already populated.
+Purpose: one record per flat per billing month.
+
+Fields:
+- flat: Reference to x_society_flat, mandatory
+- month_year: String max 7 chars, mandatory — e.g. MAR-2026
+- amount: Decimal, mandatory — charge in INR
+- due_date: Date, mandatory
+- status: Choice — unpaid, paid, overdue. Default: unpaid
+- payment_date: Date
+- payment_mode: Choice — cash, upi, bank_transfer, cheque
+- remarks: String max 500 chars — committee notes
 
 ───────────────────────────────────────────────────────────────
-COMPONENT 3 — ACLs
+TABLE 3 — service_request  (unified: complaints + bookings + notices)
 ───────────────────────────────────────────────────────────────
-ACL 1 — READ: Any authenticated user can read all ideas.
-ACL 2 — CREATE: Any authenticated user can submit a new idea.
-ACL 3 — WRITE: Users with idea_reviewer or admin role can update ideas
-  (change status, add review notes, modify other people’s submissions).
-ACL 4 — DELETE: Only admin can delete ideas.
+Purpose: single table for all resident requests and society communications,
+distinguished by request_type.
+
+Common fields (all types):
+- request_type: Choice — complaint, facility_booking, notice. Mandatory.
+- title: String max 200 chars, mandatory
+- description: String max 4000 chars
+- opened_by: Reference to sys_user, mandatory
+- flat: Reference to x_society_flat
+- opened_on: Date — auto-set by business rule on insert
+- status: Choice — open, in_progress, resolved, confirmed, cancelled, active, expired
+  Default: open
+- assigned_to: Reference to sys_user — committee member
+
+Complaint-specific fields:
+- category: Choice — water, electricity, lift, parking, housekeeping, security, noise, other
+- priority: Choice — low, medium, high. Default: medium
+- vendor_name: String max 100 chars — outsourced vendor if any
+- resolution_notes: String max 2000 chars
+- resolved_on: Date — auto-set by business rule when status → resolved
+
+Facility Booking-specific fields:
+- facility: Choice — gym, community_hall, terrace, guest_room, swimming_pool
+- booking_date: Date
+- start_time: String max 5 chars — e.g. 10:00
+- end_time: String max 5 chars — e.g. 14:00
+- booking_charges: Decimal, default 0
+
+Notice-specific fields:
+- pinned: Boolean, default false
+- expires_on: Date
 
 ───────────────────────────────────────────────────────────────
-COMPONENT 4 — Navigation
+TABLE 4 — visitor_log
 ───────────────────────────────────────────────────────────────
-Application menu:
-- Title: "Employee Idea Box"
-- Visible to all authenticated users (no special role required)
+Purpose: gate entry log maintained by security staff.
+
+Fields:
+- visitor_name: String max 100 chars, mandatory
+- visitor_phone: String max 15 chars
+- purpose: Choice — delivery, guest, service_vendor, cab, other
+- host_flat: Reference to x_society_flat, mandatory
+- vehicle_number: String max 15 chars
+- entry_time: DateTime, mandatory
+- exit_time: DateTime
+- logged_by: Reference to sys_user — security staff
+
+───────────────────────────────────────────────────────────────
+BUSINESS RULE 1 — set-dates  (on service_request)
+───────────────────────────────────────────────────────────────
+Write a before-insert and before-update business rule on x_society_service_request.
+
+It should handle two things:
+- On insert: automatically populate opened_on with today's date if it is not already set.
+- On update: when the status field changes to "resolved", automatically set resolved_on
+  to today's date if it is not already populated.
+
+Generate the appropriate ServiceNow server-side script for this logic.
+
+───────────────────────────────────────────────────────────────
+BUSINESS RULE 2 — prevent-double-booking  (on service_request)
+───────────────────────────────────────────────────────────────
+Write a before-insert and before-update business rule on x_society_service_request.
+It should only run when request_type is "facility_booking" and status is not "cancelled".
+
+The rule must prevent a booking from saving if another confirmed booking already exists
+for the same facility on the same date with an overlapping time slot.
+If a conflict is found, abort the action and show a clear error message to the user.
+
+Generate the ServiceNow server-side script that queries for conflicts and enforces this.
+
+───────────────────────────────────────────────────────────────
+SCRIPT INCLUDE 1 — SocietyUtils
+───────────────────────────────────────────────────────────────
+Create a server-side Script Include class called SocietyUtils (not client-callable).
+
+It should expose three reusable helper methods:
+
+1. A method to check if a facility time slot is available — takes facility, booking date,
+   start time, end time, and an optional record sys_id to exclude (for update scenarios).
+   Returns true if no confirmed bookings overlap with the given slot, false otherwise.
+
+2. A method to get all unpaid or overdue maintenance bills for a given flat sys_id.
+   Returns results ordered by due date ascending.
+
+3. A method to get all open (unresolved/unarchived) service_request records for a given
+   request_type. Returns results ordered by opened_on descending.
+
+Generate clean, well-commented ServiceNow GlideRecord-based code for each method.
+
+───────────────────────────────────────────────────────────────
+SCRIPT INCLUDE 2 — MaintenanceBillingEngine
+───────────────────────────────────────────────────────────────
+Create a server-side Script Include class called MaintenanceBillingEngine (not client-callable).
+
+It should expose two methods:
+
+1. generateMonthlyBills(month_year): Takes a billing period string like "MAR-2026".
+   Finds all active flat records and for each one checks if a maintenance_bill already
+   exists for that month_year. If not, creates a new bill with status = unpaid and
+   due_date set to the 10th of the following month.
+   Log how many bills were created using gs.info with a [SocietyApp] prefix.
+
+2. markOverdueBills(): Finds all maintenance_bill records that are still "unpaid"
+   but have a due_date in the past. Updates their status to "overdue".
+   Log how many records were updated using gs.info with a [SocietyApp] prefix.
+
+Generate production-quality ServiceNow server-side code for both methods.
+
+───────────────────────────────────────────────────────────────
+SCHEDULED JOB 1 — mark-overdue-bills
+───────────────────────────────────────────────────────────────
+Name: "Society: Mark Overdue Bills"
+Schedule: Daily at 01:00 AM
+Write a short job script that instantiates MaintenanceBillingEngine and calls
+markOverdueBills(). Generate the script.
+
+───────────────────────────────────────────────────────────────
+SCHEDULED JOB 2 — generate-monthly-bills
+───────────────────────────────────────────────────────────────
+Name: "Society: Generate Monthly Bills"
+Schedule: Monthly, 1st of every month at 06:00 AM
+Write a job script that resolves the current month and year into a "MMM-YYYY" string
+and passes it to MaintenanceBillingEngine.generateMonthlyBills(). Generate the script.
+
+───────────────────────────────────────────────────────────────
+ACLs
+───────────────────────────────────────────────────────────────
+Apply across all four society tables:
+ACL 1 — READ: Any authenticated user can read records.
+ACL 2 — CREATE: Any authenticated user can create service_requests and visitor_log entries.
+  Only committee_member or admin can create maintenance_bill and flat records.
+ACL 3 — WRITE: committee_member or admin can update all records.
+  Residents can only update their own service_request records (opened_by = current user)
+  when status is still "open".
+ACL 4 — DELETE: Only admin can delete any record.
+
+───────────────────────────────────────────────────────────────
+NAVIGATION
+───────────────────────────────────────────────────────────────
+Application menu: "Society Management" — visible to all authenticated users.
 
 Menu items:
-1. "All Ideas" at order 100 — shows every record in the idea table
-2. "My Ideas" at order 200 — shows only ideas where submitted_by is the
-   current logged-in user
-3. "Under Review" at order 300 — shows ideas where status equals under_review
-4. "Approved Ideas" at order 400 — shows ideas where status is approved or
-   implemented</code></pre>
+1. "Dashboard"          order 100 — all service_request records (overview)
+2. "My Bills"           order 200 — maintenance_bill filtered by current user’s flat
+3. "Complaints"         order 300 — service_request where request_type = complaint
+4. "Facility Booking"   order 400 — service_request where request_type = facility_booking
+5. "Notices"            order 500 — service_request where request_type = notice, pinned first
+6. "Visitor Log"        order 600 — all visitor_log records
+7. "Flat Registry"      order 700 — flat table (committee_member/admin role required)</code></pre>
                                         <div class="prompt-actions">
                                             <button class="btn-download" onclick="downloadPrompt('build-prompt-block', 'build-app-prompt.txt')"><i class="fa-solid fa-download"></i> Download</button>
                                             <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
@@ -485,7 +823,7 @@ Menu items:
 
                             <div class="info-card stagger-4">
                                 <i class="fa-solid fa-circle-info"></i>
-                                <div>Claude shows each file it plans to create and asks for approval before writing. Review each one. Once done, run the Field Reference prompt from Step 4 before deploying.</div>
+                                <div>Claude shows each file it plans to create and asks for approval before writing. Review each one — 8 files total. Once done, run the Field Reference prompt from Step 4 before deploying.</div>
                             </div>
                         </div>
                     </div>
@@ -537,11 +875,19 @@ Menu items:
                                         <div class="info-card" style="margin-top:12px; background:rgba(5,150,105,0.07);">
                                             <i class="fa-solid fa-circle-check" style="color:#059669;"></i>
                                             <div><strong>Success looks like:</strong><br>
-                                            <code>✔ Table: x_ideabox_idea</code><br>
-                                            <code>✔ BusinessRule: Set submitted_on on insert</code><br>
-                                            <code>✔ ACL: x_ideabox_idea.read (4 rules)</code><br>
-                                            <code>✔ AppMenu: Employee Idea Box</code><br>
-                                            <code>✔ Deployed successfully in 11.3s</code></div>
+                                            <code>✔ Table: x_society_flat</code><br>
+                                            <code>✔ Table: x_society_maintenance_bill</code><br>
+                                            <code>✔ Table: x_society_service_request</code><br>
+                                            <code>✔ Table: x_society_visitor_log</code><br>
+                                            <code>✔ BusinessRule: Set Dates on Insert/Resolve</code><br>
+                                            <code>✔ BusinessRule: Prevent Double Booking</code><br>
+                                            <code>✔ ScriptInclude: SocietyUtils</code><br>
+                                            <code>✔ ScriptInclude: MaintenanceBillingEngine</code><br>
+                                            <code>✔ ScheduledJob: Society Mark Overdue Bills</code><br>
+                                            <code>✔ ScheduledJob: Society Generate Monthly Bills</code><br>
+                                            <code>✔ ACL: x_society (8 rules)</code><br>
+                                            <code>✔ AppMenu: Society Management</code><br>
+                                            <code>✔ Deployed successfully in 24.3s</code></div>
                                         </div>
                                     </div>
                                 </div>
@@ -557,6 +903,75 @@ Menu items:
                                     </tbody>
                                 </table>
                             </div>
+
+                            <div class="command-group" style="margin-top:24px;">
+                                <div class="command-label"><i class="fa-solid fa-magnifying-glass-chart text-accent"></i> Step 3 — Verify the Deploy in ServiceNow UI</div>
+                                <p class="command-desc">Open your ServiceNow instance in a browser and run through these four checks. Each one confirms a different layer of the app landed correctly.</p>
+                                <div class="cmd-list">
+                                    <div class="cmd-item type-sys">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-sidebar"></i> Check 1: App menu appears in the navigator</div>
+                                            <div class="cmd-description">Log in to your instance → look for <strong>Society Management</strong> in the left sidebar. If it doesn't appear, type <code>Society</code> in the top filter field of the App Navigator. Menus sometimes take up to 30 seconds to appear after a fresh deploy.</div>
+                                        </div>
+                                        <table class="data-table" style="margin-top:10px;">
+                                            <thead><tr><th>Expected Menu Item</th><th>What It Opens</th></tr></thead>
+                                            <tbody>
+                                                <tr><td>Dashboard</td><td>All service_request records (overview)</td></tr>
+                                                <tr><td>My Bills</td><td>Maintenance bills filtered to current user's flat</td></tr>
+                                                <tr><td>Complaints</td><td>service_request where request_type = complaint</td></tr>
+                                                <tr><td>Facility Booking</td><td>service_request where request_type = facility_booking</td></tr>
+                                                <tr><td>Notices</td><td>service_request where request_type = notice, pinned first</td></tr>
+                                                <tr><td>Visitor Log</td><td>All visitor_log records</td></tr>
+                                                <tr><td>Flat Registry</td><td>flat table (committee_member / admin role required)</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="cmd-item type-sys">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-table"></i> Check 2: All four tables exist</div>
+                                            <div class="cmd-description">App Navigator → search <strong>"Tables"</strong> → open <strong>System Definition → Tables</strong>. In the search bar at the top of the list, filter by <code>x_society</code> in the Label or Name column.</div>
+                                        </div>
+                                        <div class="info-card" style="margin-top:10px; background:rgba(5,150,105,0.07);">
+                                            <i class="fa-solid fa-circle-check" style="color:#059669;"></i>
+                                            <div><strong>Expected — all four should appear:</strong><br>
+                                            <code>x_society_flat</code> &nbsp;|&nbsp;
+                                            <code>x_society_maintenance_bill</code> &nbsp;|&nbsp;
+                                            <code>x_society_service_request</code> &nbsp;|&nbsp;
+                                            <code>x_society_visitor_log</code></div>
+                                        </div>
+                                    </div>
+                                    <div class="cmd-item type-sys">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-bolt"></i> Check 3: Business rules are active</div>
+                                            <div class="cmd-description">App Navigator → search <strong>"Business Rules"</strong> → open <strong>System Definition → Business Rules</strong>. Filter Name contains <code>society</code>. Both rules must show <strong>Active = true</strong>. If either shows inactive, open the record and toggle it on.</div>
+                                        </div>
+                                        <div class="info-card" style="margin-top:10px; background:rgba(5,150,105,0.07);">
+                                            <i class="fa-solid fa-circle-check" style="color:#059669;"></i>
+                                            <div><strong>Expected:</strong> <strong>Set Dates on Insert/Resolve</strong> (active, on x_society_service_request) &nbsp;|&nbsp; <strong>Prevent Double Booking</strong> (active, on x_society_service_request)</div>
+                                        </div>
+                                    </div>
+                                    <div class="cmd-item type-sys">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-clock"></i> Check 4: Scheduled jobs are registered</div>
+                                            <div class="cmd-description">App Navigator → search <strong>"Scheduled Jobs"</strong> → open <strong>System Definition → Scheduled Jobs</strong>. Filter Name contains <code>Society</code>. Both jobs should be listed and active. You can click <strong>Execute Now</strong> on the overdue bills job to test it immediately.</div>
+                                        </div>
+                                        <div class="info-card" style="margin-top:10px; background:rgba(5,150,105,0.07);">
+                                            <i class="fa-solid fa-circle-check" style="color:#059669;"></i>
+                                            <div><strong>Expected:</strong> <strong>Society: Mark Overdue Bills</strong> (daily, 01:00 AM) &nbsp;|&nbsp; <strong>Society: Generate Monthly Bills</strong> (monthly, 1st, 06:00 AM)</div>
+                                        </div>
+                                    </div>
+                                    <div class="cmd-item type-sys">
+                                        <div class="cmd-meta">
+                                            <div class="cmd-title"><i class="fa-solid fa-shield-halved"></i> Check 5: ACLs are in place</div>
+                                            <div class="cmd-description">App Navigator → search <strong>"Access Control"</strong> → open <strong>Security → Access Control (ACL)</strong>. Filter Name contains <code>x_society</code>. You should see 8 rules covering read, create, write, and delete across the four tables.</div>
+                                        </div>
+                                        <div class="info-card warning-card" style="margin-top:10px;">
+                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                            <div>If no ACLs appear, your instance may have the <strong>High Security plugin</strong> disabled. Go to System Definition → Plugins and verify <strong>com.glide.security_jump_start</strong> is active, then redeploy.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -564,14 +979,53 @@ Menu items:
                     <div class="wizard-step" data-flow="sn" data-step="7" data-title="Workflow Complete">
                         <span class="step-eyebrow">Step 7 of 7</span>
                         <div class="step-header stagger-1">
-                            <h1 style="text-align:center; width:100%;">Employee Idea Box is Live!</h1>
+                            <h1 style="text-align:center; width:100%;">Society Management System is Live!</h1>
                         </div>
                         <div class="step-content stagger-2" style="text-align:center; padding-top:40px;">
-                            <i class="fa-solid fa-check-circle" style="font-size:80px; color:var(--success); margin-bottom:24px; filter:drop-shadow(0 0 20px rgba(5,150,105,0.4));"></i>
-                            <p style="font-size:18px; color:var(--text-muted); max-width:600px; margin:0 auto 32px;">Log in to ServiceNow and look for <strong>Employee Idea Box</strong> in the left sidebar. Your table, menus, ACLs, and business rule are all deployed and live.</p>
-                            <div class="info-card" style="text-align:left; max-width:600px; margin:0 auto;">
+                            <i class="fa-solid fa-building-user" style="font-size:80px; color:var(--success); margin-bottom:24px; filter:drop-shadow(0 0 20px rgba(5,150,105,0.4));"></i>
+                            <p style="font-size:18px; color:var(--text-muted); max-width:600px; margin:0 auto 32px;">Log in to ServiceNow and look for <strong>Society Management</strong> in the left sidebar. 4 tables, 2 business rules, 2 script includes, 2 scheduled jobs, menus, and ACLs — all live. No more WhatsApp chaos!</p>
+                            <div class="info-card" style="text-align:left; max-width:680px; margin:0 auto;">
                                 <i class="fa-solid fa-lightbulb"></i>
-                                <div><strong>What to try next:</strong> Submit a test idea — verify <code>submitted_on</code> auto-fills. Log in as a non-admin and confirm you can’t change the status. Switch to <strong>Claude Mastery</strong> in the sidebar to go deeper on AI workflows.</div>
+                                <div><strong>Smoke-test checklist — run through these to confirm everything works end-to-end:</strong>
+                                    <table class="data-table" style="margin-top:14px; text-align:left;">
+                                        <thead><tr><th>#</th><th>Action</th><th>What to Verify</th></tr></thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Open <strong>Flat Registry</strong> → New → create a flat (e.g. A-101, Block A, Floor 1)</td>
+                                                <td>Record saves without errors; flat appears in the list</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>Open <strong>Complaints</strong> → New → submit a complaint referencing that flat</td>
+                                                <td><code>opened_on</code> is auto-populated by the business rule — you should not need to fill it in manually</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>Change the complaint status to <strong>resolved</strong> and save</td>
+                                                <td><code>resolved_on</code> auto-fills with today’s date — confirms the second branch of the set-dates business rule</td>
+                                            </tr>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>Open <strong>Facility Booking</strong> → New → book the community hall for today, 10:00–14:00 → save. Then create a second booking for the same facility and overlapping time</td>
+                                                <td>The second booking is <strong>blocked</strong> with an error message — confirms the prevent-double-booking business rule is active</td>
+                                            </tr>
+                                            <tr>
+                                                <td>5</td>
+                                                <td>Navigate to <strong>Scheduled Jobs</strong> → find <strong>Society: Mark Overdue Bills</strong> → click <strong>Execute Now</strong></td>
+                                                <td>Job runs without error; any maintenance_bill records with a past due date and status = unpaid flip to <em>overdue</em></td>
+                                            </tr>
+                                            <tr>
+                                                <td>6</td>
+                                                <td>Log out and log in as a test user <em>without</em> the <code>committee_member</code> or <code>admin</code> role</td>
+                                                <td>User can see complaints but <strong>cannot update</strong> records that don’t belong to them — confirms ACL rules are enforced</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+                                        <strong>Next steps:</strong> Switch to <strong>Claude Mastery</strong> (top-left toggle) to learn how to extend scripts, add email notifications, build a dashboard UI page, and configure hooks for automatic linting.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -790,7 +1244,7 @@ Menu items:
                         <span class="step-eyebrow">Step 5 of 5</span>
                         <div class="step-header stagger-1">
                             <h1>Setup & Configuration Guide</h1>
-                            <p class="step-desc">A comprehensive methodology on how to actually configure Skills, Context, and Hooks inside your ServiceNow project to successfully govern Claude.</p>
+                            <p class="step-desc">A comprehensive methodology on how to actually configure Skills, Context, and Hooks inside your Society Management project to successfully govern Claude.</p>
                         </div>
                         <div class="step-content stagger-2">
                             
@@ -807,7 +1261,7 @@ Menu items:
                                         <div class="cmd-use"><i class="fa-solid fa-circle-check"></i> <strong>Use:</strong> Forcing Claude to always use `GlideRecordSecure` instead of regular `GlideRecord` preventing major instance security breaches.</div>
                                         <div class="prompt-block">
                                              <div class="prompt-header"><i class="fa-solid fa-asterisk"></i> Ask Claude to generate it:</div>
-                                             <pre><code>I am deploying a 'Wellness Tracker' via SN SDK. Create a '.claude/reference.md'. Add a strict rule: "All database table queries must use 'GlideRecordSecure()' to enforce ACLs immediately. All logging must explicitly use 'gs.info("[WellnessApp]")'."</code></pre>
+                                             <pre><code>I am deploying a 'Society Management System' via SN SDK. Create a '.claude/reference.md'. Add a strict rule: "All database table queries must use 'GlideRecordSecure()' to enforce ACLs immediately. All logging must explicitly use 'gs.info("[SocietyApp]")'."</code></pre>
                                              <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
                                         </div>
                                     </div>
@@ -821,7 +1275,7 @@ Menu items:
                                         <div class="cmd-use"><i class="fa-solid fa-circle-check"></i> <strong>Use:</strong> Safely creates ServiceNow UI Pages and backend module hooks using your `sys_metadata` logic without making manual mistakes.</div>
                                         <div class="prompt-block">
                                              <div class="prompt-header"><i class="fa-solid fa-asterisk"></i> Ask Claude to generate it:</div>
-                                             <pre><code>Referencing our 'wellness-tracker' fluent-patterns.md rules, please build a scoped frontend UiPage showing a metric dashboard of all currently approved 'x_acme_wellness_activity' rows.</code></pre>
+                                             <pre><code>Referencing our 'society-mgmt' fluent-patterns.md rules, please build a scoped frontend UiPage showing a society dashboard: count of open complaints by category, unpaid maintenance bills this month, and today's facility bookings from 'x_society_*' tables.</code></pre>
                                              <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
                                         </div>
                                     </div>

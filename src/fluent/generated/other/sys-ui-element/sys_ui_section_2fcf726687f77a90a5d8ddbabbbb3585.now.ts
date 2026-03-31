@@ -1,410 +1,381 @@
 import { Record } from '@servicenow/sdk/core'
 
 Record({
-    $id: Now.ID['abd7187a87f7ba90a5d8ddbabbbb3530'],
-    table: 'sys_ui_element',
-    data: {
-        element: '.begin_split',
-        position: 0,
-        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-        type: '.begin_split',
-    },
-})
-Record({
-    $id: Now.ID['63d7187a87f7ba90a5d8ddbabbbb3532'],
+    $id: Now.ID['637308cb87b37e90a5d8ddbabbbb354b'],
     table: 'sys_ui_element',
     data: {
         element: 'x_epams_cmdb_healt_run_status',
+        position: 0,
+        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
+    },
+})
+Record({
+    $id: Now.ID['2b7308cb87b37e90a5d8ddbabbbb354c'],
+    table: 'sys_ui_element',
+    data: {
+        element: 'x_epams_cmdb_healt_ci',
         position: 1,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['efd7187a87f7ba90a5d8ddbabbbb3532'],
+    $id: Now.ID['a77308cb87b37e90a5d8ddbabbbb354d'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_ci',
+        element: 'x_epams_cmdb_healt_analysis_date',
         position: 2,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['6fd7187a87f7ba90a5d8ddbabbbb3533'],
-    table: 'sys_ui_element',
-    data: {
-        element: 'x_epams_cmdb_healt_analysis_date',
-        position: 3,
-        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-    },
-})
-Record({
-    $id: Now.ID['ebd7187a87f7ba90a5d8ddbabbbb3534'],
+    $id: Now.ID['277308cb87b37e90a5d8ddbabbbb354e'],
     table: 'sys_ui_element',
     data: {
         element: '.split',
-        position: 4,
+        position: 3,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
         type: '.split',
     },
 })
 Record({
-    $id: Now.ID['6bd7187a87f7ba90a5d8ddbabbbb3535'],
+    $id: Now.ID['a37308cb87b37e90a5d8ddbabbbb354f'],
     table: 'sys_ui_element',
     data: {
         element: 'x_epams_cmdb_healt_health_status',
+        position: 4,
+        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
+    },
+})
+Record({
+    $id: Now.ID['237308cb87b37e90a5d8ddbabbbb3550'],
+    table: 'sys_ui_element',
+    data: {
+        element: 'x_epams_cmdb_healt_previous_score',
         position: 5,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['e7d7187a87f7ba90a5d8ddbabbbb3536'],
+    $id: Now.ID['af7308cb87b37e90a5d8ddbabbbb3550'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_previous_score',
+        element: 'x_epams_cmdb_healt_has_duplicates',
         position: 6,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['67d7187a87f7ba90a5d8ddbabbbb3537'],
-    table: 'sys_ui_element',
-    data: {
-        element: 'x_epams_cmdb_healt_has_duplicates',
-        position: 7,
-        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-    },
-})
-Record({
-    $id: Now.ID['e3d7187a87f7ba90a5d8ddbabbbb3538'],
+    $id: Now.ID['2f7308cb87b37e90a5d8ddbabbbb3551'],
     table: 'sys_ui_element',
     data: {
         element: '.end_split',
-        position: 8,
+        position: 7,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
         type: '.end_split',
     },
 })
 Record({
-    $id: Now.ID['63d7187a87f7ba90a5d8ddbabbbb3539'],
+    $id: Now.ID['ab7308cb87b37e90a5d8ddbabbbb3552'],
     table: 'sys_ui_element',
     data: {
         element: 'x_epams_cmdb_healt_priority_action',
+        position: 8,
+        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
+    },
+})
+Record({
+    $id: Now.ID['2b7308cb87b37e90a5d8ddbabbbb3553'],
+    table: 'sys_ui_element',
+    data: {
+        element: 'x_epams_cmdb_healt_raw_payload_json',
         position: 9,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['efd7187a87f7ba90a5d8ddbabbbb3539'],
+    $id: Now.ID['a77308cb87b37e90a5d8ddbabbbb3554'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_raw_payload_json',
+        element: 'x_epams_cmdb_healt_ci_class',
         position: 10,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['6fd7187a87f7ba90a5d8ddbabbbb353a'],
-    table: 'sys_ui_element',
-    data: {
-        element: 'x_epams_cmdb_healt_ci_class',
-        position: 11,
-        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-    },
-})
-Record({
-    $id: Now.ID['ebd7187a87f7ba90a5d8ddbabbbb353b'],
+    $id: Now.ID['277308cb87b37e90a5d8ddbabbbb3555'],
     table: 'sys_ui_element',
     data: {
         element: '.begin_split',
-        position: 12,
+        position: 11,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
         type: '.begin_split',
     },
 })
 Record({
-    $id: Now.ID['e7d7187a87f7ba90a5d8ddbabbbb3555'],
+    $id: Now.ID['a37308cb87b37e90a5d8ddbabbbb3556'],
     table: 'sys_ui_element',
     data: {
         element: 'x_epams_cmdb_healt_retry_count',
+        position: 12,
+        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
+    },
+})
+Record({
+    $id: Now.ID['237308cb87b37e90a5d8ddbabbbb3557'],
+    table: 'sys_ui_element',
+    data: {
+        element: 'x_epams_cmdb_healt_correctness_score',
         position: 13,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['67d7187a87f7ba90a5d8ddbabbbb3556'],
-    table: 'sys_ui_element',
-    data: {
-        element: 'x_epams_cmdb_healt_correctness_score',
-        position: 14,
-        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-    },
-})
-Record({
-    $id: Now.ID['e3d7187a87f7ba90a5d8ddbabbbb3557'],
+    $id: Now.ID['af7308cb87b37e90a5d8ddbabbbb3557'],
     table: 'sys_ui_element',
     data: {
         element: '.split',
-        position: 15,
+        position: 14,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
         type: '.split',
     },
 })
 Record({
-    $id: Now.ID['63d7187a87f7ba90a5d8ddbabbbb3558'],
+    $id: Now.ID['2f7308cb87b37e90a5d8ddbabbbb3558'],
     table: 'sys_ui_element',
     data: {
         element: 'x_epams_cmdb_healt_score_delta',
+        position: 15,
+        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
+    },
+})
+Record({
+    $id: Now.ID['ab7308cb87b37e90a5d8ddbabbbb3559'],
+    table: 'sys_ui_element',
+    data: {
+        element: 'x_epams_cmdb_healt_violations_count',
         position: 16,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['efd7187a87f7ba90a5d8ddbabbbb3558'],
-    table: 'sys_ui_element',
-    data: {
-        element: 'x_epams_cmdb_healt_violations_count',
-        position: 17,
-        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-    },
-})
-Record({
-    $id: Now.ID['6fd7187a87f7ba90a5d8ddbabbbb3559'],
+    $id: Now.ID['2b7308cb87b37e90a5d8ddbabbbb355a'],
     table: 'sys_ui_element',
     data: {
         element: '.end_split',
-        position: 18,
+        position: 17,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
         type: '.end_split',
     },
 })
 Record({
-    $id: Now.ID['ebd7187a87f7ba90a5d8ddbabbbb355a'],
+    $id: Now.ID['a77308cb87b37e90a5d8ddbabbbb355b'],
     table: 'sys_ui_element',
     data: {
         element: 'x_epams_cmdb_healt_autofix_actions',
+        position: 18,
+        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
+    },
+})
+Record({
+    $id: Now.ID['277308cb87b37e90a5d8ddbabbbb355c'],
+    table: 'sys_ui_element',
+    data: {
+        element: 'x_epams_cmdb_healt_autofix_status',
         position: 19,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['6bd7187a87f7ba90a5d8ddbabbbb355b'],
+    $id: Now.ID['677308cb87b37e90a5d8ddbabbbb359b'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_autofix_status',
+        element: 'x_epams_cmdb_healt_environment',
         position: 20,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['e7d7187a87f7ba90a5d8ddbabbbb355c'],
+    $id: Now.ID['e37308cb87b37e90a5d8ddbabbbb359c'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_environment',
+        element: 'x_epams_cmdb_healt_error_log',
         position: 21,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['67d7187a87f7ba90a5d8ddbabbbb355d'],
-    table: 'sys_ui_element',
-    data: {
-        element: 'x_epams_cmdb_healt_error_log',
-        position: 22,
-        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-    },
-})
-Record({
-    $id: Now.ID['e3d7187a87f7ba90a5d8ddbabbbb355e'],
+    $id: Now.ID['637308cb87b37e90a5d8ddbabbbb359d'],
     table: 'sys_ui_element',
     data: {
         element: '.begin_split',
-        position: 23,
+        position: 22,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
         type: '.begin_split',
     },
 })
 Record({
-    $id: Now.ID['63d7187a87f7ba90a5d8ddbabbbb355f'],
+    $id: Now.ID['ef7308cb87b37e90a5d8ddbabbbb359d'],
     table: 'sys_ui_element',
     data: {
         element: 'x_epams_cmdb_healt_completeness_score',
+        position: 23,
+        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
+    },
+})
+Record({
+    $id: Now.ID['6f7308cb87b37e90a5d8ddbabbbb359e'],
+    table: 'sys_ui_element',
+    data: {
+        element: 'x_epams_cmdb_healt_is_stale',
         position: 24,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['efd7187a87f7ba90a5d8ddbabbbb355f'],
-    table: 'sys_ui_element',
-    data: {
-        element: 'x_epams_cmdb_healt_is_stale',
-        position: 25,
-        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-    },
-})
-Record({
-    $id: Now.ID['6fd7187a87f7ba90a5d8ddbabbbb3560'],
+    $id: Now.ID['eb7308cb87b37e90a5d8ddbabbbb359f'],
     table: 'sys_ui_element',
     data: {
         element: '.split',
-        position: 26,
+        position: 25,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
         type: '.split',
     },
 })
 Record({
-    $id: Now.ID['a3d7187a87f7ba90a5d8ddbabbbb356e'],
+    $id: Now.ID['6b7308cb87b37e90a5d8ddbabbbb35a0'],
     table: 'sys_ui_element',
     data: {
         element: 'x_epams_cmdb_healt_missing_fields_count',
-        position: 27,
+        position: 26,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['23d7187a87f7ba90a5d8ddbabbbb356f'],
+    $id: Now.ID['e77308cb87b37e90a5d8ddbabbbb35a1'],
     table: 'sys_ui_element',
     data: {
         element: '.end_split',
-        position: 28,
+        position: 27,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
         type: '.end_split',
     },
 })
 Record({
-    $id: Now.ID['afd7187a87f7ba90a5d8ddbabbbb356f'],
+    $id: Now.ID['677308cb87b37e90a5d8ddbabbbb35a2'],
     table: 'sys_ui_element',
     data: {
         element: 'x_epams_cmdb_healt_review_actions',
-        position: 29,
+        position: 28,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['2fd7187a87f7ba90a5d8ddbabbbb3570'],
+    $id: Now.ID['e37308cb87b37e90a5d8ddbabbbb35a3'],
     table: 'sys_ui_element',
     data: {
         element: '.begin_split',
-        position: 30,
+        position: 29,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
         type: '.begin_split',
     },
 })
 Record({
-    $id: Now.ID['abd7187a87f7ba90a5d8ddbabbbb3571'],
+    $id: Now.ID['637308cb87b37e90a5d8ddbabbbb35a4'],
     table: 'sys_ui_element',
     data: {
         element: 'x_epams_cmdb_healt_reviewed_by',
+        position: 30,
+        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
+    },
+})
+Record({
+    $id: Now.ID['ef7308cb87b37e90a5d8ddbabbbb35a4'],
+    table: 'sys_ui_element',
+    data: {
+        element: 'x_epams_cmdb_healt_overall_health_score',
         position: 31,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['2bd7187a87f7ba90a5d8ddbabbbb3572'],
+    $id: Now.ID['6f7308cb87b37e90a5d8ddbabbbb35a5'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_overall_health_score',
+        element: 'x_epams_cmdb_healt_templates_checked',
         position: 32,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['a7d7187a87f7ba90a5d8ddbabbbb3573'],
+    $id: Now.ID['eb7308cb87b37e90a5d8ddbabbbb35a6'],
     table: 'sys_ui_element',
     data: {
-        element: '.split',
+        element: 'x_epams_cmdb_healt_duplicate_count',
         position: 33,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-        type: '.split',
     },
 })
 Record({
-    $id: Now.ID['27d7187a87f7ba90a5d8ddbabbbb3574'],
+    $id: Now.ID['6b7308cb87b37e90a5d8ddbabbbb35a7'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_compliance_score',
+        element: 'x_epams_cmdb_healt_review_actions_count',
         position: 34,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['a3d7187a87f7ba90a5d8ddbabbbb3575'],
+    $id: Now.ID['677308cb87b37e90a5d8ddbabbbb35c1'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_is_orphan',
+        element: 'x_epams_cmdb_healt_regulatory_risk',
         position: 35,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['23d7187a87f7ba90a5d8ddbabbbb3576'],
+    $id: Now.ID['e37308cb87b37e90a5d8ddbabbbb35c2'],
     table: 'sys_ui_element',
     data: {
-        element: '.end_split',
+        element: '.split',
         position: 36,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-        type: '.end_split',
+        type: '.split',
     },
 })
 Record({
-    $id: Now.ID['afd7187a87f7ba90a5d8ddbabbbb3576'],
+    $id: Now.ID['637308cb87b37e90a5d8ddbabbbb35c3'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_llm_summary',
+        element: 'x_epams_cmdb_healt_compliance_score',
         position: 37,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['2fd7187a87f7ba90a5d8ddbabbbb3577'],
+    $id: Now.ID['ef7308cb87b37e90a5d8ddbabbbb35c3'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_full_llm_response',
+        element: 'x_epams_cmdb_healt_is_orphan',
         position: 38,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['abd7187a87f7ba90a5d8ddbabbbb3578'],
+    $id: Now.ID['6f7308cb87b37e90a5d8ddbabbbb35c4'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_review_date',
+        element: 'x_epams_cmdb_healt_fields_review',
         position: 39,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
 Record({
-    $id: Now.ID['2bd7187a87f7ba90a5d8ddbabbbb3579'],
+    $id: Now.ID['eb7308cb87b37e90a5d8ddbabbbb35c5'],
     table: 'sys_ui_element',
     data: {
-        element: 'x_epams_cmdb_healt_job_completed_at',
+        element: 'x_epams_cmdb_healt_high_risk_count',
         position: 40,
-        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-    },
-})
-Record({
-    $id: Now.ID['a7d7187a87f7ba90a5d8ddbabbbb357a'],
-    table: 'sys_ui_element',
-    data: {
-        element: 'x_epams_cmdb_healt_job_started_at',
-        position: 41,
-        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-    },
-})
-Record({
-    $id: Now.ID['ebd7187a87f7ba90a5d8ddbabbbb3587'],
-    table: 'sys_ui_element',
-    data: {
-        element: 'x_epams_cmdb_healt_last_stage',
-        position: 42,
-        sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
-    },
-})
-Record({
-    $id: Now.ID['6bd7187a87f7ba90a5d8ddbabbbb3588'],
-    table: 'sys_ui_element',
-    data: {
-        element: 'x_epams_cmdb_healt_stage_updated_at',
-        position: 43,
         sys_ui_section: '2fcf726687f77a90a5d8ddbabbbb3585',
     },
 })
