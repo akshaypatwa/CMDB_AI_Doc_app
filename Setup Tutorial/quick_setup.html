@@ -211,8 +211,8 @@ nvm use 18</code></pre>
                                 <p class="command-desc">The SDK stores credentials securely in your OS keychain — nothing is written to project files. Choose your authentication method below. <strong>Basic</strong> is the fastest to set up; <strong>OAuth</strong> is recommended for SSO environments, CI/CD pipelines, or shared team setups.</p>
 
                                 <div class="tabs-header">
-                                    <button class="tab-btn active" onclick="switchTab(‘auth-basic’)"><i class="fa-solid fa-user-lock"></i> Basic Auth</button>
-                                    <button class="tab-btn" onclick="switchTab(‘auth-oauth’)"><i class="fa-solid fa-shield-halved"></i> OAuth</button>
+                                    <button class="tab-btn active" onclick="switchTab('auth-basic')"><i class="fa-solid fa-user-lock"></i> Basic Auth</button>
+                                    <button class="tab-btn" onclick="switchTab('auth-oauth')"><i class="fa-solid fa-shield-halved"></i> OAuth</button>
                                 </div>
 
                                 <!-- ── BASIC AUTH TAB ── -->
@@ -220,46 +220,35 @@ nvm use 18</code></pre>
                                     <div class="cmd-list">
                                         <div class="cmd-item type-sn">
                                             <div class="cmd-meta">
-                                                <div class="cmd-title"><i class="fa-solid fa-plus"></i> Register Your Instance</div>
-                                                <div class="cmd-description">Run the command below. The CLI guides you through four prompts interactively — nothing is pre-typed for you.</div>
+                                                <div class="cmd-title"><i class="fa-solid fa-plus"></i> Step 1: Save Credentials</div>
+                                                <div class="cmd-description">Run the command below, replacing <code>&lt;your-instance&gt;</code> with your actual instance name. The SDK will prompt you for your password.</div>
                                             </div>
                                             <div class="code-block">
-                                                <pre><code>now-sdk auth add</code></pre>
+                                                <pre><code>now-sdk auth --add &lt;your-instance&gt;</code></pre>
                                                 <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
                                             </div>
-                                            <table class="data-table" style="margin-top:12px;">
-                                                <thead><tr><th>Prompt</th><th>What to Enter</th><th>Notes</th></tr></thead>
+                                        </div>
+                                        <div class="cmd-item type-sn">
+                                            <div class="cmd-meta">
+                                                <div class="cmd-title"><i class="fa-solid fa-flag"></i> Step 2: Understand the Flags</div>
+                                            </div>
+                                            <table class="data-table" style="margin-top:8px;">
+                                                <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>Profile name (alias)</td>
-                                                        <td><code>dev</code></td>
-                                                        <td>A short label — you’ll reference it during <code>now-sdk init</code> and deploy. You can have multiple aliases for different instances.</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Instance URL</td>
-                                                        <td><code>https://yourcompany.service-now.com</code></td>
-                                                        <td>No trailing slash. PDI users: copy your URL from <strong>developer.servicenow.com → My Instances</strong>.</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Username</td>
-                                                        <td>Your ServiceNow admin username</td>
-                                                        <td>Must have the <strong>admin</strong> role to deploy scoped apps. Verify by checking for "Admin" in the ServiceNow top-right corner.</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Password</td>
-                                                        <td>Your ServiceNow password</td>
-                                                        <td>Stored encrypted in your OS keychain (Keychain Access on Mac, Credential Manager on Windows) — never written to disk or project files.</td>
+                                                        <td><code>mydev</code></td>
+                                                        <td>A friendly alias for this connection — you’ll use this in other commands</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                         <div class="cmd-item type-sn">
                                             <div class="cmd-meta">
-                                                <div class="cmd-title"><i class="fa-solid fa-list-check"></i> Verify the Connection</div>
-                                                <div class="cmd-description">Prints all registered profiles. You should see your alias, instance URL, and auth type. If it appears, you’re ready for Step 3.</div>
+                                                <div class="cmd-title"><i class="fa-solid fa-list-check"></i> Step 3: Verify It Works</div>
+                                                <div class="cmd-description">If this runs without errors and starts downloading type definitions, your connection is working.</div>
                                             </div>
                                             <div class="code-block">
-                                                <pre><code>now-sdk auth list</code></pre>
+                                                <pre><code>now-sdk auth --list</code></pre>
                                                 <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
                                             </div>
                                             <div class="info-card" style="margin-top:10px; background:rgba(5,150,105,0.07);">
@@ -270,6 +259,10 @@ nvm use 18</code></pre>
                                     </div>
                                     <div class="info-card warning-card" style="margin-top:16px;">
                                         <i class="fa-solid fa-triangle-exclamation"></i>
+                                        <div><strong>WARNING:</strong> Your password is stored in the OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service) — <strong>NOT</strong> in any project file. Never create <code>.env</code> files with passwords.</div>
+                                    </div>
+                                    <div class="info-card warning-card" style="margin-top:10px;">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
                                         <div><strong>Authentication failed?</strong> The most common causes are: (1) Your instance enforces <strong>SSO or MFA</strong> — use the OAuth tab instead, or ask your admin to create a dedicated service account with basic auth enabled under System Security → Users. (2) You have <strong>IP allowlisting</strong> on the instance — ensure your machine’s IP is permitted. (3) Your <strong>PDI instance is hibernating</strong> — log in to developer.servicenow.com and wake it up first.</div>
                                     </div>
                                 </div>
@@ -278,67 +271,68 @@ nvm use 18</code></pre>
                                 <div id="auth-oauth" class="tab-content">
                                     <div class="info-card" style="margin-bottom:16px;">
                                         <i class="fa-solid fa-shield-halved"></i>
-                                        <div><strong>When to use OAuth:</strong> OAuth is the right choice when your organization enforces SSO/MFA, when you’re setting up automated CI/CD deployments, or when you want to avoid storing a personal password. Instead of a username and password, the SDK exchanges a short-lived access token that auto-refreshes — your actual credentials are never stored.</div>
+                                        <div><strong>When to use OAuth:</strong> OAuth uses token-based auth with automatic refresh. Required for SSO-enabled instances and recommended for production work.</div>
                                     </div>
                                     <div class="cmd-list">
-                                        <!-- Step 1: Create OAuth App in ServiceNow -->
+                                        <!-- Step 1: Install ServiceNow IDE -->
                                         <div class="cmd-item type-sn">
                                             <div class="cmd-meta">
-                                                <div class="cmd-title"><i class="fa-solid fa-gears"></i> 1. Register an OAuth Application in ServiceNow</div>
-                                                <div class="cmd-description">Before running any CLI commands, you need to create a dedicated OAuth application entry in your ServiceNow instance. This gives the SDK a client identity it can exchange tokens with.</div>
+                                                <div class="cmd-title"><i class="fa-solid fa-gears"></i> Step 1: Install the ServiceNow IDE on Your Instance</div>
+                                                <div class="cmd-description">This pre-configures the OAuth endpoint the SDK needs.</div>
                                             </div>
                                             <div class="info-card" style="margin-top:10px;">
                                                 <i class="fa-solid fa-arrow-pointer"></i>
                                                 <div>
-                                                    <strong>In your ServiceNow browser UI:</strong>
                                                     <ol style="margin-top:8px; padding-left:18px; display:flex; flex-direction:column; gap:6px;">
-                                                        <li>Open the App Navigator (top-left filter icon) → type <strong>"Application Registry"</strong> → open <strong>System OAuth → Application Registry</strong></li>
-                                                        <li>Click <strong>New</strong> → select <strong>"Create an OAuth API endpoint for external clients"</strong></li>
-                                                        <li>Set <strong>Name</strong> to <code>SN SDK CLI</code> (or any recognizable label)</li>
-                                                        <li>Set <strong>Redirect URL</strong> to <code>http://localhost:9999/oauth_redirect</code> — this is the local callback address the SDK listens on during the auth flow</li>
-                                                        <li>Set <strong>Access Token Lifespan</strong> to <code>7776000</code> (90 days in seconds)</li>
-                                                        <li>Set <strong>Refresh Token Lifespan</strong> to <code>8640000</code> (100 days — must be longer than access token)</li>
-                                                        <li>Click <strong>Submit</strong> to save the record</li>
+                                                        <li>Log into your ServiceNow instance as admin</li>
+                                                        <li>Open <strong>Application Manager</strong> (System Applications → All Available Applications → All)</li>
+                                                        <li>Search for <strong>"ServiceNow IDE"</strong> and install it</li>
                                                     </ol>
                                                 </div>
                                             </div>
-                                            <div class="info-card warning-card" style="margin-top:10px;">
-                                                <i class="fa-solid fa-triangle-exclamation"></i>
-                                                <div><strong>Important:</strong> After the record saves, open it again — ServiceNow auto-generates the <strong>Client ID</strong> and <strong>Client Secret</strong> on first save and they’re only visible once you reopen the record. Copy both values to a safe place before continuing.</div>
-                                            </div>
                                         </div>
-                                        <!-- Step 2: Run auth add with OAuth -->
+                                        <!-- Step 2: Authenticate from CLI -->
                                         <div class="cmd-item type-sn">
                                             <div class="cmd-meta">
-                                                <div class="cmd-title"><i class="fa-solid fa-terminal"></i> 2. Register the OAuth Profile with the SDK CLI</div>
-                                                <div class="cmd-description">Run the command below. The CLI will prompt for your instance URL and the Client ID/Secret from the Application Registry record you just created. At the end, a browser window opens for you to approve the initial OAuth grant.</div>
+                                                <div class="cmd-title"><i class="fa-solid fa-terminal"></i> Step 2: Authenticate from the CLI</div>
+                                                <div class="cmd-description">Run the command below, replacing <code>&lt;your-instance&gt;</code> with your actual instance name.</div>
                                             </div>
                                             <div class="code-block">
-                                                <pre><code>now-sdk auth add --auth-type oauth</code></pre>
+                                                <pre><code>now-sdk auth --add &lt;your-instance&gt;</code></pre>
                                                 <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
                                             </div>
-                                            <table class="data-table" style="margin-top:12px;">
-                                                <thead><tr><th>Prompt</th><th>What to Enter</th></tr></thead>
-                                                <tbody>
-                                                    <tr><td>Profile name (alias)</td><td><code>dev</code></td></tr>
-                                                    <tr><td>Instance URL</td><td><code>https://yourcompany.service-now.com</code></td></tr>
-                                                    <tr><td>Client ID</td><td>The auto-generated value from the Application Registry record</td></tr>
-                                                    <tr><td>Client Secret</td><td>The auto-generated secret from the Application Registry record</td></tr>
-                                                </tbody>
-                                            </table>
                                             <div class="info-card" style="margin-top:10px;">
                                                 <i class="fa-solid fa-circle-info"></i>
-                                                <div>After you enter the credentials, the CLI starts a temporary local server on port <code>9999</code> and opens a browser window pointing to your ServiceNow instance’s login page. Log in with your normal SSO/password, then click <strong>Allow</strong> on the OAuth consent screen. The browser redirects back to <code>localhost:9999</code>, the CLI captures the token, stores the access token and refresh token in your OS keychain, and exits. You won’t need to re-authorize as long as the refresh token remains valid.</div>
+                                                <div>
+                                                    <ol style="margin-top:8px; padding-left:18px; display:flex; flex-direction:column; gap:6px;">
+                                                        <li>The SDK prompts for the type of auth — choose <strong>OAuth</strong></li>
+                                                        <li>Your browser opens the ServiceNow login page</li>
+                                                        <li>Sign in with your credentials (or SSO provider)</li>
+                                                        <li>After login, ServiceNow displays a <strong>one-time token</strong> in the browser</li>
+                                                        <li>Copy the token, paste it back into the terminal, press <strong>Enter</strong></li>
+                                                    </ol>
+                                                </div>
                                             </div>
                                         </div>
-                                        <!-- Step 3: Verify -->
+                                        <!-- Step 3: Set as default (optional) -->
                                         <div class="cmd-item type-sn">
                                             <div class="cmd-meta">
-                                                <div class="cmd-title"><i class="fa-solid fa-list-check"></i> 3. Verify the OAuth Profile</div>
+                                                <div class="cmd-title"><i class="fa-solid fa-star"></i> Step 3: Set as Default <span style="font-weight:400; opacity:0.7;">(optional)</span></div>
+                                                <div class="cmd-description">OAuth tokens refresh automatically. You won’t need to re-authenticate unless the refresh token expires.</div>
+                                            </div>
+                                            <div class="code-block">
+                                                <pre><code>now-sdk auth --add mydev-oauth --type oauth --default</code></pre>
+                                                <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                                            </div>
+                                        </div>
+                                        <!-- Step 4: Verify -->
+                                        <div class="cmd-item type-sn">
+                                            <div class="cmd-meta">
+                                                <div class="cmd-title"><i class="fa-solid fa-list-check"></i> Step 4: Verify</div>
                                                 <div class="cmd-description">Confirm the profile was saved with OAuth auth type before moving on.</div>
                                             </div>
                                             <div class="code-block">
-                                                <pre><code>now-sdk auth list</code></pre>
+                                                <pre><code>now-sdk auth --list</code></pre>
                                                 <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
                                             </div>
                                             <div class="info-card" style="margin-top:10px; background:rgba(5,150,105,0.07);">
