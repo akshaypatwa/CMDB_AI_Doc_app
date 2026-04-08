@@ -1,38 +1,90 @@
 (function() {
 
-    // ─── Action handler: Add CI to watchlist ──────────────────
-    if (input && input.action === 'add_ci') {
-        data.addResult = { success: false, message: '' };
-        var ciName = input.ci_name || '';
-
-        if (!ciName) {
-            data.addResult.message = 'CI name is required.';
-        } else {
-            var ciGr = new GlideRecord('cmdb_ci');
-            ciGr.addQuery('name', ciName);
-            ciGr.setLimit(1);
-            ciGr.query();
-
-            if (!ciGr.next()) {
-                data.addResult.message = 'CI "' + ciName + '" not found in CMDB. Check the name and try again.';
-            } else {
-                var ciSysId = ciGr.getUniqueValue();
-                var existGr = new GlideRecord('x_epams_cmdb_healt_health_record');
-                existGr.addQuery('x_epams_cmdb_healt_ci', ciSysId);
-                existGr.setLimit(1);
-                existGr.query();
-
-                if (existGr.next()) {
-                    data.addResult.message = 'CI "' + ciName + '" is already in the health watchlist.';
-                } else {
-                    var newRec = new GlideRecord('x_epams_cmdb_healt_health_record');
-                    newRec.setValue('x_epams_cmdb_healt_ci', ciSysId);
-                    newRec.setValue('x_epams_cmdb_healt_run_status', 'new');
-                    newRec.insert();
-                    data.addResult.success = true;
-                    data.addResult.message = 'CI "' + ciName + '" added. It will be evaluated on the next scheduled run.';
-                }
+    // ─── Helper: split + dedupe comma-separated CI names ──────
+    function parseCiNames(raw) {
+        var out = [];
+        var seen = {};
+        var parts = (raw || '').split(',');
+        for (var i = 0; i < parts.length; i++) {
+            var n = (parts[i] || '').trim();
+            if (n && !seen[n.toLowerCase()]) {
+                seen[n.toLowerCase()] = true;
+                out.push(n);
             }
+        }
+        return out;
+    }
+
+    // ─── Action handler: Verify CI names exist in CMDB ────────
+    if (input && input.action === 'verify_cis') {
+        data.verifyResult = { found: [], missing: [], alreadyAdded: [] };
+        var vNames = parseCiNames(input.ci_names);
+        for (var vi = 0; vi < vNames.length; vi++) {
+            var vName = vNames[vi];
+            var vGr = new GlideRecord('cmdb_ci');
+            vGr.addQuery('name', vName);
+            vGr.setLimit(1);
+            vGr.query();
+            if (vGr.next()) {
+                var vSysId = vGr.getUniqueValue();
+                var dupGr = new GlideRecord('x_epams_cmdb_healt_health_record');
+                dupGr.addQuery('x_epams_cmdb_healt_ci', vSysId);
+                dupGr.setLimit(1);
+                dupGr.query();
+                if (dupGr.next()) {
+                    data.verifyResult.alreadyAdded.push(vName);
+                } else {
+                    data.verifyResult.found.push(vName);
+                }
+            } else {
+                data.verifyResult.missing.push(vName);
+            }
+        }
+    }
+
+    // ─── Action handler: Add verified CIs to watchlist ────────
+    if (input && input.action === 'add_cis') {
+        data.addResult = { success: false, message: '', addedCount: 0, skippedCount: 0 };
+        var aNames = parseCiNames(input.ci_names);
+        if (aNames.length === 0) {
+            data.addResult.message = 'No CI names provided.';
+        } else {
+            var added = 0;
+            var skipped = 0;
+            var notFound = [];
+            for (var ai = 0; ai < aNames.length; ai++) {
+                var aName = aNames[ai];
+                var aGr = new GlideRecord('cmdb_ci');
+                aGr.addQuery('name', aName);
+                aGr.setLimit(1);
+                aGr.query();
+                if (!aGr.next()) {
+                    notFound.push(aName);
+                    continue;
+                }
+                var aSysId = aGr.getUniqueValue();
+                var aDup = new GlideRecord('x_epams_cmdb_healt_health_record');
+                aDup.addQuery('x_epams_cmdb_healt_ci', aSysId);
+                aDup.setLimit(1);
+                aDup.query();
+                if (aDup.next()) {
+                    skipped++;
+                    continue;
+                }
+                var newRec = new GlideRecord('x_epams_cmdb_healt_health_record');
+                newRec.setValue('x_epams_cmdb_healt_ci', aSysId);
+                newRec.setValue('x_epams_cmdb_healt_run_status', 'new');
+                newRec.insert();
+                added++;
+            }
+            data.addResult.addedCount = added;
+            data.addResult.skippedCount = skipped;
+            data.addResult.success = (added > 0 && notFound.length === 0);
+            var msgParts = [];
+            if (added > 0)        { msgParts.push(added + ' added'); }
+            if (skipped > 0)      { msgParts.push(skipped + ' already on watchlist'); }
+            if (notFound.length)  { msgParts.push(notFound.length + ' not found: ' + notFound.join(', ')); }
+            data.addResult.message = msgParts.join(' · ') || 'No changes.';
         }
     }
 

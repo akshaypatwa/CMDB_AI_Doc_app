@@ -36,38 +36,45 @@
     gs.info('[CMDBHealthJob] PHASE 1: EVALUATION starting');
     gs.info('[CMDBHealthJob] ----------------------------------------------------------------');
 
-    var isWeeklyReeval = (new GlideDateTime().getDayOfWeekLocalTime() === 1); // Sunday = 1
-    if (isWeeklyReeval) {
-        gs.info('[CMDBHealthJob] Phase 1 — Sunday detected: all COMPLETE records will be re-evaluated');
-    }
+    // Re-evaluate when: new, OR failed (retry<3), OR analysis_date older than 24h.
+    var dayAgo = new GlideDateTime();
+    dayAgo.addSeconds(-86400);
 
-    // Build Phase 1 query
     var gr1 = new GlideRecord(TABLE);
     var cond1 = gr1.addQuery(F + 'run_status', 'new');
     var retryP1 = cond1.addOrCondition(F + 'run_status', 'failed');
     retryP1.addCondition(F + 'retry_count', '<', 3);
-    if (isWeeklyReeval) {
-        cond1.addOrCondition(F + 'run_status', 'complete');
-    }
+    cond1.addOrCondition(F + 'analysis_date', '<', dayAgo);
     gr1.query();
 
     var p1Total   = gr1.getRowCount();
     var p1Success = 0;
     var p1Failed  = 0;
     gs.info('[CMDBHealthJob] Phase 1 — CIs queued: ' + p1Total +
-        ' (new + failed<3retry' + (isWeeklyReeval ? ' + complete(weekly)' : '') + ')');
+        ' (new + failed<3retry + analysis_date>24h)');
 
     if (p1Total === 0) {
         gs.info('[CMDBHealthJob] Phase 1 — No CIs to evaluate. Skipping.');
     }
 
-    var p1Idx = 0;
+    // Collect first to release the cursor before slow per-CI work.
+    var p1Rows = [];
     while (gr1.next()) {
+        p1Rows.push({
+            ciSysId:    gr1.getValue(F + 'ci'),
+            ciName:     gr1.getDisplayValue(F + 'ci'),
+            prevStatus: gr1.getValue(F + 'run_status'),
+            retryCount: gr1.getValue(F + 'retry_count') || 0,
+        });
+    }
+
+    var p1Idx = 0;
+    for (var i1 = 0; i1 < p1Rows.length; i1++) {
         p1Idx++;
-        var ciSysId    = gr1.getValue(F + 'ci');
-        var ciName     = gr1.getDisplayValue(F + 'ci');
-        var prevStatus = gr1.getValue(F + 'run_status');
-        var retryCount = gr1.getValue(F + 'retry_count') || 0;
+        var ciSysId    = p1Rows[i1].ciSysId;
+        var ciName     = p1Rows[i1].ciName;
+        var prevStatus = p1Rows[i1].prevStatus;
+        var retryCount = p1Rows[i1].retryCount;
 
         gs.info('[CMDBHealthJob] Phase 1 [' + p1Idx + '/' + p1Total + '] CI: "' + ciName + '" (' + ciSysId + ') prev_status=' + prevStatus + ' retry=' + retryCount);
 
@@ -133,13 +140,24 @@
         gs.info('[CMDBHealthJob] Phase 2 — No CIs to send to LLM. Skipping.');
     }
 
-    var p2Idx = 0;
+    // Collect first to release the cursor before each (slow) LLM call.
+    var p2Rows = [];
     while (gr2.next()) {
+        p2Rows.push({
+            ci2SysId:    gr2.getValue(F + 'ci'),
+            ci2Name:     gr2.getDisplayValue(F + 'ci'),
+            rawPayload:  gr2.getValue(F + 'raw_payload_json'),
+            retryCount2: gr2.getValue(F + 'retry_count') || 0,
+        });
+    }
+
+    var p2Idx = 0;
+    for (var i2 = 0; i2 < p2Rows.length; i2++) {
         p2Idx++;
-        var ci2SysId    = gr2.getValue(F + 'ci');
-        var ci2Name     = gr2.getDisplayValue(F + 'ci');
-        var rawPayload  = gr2.getValue(F + 'raw_payload_json');
-        var retryCount2 = gr2.getValue(F + 'retry_count') || 0;
+        var ci2SysId    = p2Rows[i2].ci2SysId;
+        var ci2Name     = p2Rows[i2].ci2Name;
+        var rawPayload  = p2Rows[i2].rawPayload;
+        var retryCount2 = p2Rows[i2].retryCount2;
 
         gs.info('[CMDBHealthJob] Phase 2 [' + p2Idx + '/' + p2Total + '] CI: "' + ci2Name + '" (' + ci2SysId + ') retry=' + retryCount2);
 
@@ -155,9 +173,10 @@
             gs.info('[CMDBHealthJob] Phase 2 [' + p2Idx + '/' + p2Total + '] Sending to LLM: "' + ci2Name + '"...');
 
             var llmResponse = llm.call(payload);
-            if (!llmResponse) {
-                gs.error('[CMDBHealthJob] Phase 2 — LLM returned null for "' + ci2Name + '". Check LLM endpoint + API key in sys_properties.');
-                writer.markFailed(ci2SysId, 'Phase 2: LLM call returned null — verify cmdb_health.llm.endpoint and cmdb_health.llm.api_key');
+            if (!llmResponse || llmResponse.ok === false) {
+                var failReason = (llmResponse && llmResponse.reason) ? llmResponse.reason : 'LLM call returned null';
+                gs.error('[CMDBHealthJob] Phase 2 — LLM failed for "' + ci2Name + '": ' + failReason);
+                writer.markFailed(ci2SysId, 'Phase 2: ' + failReason);
                 p2Failed++;
                 continue;
             }

@@ -26,7 +26,8 @@
       "Bash(mkdir -p \"/Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/.claude/skills/cmdb-health-sp/references\")",
       "Bash(rm \"/Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/.claude/skills/sndev.md\")",
       "Bash(rm \"/Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/.claude/skills/cmdb-health-sp.md\")",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "WebSearch"
     ]
   }
 }

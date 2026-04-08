@@ -309,6 +309,7 @@
 
 /* ─── EXPANDED DETAIL PANEL ──────────────────────────────────── */
 
+.detail-panel:not(.open) { display: none; }
 .detail-panel {
   grid-column: 1 / -1;
   overflow: hidden;
@@ -854,6 +855,9 @@
 }
 .btn-cancel { padding: 9px 22px; border-radius: 8px; color: #546e7a; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; }
 .btn-add-confirm { padding: 9px 22px; border-radius: 8px; color: #43a047; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
+.btn-verify { padding: 9px 22px; border-radius: 8px; color: #4fc3f7; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
+.btn-add-confirm[disabled], .btn-verify[disabled] { opacity: 0.45; cursor: not-allowed; }
+.modal-hint { font-size: 11px; color: #7a8aa8; margin: -4px 0 10px; letter-spacing: 0.02em; }
 
 /* ─── TOAST ──────────────────────────────────────────────────── */
 

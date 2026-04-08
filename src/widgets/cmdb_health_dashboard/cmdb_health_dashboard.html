@@ -73,8 +73,8 @@
               <div class="score-track">
                 <div class="score-fill"
                      ng-style="{'width': scoresAnimated ? (record.correctness_score + '%') : '0%',
-                                'background': getStatusColor(record.health_status),
-                                'color': getStatusColor(record.health_status)}"></div>
+                                'background': getDimColor(record.correctness_score),
+                                'color': getDimColor(record.correctness_score)}"></div>
               </div>
               <div class="score-num">{{record.correctness_score}}</div>
             </div>
@@ -83,8 +83,8 @@
               <div class="score-track">
                 <div class="score-fill"
                      ng-style="{'width': scoresAnimated ? (record.completeness_score + '%') : '0%',
-                                'background': getStatusColor(record.health_status),
-                                'color': getStatusColor(record.health_status)}"></div>
+                                'background': getDimColor(record.completeness_score),
+                                'color': getDimColor(record.completeness_score)}"></div>
               </div>
               <div class="score-num">{{record.completeness_score}}</div>
             </div>
@@ -93,8 +93,8 @@
               <div class="score-track">
                 <div class="score-fill"
                      ng-style="{'width': scoresAnimated ? (record.compliance_score + '%') : '0%',
-                                'background': getStatusColor(record.health_status),
-                                'color': getStatusColor(record.health_status)}"></div>
+                                'background': getDimColor(record.compliance_score),
+                                'color': getDimColor(record.compliance_score)}"></div>
               </div>
               <div class="score-num">{{record.compliance_score}}</div>
             </div>
@@ -310,16 +310,22 @@
   <!-- ─── ADD CI MODAL ─── -->
   <div class="modal-backdrop" ng-if="showAddModal" ng-click="closeAddModal()">
     <div class="modal-dialog" ng-click="$event.stopPropagation()">
-      <div class="modal-title">ADD CI TO WATCHLIST</div>
-      <input type="text" class="modal-input" ng-model="newCiName"
-             placeholder="Enter exact CI name (e.g. PROD-DB-01)"
-             ng-keyup="$event.keyCode == 13 && submitAddCi()"/>
+      <div class="modal-title">ADD CIs TO WATCHLIST</div>
+      <div class="modal-hint">Enter one or more CI names, comma-separated. Verify before adding.</div>
+      <input type="text" class="modal-input" ng-model="newCiNames"
+             placeholder="e.g. PROD-DB-01, PROD-WEB-02, PROD-APP-03"
+             ng-change="onCiInputChange()"
+             ng-keyup="$event.keyCode == 13 && (verified ? submitAddCi() : verifyCis())"/>
       <div class="modal-message" ng-if="addMessage" ng-class="{'success': addSuccess, 'error': !addSuccess}">
         {{addMessage}}
       </div>
       <div class="modal-actions">
         <button class="btn-skeuo btn-cancel" ng-click="closeAddModal()">CANCEL</button>
-        <button class="btn-skeuo btn-add-confirm" ng-click="submitAddCi()" ng-disabled="addLoading || !newCiName">
+        <button class="btn-skeuo btn-verify" ng-click="verifyCis()" ng-disabled="verifyLoading || !newCiNames">
+          <span ng-if="!verifyLoading">VERIFY</span>
+          <span ng-if="verifyLoading">VERIFYING...</span>
+        </button>
+        <button class="btn-skeuo btn-add-confirm" ng-click="submitAddCi()" ng-disabled="addLoading || !verified">
           <span ng-if="!addLoading">ADD CI</span>
           <span ng-if="addLoading">ADDING...</span>
         </button>

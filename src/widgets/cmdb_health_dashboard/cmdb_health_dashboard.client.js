@@ -14,11 +14,20 @@ api.controller = function($scope, spUtil, $timeout, $http) {
     $scope.toast          = null;
 
     // Add CI modal state
-    $scope.showAddModal = false;
-    $scope.newCiName    = '';
-    $scope.addMessage   = '';
-    $scope.addSuccess   = false;
-    $scope.addLoading   = false;
+    $scope.showAddModal   = false;
+    $scope.newCiNames     = '';
+    $scope.addMessage     = '';
+    $scope.addSuccess     = false;
+    $scope.addLoading     = false;
+    $scope.verifyLoading  = false;
+    $scope.verified       = false;
+    $scope.verifyResult   = null;
+    $scope.onCiInputChange = function() {
+        // Any edit invalidates prior verification
+        $scope.verified     = false;
+        $scope.verifyResult = null;
+        $scope.addMessage   = '';
+    };
 
     // Build environment dropdown dynamically
     var envMap = {};
@@ -153,21 +162,50 @@ api.controller = function($scope, spUtil, $timeout, $http) {
     // ─── Add CI modal ─────────────────────────────────────────
     $scope.openAddModal = function($event) {
         if ($event) { $event.stopPropagation(); }
-        $scope.showAddModal = true;
-        $scope.newCiName    = '';
-        $scope.addMessage   = '';
-        $scope.addSuccess   = false;
+        $scope.showAddModal  = true;
+        $scope.newCiNames    = '';
+        $scope.addMessage    = '';
+        $scope.addSuccess    = false;
+        $scope.verified      = false;
+        $scope.verifyResult  = null;
     };
 
     $scope.closeAddModal = function() {
         $scope.showAddModal = false;
     };
 
+    $scope.verifyCis = function() {
+        if (!$scope.newCiNames) { return; }
+        $scope.verifyLoading = true;
+        $scope.addMessage    = '';
+        $scope.data.action   = 'verify_cis';
+        $scope.data.ci_names = $scope.newCiNames;
+
+        $scope.server.update().then(function() {
+            $scope.verifyLoading = false;
+            var result = $scope.data.verifyResult || { found: [], missing: [], alreadyAdded: [] };
+            $scope.verifyResult = result;
+
+            // Verified-OK only if there's at least one fresh CI to add and no missing names
+            $scope.verified = (result.found.length > 0 && result.missing.length === 0);
+
+            var parts = [];
+            if (result.found.length)        { parts.push(result.found.length + ' ready to add'); }
+            if (result.alreadyAdded.length) { parts.push(result.alreadyAdded.length + ' already on watchlist'); }
+            if (result.missing.length)      { parts.push('not found: ' + result.missing.join(', ')); }
+            $scope.addMessage = parts.join(' · ') || 'No CIs to verify.';
+            $scope.addSuccess = $scope.verified;
+
+            $scope.data.action   = '';
+            $scope.data.ci_names = '';
+        });
+    };
+
     $scope.submitAddCi = function() {
-        if (!$scope.newCiName) { return; }
-        $scope.addLoading = true;
-        $scope.data.action  = 'add_ci';
-        $scope.data.ci_name = $scope.newCiName;
+        if (!$scope.verified || !$scope.newCiNames) { return; }
+        $scope.addLoading    = true;
+        $scope.data.action   = 'add_cis';
+        $scope.data.ci_names = $scope.newCiNames;
 
         $scope.server.update().then(function() {
             $scope.addLoading = false;
@@ -175,15 +213,14 @@ api.controller = function($scope, spUtil, $timeout, $http) {
             $scope.addSuccess = result.success;
             $scope.addMessage = result.message;
 
-            if ($scope.addSuccess) {
+            if (result.addedCount > 0) {
                 $scope.showToast(result.message, 'success');
                 $timeout(function() { $scope.closeAddModal(); }, 1500);
             } else {
                 $scope.showToast(result.message, 'error');
             }
-            // Clear action so subsequent updates don't re-trigger
-            $scope.data.action  = '';
-            $scope.data.ci_name = '';
+            $scope.data.action   = '';
+            $scope.data.ci_names = '';
         });
     };
 };
