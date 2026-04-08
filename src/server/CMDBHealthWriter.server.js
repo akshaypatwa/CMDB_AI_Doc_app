@@ -1,25 +1,67 @@
 /**
  * CMDBHealthWriter — Script Include
+ * ─────────────────────────────────────────────────────────────────────────────
+ * PURPOSE
+ *   Single-responsibility persistence layer for the CMDB Health evaluation
+ *   pipeline. Every GlideRecord write for a CI health record flows through
+ *   this class — no other script writes directly to the health table.
  *
- * Responsible for all GlideRecord writes to the scoped health_record table.
- * It is the single point of persistence for the two-phase CMDB health evaluation pipeline:
+ * SCOPE DESIGN
+ *   initialize() derives the table name and field prefix from
+ *   gs.getCurrentScopeName() at runtime, so the class works in any scoped
+ *   application without hardcoding scope strings.
+ *     this.TABLE  →  <scope>_health_record
+ *     this.F      →  '<scope>_'   (prepended to every field name)
  *
- *   Phase 1 (Evaluation)  — save() with targetStatus='evaluated'
- *     Writes structured scores (correctness, completeness, compliance), staleness/orphan/duplicate
- *     flags, violation counts, and the raw merged payload JSON.  Also computes and stores the
- *     score delta relative to the previous run.
+ * TWO-PHASE PIPELINE MODEL
+ *   The health job runs in two sequential phases; this writer supports both:
  *
- *   Phase 2 (LLM Analysis) — save() with targetStatus='complete'
- *     Adds the LLM-generated summary, priority action, auto-fix / review action lists, risk
- *     counts, per-dimension narrative summaries, field-level review chips, and compliance detail.
+ *   Phase 1 — Rule-based evaluation (deterministic)
+ *     Caller:  save(ciSysId, mergedPayload, null, 'evaluated')
+ *     Writes:  numeric scores (overall, correctness, completeness, compliance),
+ *              boolean flags (is_stale, is_orphan, has_duplicates),
+ *              counts (duplicate_count, violations_count, missing_fields_count),
+ *              and the raw JSON payload for auditability.
+ *              Also computes score_delta vs. the previous run's overall score.
  *
- * Additional lifecycle helpers:
- *   markEvaluating(ciSysId)            — stamps run_status='evaluating' and records job_started_at
- *   updateStage(ciSysId, stage)        — lightweight mid-run progress stamp (no score writes)
- *   markFailed(ciSysId, errorMessage)  — stamps run_status='failed', writes error_log, increments retry_count
+ *   Phase 2 — LLM-generated analysis (AI enrichment)
+ *     Caller:  save(ciSysId, mergedPayload, llmResponse, 'complete')
+ *     Writes:  llm_summary, priority_action, autofix_actions (JSON array),
+ *              review_actions (JSON array), dimension summaries (correctness /
+ *              completeness / compliance), portal badge counts
+ *              (review_actions_count, autofix_actions_count, high_risk_count),
+ *              field-level chip list (fields_review), and compliance risk flags.
  *
- * The table name and field prefix are derived at runtime from gs.getCurrentScopeName() so the
- * class works in any scoped application without hardcoding the scope.
+ * METHOD SUMMARY
+ *   initialize()                          — sets TABLE and F from current scope
+ *   updateStage(ciSysId, stage)           — lightweight mid-pipeline stage stamp;
+ *                                           updates only last_stage + stage_updated_at
+ *   markEvaluating(ciSysId)              — sets run_status='evaluating', stamps
+ *                                           job_started_at; called at Phase 1 start
+ *   save(ciSysId, payload, llm, status)  — core write; insert-or-update logic,
+ *                                           handles both phases depending on which
+ *                                           args are non-null; sets run_status to
+ *                                           'evaluated' or 'complete' accordingly
+ *   markFailed(ciSysId, errorMessage)    — sets run_status='failed', writes
+ *                                           error_log, and increments retry_count
+ *
+ * SCORE DELTA TRACKING
+ *   On every update, save() reads the existing overall_health_score BEFORE
+ *   overwriting it, then persists both previous_score and score_delta so the
+ *   portal can show trend arrows without extra queries.
+ *
+ * PORTAL SURFACE FIELDS
+ *   Several fields written here are consumed directly by the Service Portal
+ *   CI health cards: review_actions_count, autofix_actions_count, high_risk_count,
+ *   correctness_summary, completeness_summary, compliance_summary, fields_review.
+ *   String fields are truncated at write time (1000 / 500 chars) to stay within
+ *   column limits.
+ *
+ * ERROR HANDLING
+ *   Every public method wraps its GlideRecord operations in try/catch and logs
+ *   via gs.error() with the CI sys_id, so failures are traceable without
+ *   propagating exceptions to the calling job.
+ * ─────────────────────────────────────────────────────────────────────────────
  */
 var CMDBHealthWriter = Class.create()
 CMDBHealthWriter.prototype = {

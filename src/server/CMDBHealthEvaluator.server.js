@@ -1,3 +1,102 @@
+/**
+ * CMDBHealthEvaluator — Script Include
+ *
+ * Evaluates the data quality ("health") of a single Configuration Item (CI)
+ * across three independent dimensions and rolls them up into a single overall
+ * score that the CMDB AI Doctor surfaces to end users and feeds to the LLM for
+ * remediation advice.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  PUBLIC API
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  evaluate(ciSysId) → { mergedPayload, scores }
+ *    The only method callers need. Pass a CI sys_id; get back a rich object
+ *    containing every data point used to calculate health, plus the scores.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  THREE-PHASE EVALUATION PIPELINE
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  Phase 1A — COMPLETENESS  (weight: 30 %)
+ *    Queries cmdb_recommended_fields for the CI's class to get the list of
+ *    fields that should be populated. Score = populated / recommended × 100.
+ *    For every missing field a peer analysis is run (see below) so the LLM
+ *    knows what value peers typically carry and can suggest a fill-in.
+ *
+ *  Phase 1B — CORRECTNESS   (weight: 40 %)
+ *    Four sub-checks contribute to a composite quality score (max 100):
+ *      • Completeness carry-over     – up to 40 pts  (from Phase 1A score)
+ *      • Discovery freshness         – up to 30 pts  (decays linearly over 365 days)
+ *      • Relationship coverage       – up to 20 pts  (capped at 10 relationships)
+ *      • Incident engagement         – up to 10 pts  (capped at 10 incidents/year)
+ *    Also detects:
+ *      • Staleness  — last_discovered older than STALE_THRESHOLD_DAYS (default 30)
+ *      • Orphan status — active CI with zero relationships in cmdb_rel_ci
+ *      • Duplicates — CIs sharing serial_number, FQDN, or IP address, ranked
+ *        by a weighted confidence score (50 / 30 / 20 pts per identifier)
+ *
+ *  Phase 1C — COMPLIANCE    (weight: 30 %)
+ *    Loads all cert_template records for the CI's class and evaluates every
+ *    cert_attr_cond rule (field + operator + desired value) against the live CI.
+ *    Supports operators: eq, neq, gt, gte, lt, lte, contains, not_contains,
+ *    starts_with, ends_with, is_empty, is_not_empty.
+ *    Violations are de-duplicated across templates, prioritised:
+ *      CRITICAL  — template name/description contains a regulatory keyword
+ *                  (PCI, SOX, HIPAA, GDPR, ISO 27001, NIST)
+ *      HIGH      — same field violated in more than one template
+ *      MEDIUM    — all other violations
+ *    If any CRITICAL violation exists the overall score is hard-capped at 40.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  OVERALL SCORE & HEALTH STATUS
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *    raw = round( correctness×0.4 + completeness×0.3 + compliance×0.3 )
+ *    overall = regulatory violation? min(raw, 40) : raw
+ *
+ *    ≥ 80  →  healthy
+ *    ≥ 60  →  minor
+ *    ≥ 40  →  moderate
+ *     < 40  →  critical
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  PEER ANALYSIS  (_runPeerQueryWithFallback)
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  Used for missing fields (completeness) and violated fields (compliance).
+ *  Queries sibling CIs using GlideAggregate to find the most common values
+ *  for the field, then normalises vendor/OS/cloud strings (e.g. "RHEL" →
+ *  "Red Hat Enterprise Linux") before ranking. If fewer than MIN_PEER_SAMPLE
+ *  (default 5) peers are found the query is automatically widened:
+ *    1. Same class + same environment
+ *    2. Parent class + same environment   (walks up sys_db_object hierarchy)
+ *    3. Parent class + all environments
+ *    4. cmdb_ci root + all environments
+ *  Consensus is classified as STRONG_STANDARD (≥70 %), MEDIUM_CONFIDENCE,
+ *  STATISTICAL_NOISE (≤30 %), or INSUFFICIENT_DATA.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  GOVERNANCE  (system properties)
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  cmdb_health.governance.restricted_fields   – fields the LLM must not auto-fix
+ *  cmdb_health.governance.safe_autofix_fields – fields that are safe to auto-fix
+ *  cmdb_health.governance.allow_retirement    – whether CI retirement is permitted
+ *  cmdb_health.governance.allow_merge         – whether duplicate merges are permitted
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  KEY TABLES ACCESSED
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  cmdb_ci / <ci_class>      – the CI being evaluated
+ *  cmdb_recommended_fields   – recommended field list per class (completeness)
+ *  cmdb_rel_ci               – parent/child relationships (orphan + quality score)
+ *  cert_template             – compliance templates per class
+ *  cert_attr_cond            – individual compliance rules per template
+ *  incident                  – incident count over the past INCIDENT_LOOKBACK_DAYS
+ *  sys_db_object             – class hierarchy walk for peer fallback chain
+ */
 var CMDBHealthEvaluator = Class.create()
 CMDBHealthEvaluator.prototype = {
     initialize: function () {

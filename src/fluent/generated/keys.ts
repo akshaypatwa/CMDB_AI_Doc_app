@@ -530,9 +530,17 @@ declare global {
                         table: 'sys_app_application'
                         id: '41953cf24c8c481e9996a3dcfcbc57ba'
                     }
+                    cmdb_health_dashboard_widget: {
+                        table: 'sp_widget'
+                        id: '8cb91234f3d64900a9fd5478ff81fe20'
+                    }
                     cmdb_health_evaluator_si: {
                         table: 'sys_script_include'
                         id: 'b8936b2a29c440d6a59f020724528158'
+                    }
+                    cmdb_health_header_widget: {
+                        table: 'sp_widget'
+                        id: '73010bd0d39d488a88888dadad9a3d90'
                     }
                     cmdb_health_llm_si: {
                         table: 'sys_script_include'

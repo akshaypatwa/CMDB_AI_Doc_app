@@ -1,0 +1,41 @@
+<div class="cmdb-header scanlines">
+
+  <!-- Title row -->
+  <div class="cmdb-header-top">
+    <div class="cmdb-header-title-group">
+      <span ng-if="summary.hasCritical" class="alert-dot"></span>
+      <h1 class="cmdb-header-title">CMDB Health Doctor</h1>
+      <span class="cmdb-header-lastrun">
+        Last analysed: {{summary.lastRun || 'Never'}}
+      </span>
+    </div>
+    <button class="btn-skeuo btn-refresh" ng-click="refresh()">
+      &#8635; REFRESH
+    </button>
+  </div>
+
+  <!-- Summary count cards -->
+  <div class="cmdb-header-counts">
+    <div class="summary-count-card">
+      <div class="count-number count-total">{{summary.total}}</div>
+      <div class="count-label">Total</div>
+    </div>
+    <div class="summary-count-card">
+      <div class="count-number count-critical">{{summary.critical}}</div>
+      <div class="count-label">Critical</div>
+    </div>
+    <div class="summary-count-card">
+      <div class="count-number count-moderate">{{summary.moderate}}</div>
+      <div class="count-label">Moderate</div>
+    </div>
+    <div class="summary-count-card">
+      <div class="count-number count-minor">{{summary.minor}}</div>
+      <div class="count-label">Minor</div>
+    </div>
+    <div class="summary-count-card">
+      <div class="count-number count-healthy">{{summary.healthy}}</div>
+      <div class="count-label">Healthy</div>
+    </div>
+  </div>
+
+</div>
