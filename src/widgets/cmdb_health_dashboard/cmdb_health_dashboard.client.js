@@ -55,6 +55,35 @@ api.controller = function($scope, spUtil, $timeout, $http) {
     $scope.isQuickPanelOpen = function(record) {
         return $scope.quickPanelCard && $scope.quickPanelCard.sys_id === record.sys_id;
     };
+    // ─── Sticky-note pop-out helpers ──────────────────────────
+    $scope.MAX_NOTES = 5;
+    var _rotSeed = [ -2, 1.5, -1, 2, -1.8, 0.8, -2, 1.2 ];
+    $scope.getNoteRot = function(i) { return _rotSeed[i % _rotSeed.length]; };
+
+    $scope.getVisibleNotes = function(record) {
+        var fixes = $scope.getCardQuickFixes(record);
+        if (!fixes.length) {
+            return [{ empty: true }];
+        }
+        var max = $scope.MAX_NOTES;
+        if (fixes.length <= max) { return fixes; }
+        var visible = fixes.slice(0, max - 1);
+        visible.push({ more: true, count: fixes.length - (max - 1) });
+        return visible;
+    };
+
+    $scope.onNoteClick = function(note, $event) {
+        if ($event) { $event.stopPropagation(); }
+        // Future: trigger action. For now just a visual highlight via class toggle.
+        if ($event && $event.currentTarget) {
+            var el = $event.currentTarget;
+            el.classList.remove('qf-note-pop');
+            // force reflow to restart animation
+            void el.offsetWidth;
+            el.classList.add('qf-note-pop');
+        }
+    };
+
     $scope.getCardQuickFixes = function(record) {
         if (!record) { return []; }
         var fixes = [];

@@ -147,32 +147,46 @@
           </div>
         </div>
 
-        <!-- PER-CARD QUICK-FIX SIDE PANEL -->
-        <div class="card-quick-panel" ng-if="isQuickPanelOpen(record)" ng-click="$event.stopPropagation()">
-          <div class="cqp-header">
-            <div class="cqp-title">⚡ QUICK FIXES</div>
-            <div class="cqp-ci">{{record.ci_name}}</div>
-            <button class="cqp-close" ng-click="closeQuickPanel($event)">×</button>
+      </div>
+      <!-- END CI CARD -->
+
+      <!-- QUICK-FIX FAN-OUT (sibling of ci-card, escapes overflow clipping) -->
+      <div class="qf-fanout" ng-if="isQuickPanelOpen(record)" ng-click="$event.stopPropagation()">
+        <div class="qf-note"
+             ng-repeat="note in getVisibleNotes(record) track by $index"
+             ng-style="{'animation-delay': (40 + $index * 70) + 'ms'}"
+             ng-click="onNoteClick(note, $event)"
+             ng-class="{'qf-note-empty': note.empty, 'qf-note-more': note.more}">
+
+          <div class="qf-note-accent"
+               ng-style="{'background': note.color || '#667eea', 'box-shadow': '0 0 10px ' + (note.color || '#667eea') + '88'}"></div>
+
+          <div ng-if="note.empty" class="qf-note-body qf-note-body-empty">
+            <span class="qf-empty-icon">✓</span>
+            <span class="qf-empty-text">All clear — this CI looks healthy</span>
           </div>
-          <div class="cqp-chips">
-            <div class="cqp-chip"
-                 ng-repeat="fix in getCardQuickFixes(record) track by $index"
-                 ng-style="{'border-left-color': fix.color, 'animation-delay': ($index * 60) + 'ms'}">
-              <div class="cqp-chip-risk"
-                   ng-style="{'background': fix.color + '22', 'color': fix.color, 'border-color': fix.color + '66'}">
-                {{fix.riskIcon}} {{fix.risk}}
-              </div>
-              <div class="cqp-chip-issue">{{fix.issue}}</div>
-              <div class="cqp-chip-arrow" ng-style="{'color': fix.color}">→</div>
-              <div class="cqp-chip-rec" ng-style="{'color': fix.color}">{{fix.rec}}</div>
+
+          <div ng-if="note.more" class="qf-note-body qf-note-body-more">
+            <span class="qf-more-plus">+{{note.count}}</span>
+            <span class="qf-more-text">more fixes</span>
+            <span class="qf-more-arrow">›</span>
+          </div>
+
+          <div ng-if="!note.empty && !note.more" class="qf-note-body">
+            <div class="qf-row-top">
+              <span class="qf-risk-chip"
+                    ng-style="{'background': note.color + '28', 'color': note.color, 'border-color': note.color + '55', 'box-shadow': '0 0 8px ' + note.color + '25'}">
+                {{note.riskIcon}} {{note.risk}}
+              </span>
+              <span class="qf-issue" title="{{note.issue}}">{{note.issue}}</span>
             </div>
-            <div class="cqp-empty" ng-if="getCardQuickFixes(record).length === 0">
-              No issues — this CI looks healthy. ✨
+            <div class="qf-row-bot">
+              <span class="qf-rec-label" ng-style="{'color': note.color, 'border-color': note.color + '44'}">FIX</span>
+              <span class="qf-rec" ng-style="{'color': note.color}" title="{{note.rec}}">{{note.rec}}</span>
             </div>
           </div>
         </div>
       </div>
-      <!-- END CI CARD -->
 
       <!-- EXPANDED DETAIL PANEL -->
       <div class="detail-panel" ng-class="{'open': isExpanded(record)}">
