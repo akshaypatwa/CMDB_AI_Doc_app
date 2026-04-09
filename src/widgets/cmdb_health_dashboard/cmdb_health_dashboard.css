@@ -132,8 +132,29 @@
   grid-column: 1 / -1;
   z-index: 5;
 }
-/* Hide the card tile itself when expanded — detail panel takes over */
-.cmdb-grid-item.expanded-row .ci-card { display: none; }
+/* Collapse the card tile when expanded — detail panel takes over */
+.cmdb-grid-item.expanded-row .ci-card {
+  max-height: 0;
+  opacity: 0;
+  padding: 0;
+  margin: 0;
+  border-width: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.22s ease,
+    padding 0.38s ease,
+    margin 0.38s ease;
+}
+.ci-card {
+  max-height: 800px;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    max-height 0.42s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.3s ease 0.08s;
+}
 .cmdb-grid-item.expanded-row .ci-card {
   border-radius: 14px 14px 0 0;
   box-shadow: 0 0 0 1px rgba(120,160,255,0.25),
@@ -339,25 +360,34 @@
 
 /* ─── EXPANDED DETAIL PANEL ──────────────────────────────────── */
 
-.detail-panel:not(.open) { display: none; }
-.detail-panel.open {
+.detail-panel {
   position: relative;
   width: 100%;
-  max-height: 78vh;
-  overflow-y: auto;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
   border-radius: 0 0 14px 14px;
   background: linear-gradient(180deg, #1a2340 0%, #0f162b 100%);
+  border: 0 solid rgba(120,160,255,0.18);
+  transform: translateY(-8px) scaleY(0.98);
+  transform-origin: top center;
+  transition:
+    max-height 0.42s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.28s ease,
+    transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.4s ease,
+    border-width 0.4s ease;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+.detail-panel.open {
+  max-height: 78vh;
+  opacity: 1;
+  overflow-y: auto;
+  transform: translateY(0) scaleY(1);
   border: 1px solid rgba(120,160,255,0.18);
   border-top: 1px solid rgba(120,160,255,0.28);
   box-shadow: 0 18px 48px rgba(0,0,0,0.55),
               inset 0 1px 0 rgba(255,255,255,0.04);
-  animation: dp-unfold 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-  transform-origin: top center;
-}
-@keyframes dp-unfold {
-  0%   { opacity: 0; max-height: 0;    transform: scaleY(0.92) translateY(-6px); }
-  40%  { opacity: 1; }
-  100% { opacity: 1; max-height: 78vh; transform: scaleY(1)    translateY(0); }
 }
 .detail-panel.open .detail-panel-inner > * {
   animation: dp-fade-up 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
@@ -2990,4 +3020,196 @@ body.cmdb-theme-light #main {
     inset -2px -2px 5px rgba(255,255,255,0.9);
   transform: scale(0.97);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SKEUO v2 — Dark-mode score bars with real depth + glossy fills
+   and pedestal/pill treatment for score numerals
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Deeper debossed groove w/ bezel edge */
+.score-track {
+  position: relative;
+  height: 11px !important;
+  border-radius: 7px !important;
+  background:
+    linear-gradient(180deg, #04060d 0%, #090d1c 55%, #0d1326 100%) !important;
+  border: 1px solid rgba(0,0,0,0.85) !important;
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.95),
+    inset 0 -1px 0 rgba(255,255,255,0.06),
+    inset 2px 0 4px rgba(0,0,0,0.7),
+    inset -2px 0 4px rgba(0,0,0,0.7),
+    0 1px 0 rgba(255,255,255,0.05) !important;
+  overflow: hidden;
+}
+/* subtle scanline sheen across the groove interior */
+.score-track::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px auto 1px;
+  height: 2px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0));
+  border-radius: 6px 6px 0 0;
+  pointer-events: none;
+}
+
+/* Glossy fill: vertical highlight + color body + dark edge */
+.score-fill {
+  position: relative;
+  border-radius: 6px !important;
+  background-image:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.55) 0%,
+      rgba(255,255,255,0.18) 22%,
+      rgba(0,0,0,0.0) 55%,
+      rgba(0,0,0,0.35) 100%) !important;
+  background-blend-mode: overlay;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -1px 0 rgba(0,0,0,0.55),
+    0 0 10px currentColor,
+    0 0 18px currentColor !important;
+}
+/* (specular sheen animation removed per feedback) */
+
+/* Same upgrade for the detail-panel dimension tracks */
+.dp-dim-track {
+  position: relative;
+  border-radius: 6px !important;
+  background:
+    linear-gradient(180deg, #04060d 0%, #090d1c 55%, #0d1326 100%) !important;
+  border: 1px solid rgba(0,0,0,0.85) !important;
+  box-shadow:
+    inset 0 2px 5px rgba(0,0,0,0.95),
+    inset 0 -1px 0 rgba(255,255,255,0.06),
+    inset 2px 0 4px rgba(0,0,0,0.7),
+    inset -2px 0 4px rgba(0,0,0,0.7),
+    0 1px 0 rgba(255,255,255,0.05) !important;
+  overflow: hidden;
+}
+.dp-dim-track::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px auto 1px;
+  height: 2px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0));
+  border-radius: 5px 5px 0 0;
+  pointer-events: none;
+}
+.dp-dim-fill {
+  position: relative;
+  background-image:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.55) 0%,
+      rgba(255,255,255,0.18) 22%,
+      rgba(0,0,0,0.0) 55%,
+      rgba(0,0,0,0.35) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -1px 0 rgba(0,0,0,0.55),
+    0 0 10px currentColor,
+    0 0 18px currentColor !important;
+}
+/* (specular sheen animation removed per feedback) */
+
+/* Score bar in the detail-panel header */
+.dp-score-bar {
+  position: relative;
+  height: 12px !important;
+  background:
+    linear-gradient(180deg, #04060d 0%, #090d1c 55%, #0d1326 100%) !important;
+  border: 1px solid rgba(0,0,0,0.85) !important;
+  box-shadow:
+    inset 0 2px 5px rgba(0,0,0,0.95),
+    inset 0 -1px 0 rgba(255,255,255,0.06),
+    0 1px 0 rgba(255,255,255,0.05) !important;
+  overflow: hidden;
+}
+.dp-score-bar-fill {
+  position: relative;
+  background-image:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.55) 0%,
+      rgba(255,255,255,0.18) 22%,
+      rgba(0,0,0,0.0) 55%,
+      rgba(0,0,0,0.35) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -1px 0 rgba(0,0,0,0.55),
+    0 0 14px currentColor !important;
+}
+
+/* (score numeral pedestal/metallic effects removed per feedback —
+   reverting to original simple inline text-shadow styling) */
+
+/* ─── LIGHT MODE variants: keep depth without the dark colors ─── */
+.theme-light .score-track {
+  background: linear-gradient(180deg, #c2cde0 0%, #d0daea 60%, #dbe4f2 100%) !important;
+  border: 1px solid rgba(163,177,198,0.55) !important;
+  box-shadow:
+    inset 0 2px 5px rgba(120,135,165,0.55),
+    inset 0 -1px 0 rgba(255,255,255,0.95),
+    inset 2px 0 4px rgba(120,135,165,0.35),
+    inset -2px 0 4px rgba(120,135,165,0.35),
+    0 1px 0 rgba(255,255,255,0.9) !important;
+}
+.theme-light .score-track::before {
+  background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0));
+}
+.theme-light .score-fill {
+  background-image:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.7) 0%,
+      rgba(255,255,255,0.25) 25%,
+      rgba(0,0,0,0) 55%,
+      rgba(0,0,0,0.2) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    inset 0 -1px 0 rgba(0,0,0,0.25),
+    0 0 8px currentColor !important;
+}
+.theme-light .dp-dim-track {
+  background: linear-gradient(180deg, #c2cde0 0%, #d0daea 60%, #dbe4f2 100%) !important;
+  border: 1px solid rgba(163,177,198,0.55) !important;
+  box-shadow:
+    inset 0 2px 5px rgba(120,135,165,0.55),
+    inset 0 -1px 0 rgba(255,255,255,0.95),
+    0 1px 0 rgba(255,255,255,0.9) !important;
+}
+.theme-light .dp-dim-track::before {
+  background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0));
+}
+.theme-light .dp-dim-fill {
+  background-image:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.7) 0%,
+      rgba(255,255,255,0.25) 25%,
+      rgba(0,0,0,0) 55%,
+      rgba(0,0,0,0.2) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    inset 0 -1px 0 rgba(0,0,0,0.25),
+    0 0 8px currentColor !important;
+}
+.theme-light .dp-score-bar {
+  background: linear-gradient(180deg, #c2cde0 0%, #d0daea 60%, #dbe4f2 100%) !important;
+  border: 1px solid rgba(163,177,198,0.55) !important;
+  box-shadow:
+    inset 0 2px 5px rgba(120,135,165,0.55),
+    inset 0 -1px 0 rgba(255,255,255,0.95) !important;
+}
+.theme-light .dp-score-bar-fill {
+  background-image:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.75) 0%,
+      rgba(255,255,255,0.3) 25%,
+      rgba(0,0,0,0) 55%,
+      rgba(0,0,0,0.22) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    inset 0 -1px 0 rgba(0,0,0,0.28),
+    0 0 10px currentColor !important;
+}
+
+/* (score numeral light-mode overrides removed — reverted to simple) */
 .theme-light .ci-card-head::after { color: #3d7af5; text-shadow: 0 0 8px rgba(61,122,245,0.5); }
