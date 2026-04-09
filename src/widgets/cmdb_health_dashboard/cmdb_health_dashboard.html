@@ -1,4 +1,7 @@
-<div class="cmdb-dashboard">
+<div class="cmdb-dashboard" ng-class="{'focus-mode': expandedCard || quickPanelCard, 'theme-light': theme === 'light'}">
+
+  <!-- Lightweight backdrop only for quick-panel (no modal backdrop for expanded card) -->
+  <div class="quick-backdrop" ng-if="quickPanelCard && !expandedCard" ng-click="closeQuickPanel()"></div>
 
   <!-- ─── FILTER BAR ─── -->
   <div class="cmdb-filter-bar">
@@ -30,6 +33,12 @@
     <input type="text" class="cmdb-search" ng-model="searchQuery" placeholder="Search CI name..."/>
 
     <button class="btn-skeuo btn-add" ng-click="openAddModal()">+ ADD CI</button>
+
+    <button class="theme-toggle" ng-click="toggleTheme()" title="Toggle light / dark mode">
+      <span class="theme-toggle-track">
+        <span class="theme-toggle-thumb" ng-class="{'on': theme === 'light'}">{{theme === 'light' ? '☀' : '☾'}}</span>
+      </span>
+    </button>
   </div>
 
   <!-- ─── EMPTY STATE ─── -->
@@ -42,7 +51,9 @@
   <!-- ─── CARD GRID ─── -->
   <div class="cmdb-grid" ng-if="getFilteredRecords().length > 0">
 
-    <div ng-repeat="record in getFilteredRecords() track by record.sys_id" class="cmdb-grid-item">
+    <div ng-repeat="record in getFilteredRecords() track by record.sys_id"
+         class="cmdb-grid-item"
+         ng-class="{'expanded-row': isExpanded(record)}">
 
       <!-- CI CARD -->
       <div class="ci-card embossed-card"
@@ -120,8 +131,44 @@
           <div class="ci-foot-meta">
             {{record.review_actions_count || 0}} actions &middot; {{record.analysis_date || '—'}}
           </div>
-          <div class="ci-foot-delta" ng-style="{'color': getDeltaColor(record.score_delta)}">
-            {{getDeltaIcon(record.score_delta)}} {{record.score_delta > 0 ? '+' : ''}}{{record.score_delta || 0}}
+          <div class="ci-foot-right">
+            <div class="ci-foot-delta" ng-style="{'color': getDeltaColor(record.score_delta)}">
+              {{getDeltaIcon(record.score_delta)}} {{record.score_delta > 0 ? '+' : ''}}{{record.score_delta || 0}}
+            </div>
+            <button class="push-btn"
+                    ng-class="['push-btn-' + record.health_status, {'pressed': isQuickPanelOpen(record)}]"
+                    ng-click="openQuickPanel(record, $event)"
+                    title="Quick fixes for this CI">
+              <span class="push-btn-ring"></span>
+              <span class="push-btn-dome">
+                <span class="push-btn-glyph">⚡</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- PER-CARD QUICK-FIX SIDE PANEL -->
+        <div class="card-quick-panel" ng-if="isQuickPanelOpen(record)" ng-click="$event.stopPropagation()">
+          <div class="cqp-header">
+            <div class="cqp-title">⚡ QUICK FIXES</div>
+            <div class="cqp-ci">{{record.ci_name}}</div>
+            <button class="cqp-close" ng-click="closeQuickPanel($event)">×</button>
+          </div>
+          <div class="cqp-chips">
+            <div class="cqp-chip"
+                 ng-repeat="fix in getCardQuickFixes(record) track by $index"
+                 ng-style="{'border-left-color': fix.color, 'animation-delay': ($index * 60) + 'ms'}">
+              <div class="cqp-chip-risk"
+                   ng-style="{'background': fix.color + '22', 'color': fix.color, 'border-color': fix.color + '66'}">
+                {{fix.riskIcon}} {{fix.risk}}
+              </div>
+              <div class="cqp-chip-issue">{{fix.issue}}</div>
+              <div class="cqp-chip-arrow" ng-style="{'color': fix.color}">→</div>
+              <div class="cqp-chip-rec" ng-style="{'color': fix.color}">{{fix.rec}}</div>
+            </div>
+            <div class="cqp-empty" ng-if="getCardQuickFixes(record).length === 0">
+              No issues — this CI looks healthy. ✨
+            </div>
           </div>
         </div>
       </div>
@@ -129,7 +176,10 @@
 
       <!-- EXPANDED DETAIL PANEL -->
       <div class="detail-panel" ng-class="{'open': isExpanded(record)}">
-        <div class="detail-panel-inner" ng-if="isExpanded(record)">
+        <div class="detail-panel-inner" ng-if="isExpanded(record)" ng-click="$event.stopPropagation()">
+
+          <!-- Close button -->
+          <button class="dp-close-btn" ng-click="toggleCard(record); $event.stopPropagation()" title="Close">×</button>
 
           <!-- ── SCORE HEADER ── -->
           <div class="dp-header">
@@ -155,6 +205,16 @@
               <div class="dp-score-bar-ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
             </div>
           </div>
+
+          <!-- ── TABS ── -->
+          <div class="dp-tabs">
+            <button class="dp-tab" ng-class="{'active': activeTab === 'overview'}" ng-click="setTab('overview', $event)">Overview</button>
+            <button class="dp-tab" ng-class="{'active': activeTab === 'issues'}" ng-click="setTab('issues', $event)">
+              Issues
+            </button>
+          </div>
+
+          <div class="dp-tab-body" ng-if="activeTab === 'overview'">
 
           <!-- ── TOP PRIORITY ALERT BANNER ── -->
           <div class="dp-priority-banner" ng-if="record.priority_action">
@@ -207,9 +267,8 @@
             </div>
           </div>
 
-          <!-- ── RECOMMENDATIONS (HERO SECTION) ── -->
+          <!-- ── RECOMMENDATIONS ── -->
           <div ng-if="record.review_actions && record.review_actions.length > 0">
-
             <div class="dp-rec-section-label">
               <div class="dp-rec-section-title">
                 <span class="dp-rec-bolt-icon">⚡</span>
@@ -218,18 +277,13 @@
               </div>
               <div class="dp-rec-section-sub">AI-generated — ranked by impact &amp; risk</div>
             </div>
-
             <div class="dp-rec-container">
               <div class="dp-actions-list">
                 <div class="dp-action-card"
                      ng-repeat="action in record.review_actions"
                      ng-style="{'border-left-color': getActionRiskColor(action.risk)}">
-
-                  <!-- Colored accent gradient across top of card -->
                   <div class="dp-card-accent-bar"
                        ng-style="{'background': 'linear-gradient(90deg, ' + getActionRiskColor(action.risk) + ' 0%, rgba(0,0,0,0) 55%)'}"></div>
-
-                  <!-- Meta bar: risk + dimension + sequence -->
                   <div class="dp-action-meta">
                     <span class="dp-action-risk-badge"
                           ng-style="{'background': getActionRiskColor(action.risk) + '28', 'color': getActionRiskColor(action.risk), 'border-color': getActionRiskColor(action.risk) + '55', 'box-shadow': '0 0 10px ' + getActionRiskColor(action.risk) + '25'}">
@@ -238,14 +292,10 @@
                     <span class="dp-action-dim-badge">{{action.dimension | uppercase}}</span>
                     <span class="dp-action-seq">{{$index + 1}} / {{record.review_actions.length}}</span>
                   </div>
-
-                  <!-- Issue statement -->
                   <div class="dp-action-issue-block">
                     <span class="dp-issue-tag">ISSUE</span>
                     <div class="dp-action-issue-title">{{action.title}}</div>
                   </div>
-
-                  <!-- Recommendation hero box -->
                   <div class="dp-rec-hero"
                        ng-style="{'border-left-color': getActionRiskColor(action.risk), 'background': getActionRiskColor(action.risk) + '10', 'border-top-color': getActionRiskColor(action.risk) + '22', 'border-right-color': getActionRiskColor(action.risk) + '22', 'border-bottom-color': getActionRiskColor(action.risk) + '22'}">
                     <div class="dp-rec-hero-label" ng-style="{'color': getActionRiskColor(action.risk)}">
@@ -253,21 +303,16 @@
                     </div>
                     <div class="dp-rec-hero-text">{{action.action}}</div>
                   </div>
-
-                  <!-- Evidence row -->
                   <div class="dp-action-evidence" ng-if="action.reason">
-                    <div class="dp-evidence-header">
-                      <span class="dp-evidence-pill">WHY / EVIDENCE</span>
-                    </div>
+                    <div class="dp-evidence-header"><span class="dp-evidence-pill">WHY / EVIDENCE</span></div>
                     <div class="dp-evidence-text">{{action.reason}}</div>
                   </div>
-
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- ── HEALTH DIMENSIONS ── -->
+          <!-- ── HEALTH DIMENSIONS (overview) ── -->
           <div class="dp-section-label">HEALTH DIMENSIONS</div>
           <div class="dp-dims-row">
             <div class="dp-dim-tile">
@@ -296,9 +341,22 @@
             </div>
           </div>
 
-          <!-- ── AI ANALYSIS ── -->
           <div class="dp-section-label">AI ANALYSIS</div>
           <div class="terminal-readout">{{record.llm_summary || 'No AI summary available.'}}</div>
+
+          </div><!-- /overview -->
+
+          <div class="dp-tab-body" ng-if="activeTab === 'issues'">
+            <div class="dp-section-label">ISSUES DETAIL</div>
+            <div class="dp-issues-row">
+              <div class="dp-issue-tile tile-stale"     ng-class="{'tile-inactive': !record.is_stale, 'tile-active': record.is_stale}"><div class="dp-issue-icon">⏱</div><div class="dp-issue-count tile-stale-count">{{record.is_stale ? '1' : '0'}}</div><div class="dp-issue-name">STALE</div></div>
+              <div class="dp-issue-tile tile-orphan"    ng-class="{'tile-inactive': !record.is_orphan, 'tile-active': record.is_orphan}"><div class="dp-issue-icon">◎</div><div class="dp-issue-count tile-orphan-count">{{record.is_orphan ? '1' : '0'}}</div><div class="dp-issue-name">ORPHAN</div></div>
+              <div class="dp-issue-tile tile-dupe"      ng-class="{'tile-inactive': !record.duplicate_count, 'tile-active': record.duplicate_count > 0}"><div class="dp-issue-icon">⊕</div><div class="dp-issue-count tile-dupe-count">{{record.duplicate_count || 0}}</div><div class="dp-issue-name">DUPES</div></div>
+              <div class="dp-issue-tile tile-violation" ng-class="{'tile-inactive': !record.violations_count, 'tile-active': record.violations_count > 0}"><div class="dp-issue-icon">⚠</div><div class="dp-issue-count tile-violation-count">{{record.violations_count || 0}}</div><div class="dp-issue-name">VIOLATIONS</div></div>
+              <div class="dp-issue-tile tile-missing"   ng-class="{'tile-inactive': !record.missing_fields_count, 'tile-active': record.missing_fields_count > 0}"><div class="dp-issue-icon">▣</div><div class="dp-issue-count tile-missing-count">{{record.missing_fields_count || 0}}</div><div class="dp-issue-name">MISSING</div></div>
+            </div>
+          </div><!-- /issues -->
+
 
         </div>
       </div>

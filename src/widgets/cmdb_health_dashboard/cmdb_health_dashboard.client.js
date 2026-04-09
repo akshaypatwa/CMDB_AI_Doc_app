@@ -9,9 +9,95 @@ api.controller = function($scope, spUtil, $timeout, $http) {
     $scope.searchQuery    = '';
     $scope.sortBy         = 'score_asc';
     $scope.expandedCard   = null;
+    $scope.activeTab      = 'overview';
+    $scope.setTab = function(tab, $event) {
+        if ($event) { $event.stopPropagation(); }
+        $scope.activeTab = tab;
+    };
     $scope.scoresAnimated = false;
     $scope.openAccordions = {};
     $scope.toast          = null;
+    $scope.showQuickFixes = false;
+
+    // ─── Theme (dark / light) ─────────────────────────────────
+    try {
+        $scope.theme = localStorage.getItem('cmdb_theme') || 'dark';
+    } catch (e) {
+        $scope.theme = 'dark';
+    }
+    function applyThemeToHost(theme) {
+        try {
+            var body = document.body;
+            var html = document.documentElement;
+            body.classList.remove('cmdb-theme-light', 'cmdb-theme-dark');
+            html.classList.remove('cmdb-theme-light', 'cmdb-theme-dark');
+            body.classList.add('cmdb-theme-' + theme);
+            html.classList.add('cmdb-theme-' + theme);
+        } catch (e) {}
+    }
+    applyThemeToHost($scope.theme);
+    $scope.toggleTheme = function() {
+        $scope.theme = ($scope.theme === 'light') ? 'dark' : 'light';
+        try { localStorage.setItem('cmdb_theme', $scope.theme); } catch (e) {}
+        applyThemeToHost($scope.theme);
+    };
+
+    // ─── Per-card Quick-Fix side panel ────────────────────────
+    $scope.quickPanelCard = null;
+    $scope.openQuickPanel = function(record, $event) {
+        if ($event) { $event.stopPropagation(); }
+        $scope.quickPanelCard = record;
+    };
+    $scope.closeQuickPanel = function($event) {
+        if ($event) { $event.stopPropagation(); }
+        $scope.quickPanelCard = null;
+    };
+    $scope.isQuickPanelOpen = function(record) {
+        return $scope.quickPanelCard && $scope.quickPanelCard.sys_id === record.sys_id;
+    };
+    $scope.getCardQuickFixes = function(record) {
+        if (!record) { return []; }
+        var fixes = [];
+        if (record.review_actions && record.review_actions.length) {
+            record.review_actions.forEach(function(a) {
+                var risk = (a.risk || 'MEDIUM').toUpperCase();
+                fixes.push({
+                    risk:     risk,
+                    riskIcon: $scope.getActionRiskIcon(risk),
+                    color:    $scope.getActionRiskColor(risk),
+                    issue:    a.title || 'Issue',
+                    rec:      a.action || 'Review'
+                });
+            });
+        } else {
+            if (record.is_stale) {
+                fixes.push({ risk: 'HIGH', riskIcon: '▲', color: '#fb8c00',
+                    issue: 'Stale record', rec: 'Rediscover' });
+            }
+            if (record.is_orphan) {
+                fixes.push({ risk: 'MEDIUM', riskIcon: '●', color: '#fdd835',
+                    issue: 'No parent CI', rec: 'Relate to parent' });
+            }
+            if (record.duplicate_count > 0) {
+                fixes.push({ risk: 'HIGH', riskIcon: '▲', color: '#fb8c00',
+                    issue: record.duplicate_count + ' duplicate' + (record.duplicate_count > 1 ? 's' : ''),
+                    rec: 'Retire duplicates' });
+            }
+            if (record.missing_fields_count > 0) {
+                fixes.push({ risk: 'MEDIUM', riskIcon: '●', color: '#fdd835',
+                    issue: record.missing_fields_count + ' field' + (record.missing_fields_count > 1 ? 's' : '') + ' missing',
+                    rec: 'Populate required fields' });
+            }
+            if (record.violations_count > 0) {
+                fixes.push({ risk: 'CRITICAL', riskIcon: '⚠', color: '#e53935',
+                    issue: record.violations_count + ' policy violation' + (record.violations_count > 1 ? 's' : ''),
+                    rec: 'Remediate to pass audit' });
+            }
+        }
+        var riskOrder = { 'CRITICAL': 0, 'HIGH': 1, 'MEDIUM': 2, 'LOW': 3 };
+        fixes.sort(function(a, b) { return (riskOrder[a.risk] || 9) - (riskOrder[b.risk] || 9); });
+        return fixes;
+    };
 
     // Add CI modal state
     $scope.showAddModal   = false;
@@ -96,7 +182,10 @@ api.controller = function($scope, spUtil, $timeout, $http) {
             $scope.expandedCard = null;
         } else {
             $scope.expandedCard = record;
-            $timeout(function() { $scope.scoresAnimated = true; }, 150);
+            $scope.activeTab    = 'overview';
+            // Re-kick bar animations inside the newly opened panel
+            $scope.scoresAnimated = false;
+            $timeout(function() { $scope.scoresAnimated = true; }, 60);
         }
     };
 
@@ -151,6 +240,84 @@ api.controller = function($scope, spUtil, $timeout, $http) {
         if (d > 0) { return '#43a047'; }
         if (d < 0) { return '#e53935'; }
         return '#546e7a';
+    };
+
+    // ─── Quick Fixes FAB ──────────────────────────────────────
+    $scope.toggleQuickFixes = function() {
+        $scope.showQuickFixes = !$scope.showQuickFixes;
+    };
+
+    var _quickFixCache = null;
+    var _quickFixCacheKey = null;
+
+    $scope.getQuickFixes = function() {
+        var records = $scope.allRecords || [];
+        var key = records.length + ':' + ($scope.expandedCard ? $scope.expandedCard.sys_id : '');
+        if (_quickFixCache && _quickFixCacheKey === key) { return _quickFixCache; }
+
+        var riskOrder = { 'CRITICAL': 0, 'HIGH': 1, 'MEDIUM': 2, 'LOW': 3 };
+        var fixes = [];
+
+        records.forEach(function(r) {
+            // Prefer LLM review_actions (issue → recommendation pairs)
+            if (r.review_actions && r.review_actions.length) {
+                r.review_actions.forEach(function(a) {
+                    fixes.push({
+                        record:   r,
+                        ciName:   r.ci_name,
+                        risk:     (a.risk || 'MEDIUM').toUpperCase(),
+                        riskIcon: $scope.getActionRiskIcon((a.risk || 'MEDIUM').toUpperCase()),
+                        color:    $scope.getActionRiskColor((a.risk || 'MEDIUM').toUpperCase()),
+                        issue:    a.title || 'Issue',
+                        rec:      a.action || 'Review'
+                    });
+                });
+            } else {
+                // Derived fallbacks
+                if (r.is_stale) {
+                    fixes.push({ record: r, ciName: r.ci_name, risk: 'HIGH',
+                        riskIcon: '▲', color: '#fb8c00',
+                        issue: 'Stale record', rec: 'Rediscover' });
+                }
+                if (r.is_orphan) {
+                    fixes.push({ record: r, ciName: r.ci_name, risk: 'MEDIUM',
+                        riskIcon: '●', color: '#fdd835',
+                        issue: 'No parent CI', rec: 'Relate to parent' });
+                }
+                if (r.duplicate_count > 0) {
+                    fixes.push({ record: r, ciName: r.ci_name, risk: 'HIGH',
+                        riskIcon: '▲', color: '#fb8c00',
+                        issue: r.duplicate_count + ' duplicate' + (r.duplicate_count > 1 ? 's' : ''),
+                        rec: 'Retire duplicates' });
+                }
+                if (r.missing_fields_count > 0) {
+                    fixes.push({ record: r, ciName: r.ci_name, risk: 'MEDIUM',
+                        riskIcon: '●', color: '#fdd835',
+                        issue: r.missing_fields_count + ' field' + (r.missing_fields_count > 1 ? 's' : '') + ' missing',
+                        rec: 'Populate required fields' });
+                }
+                if (r.violations_count > 0) {
+                    fixes.push({ record: r, ciName: r.ci_name, risk: 'CRITICAL',
+                        riskIcon: '⚠', color: '#e53935',
+                        issue: r.violations_count + ' policy violation' + (r.violations_count > 1 ? 's' : ''),
+                        rec: 'Remediate to pass audit' });
+                }
+            }
+        });
+
+        fixes.sort(function(a, b) {
+            return (riskOrder[a.risk] || 9) - (riskOrder[b.risk] || 9);
+        });
+
+        _quickFixCache    = fixes.slice(0, 24);
+        _quickFixCacheKey = key;
+        return _quickFixCache;
+    };
+
+    $scope.jumpToCi = function(record) {
+        $scope.showQuickFixes = false;
+        $scope.expandedCard   = record;
+        $timeout(function() { $scope.scoresAnimated = true; }, 150);
     };
 
     // ─── Toast ────────────────────────────────────────────────
