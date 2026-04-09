@@ -27,7 +27,9 @@
       "Bash(rm \"/Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/.claude/skills/sndev.md\")",
       "Bash(rm \"/Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/.claude/skills/cmdb-health-sp.md\")",
       "WebFetch(domain:github.com)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(head -n 3134 \"/Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/src/widgets/cmdb_health_dashboard/cmdb_health_dashboard.css\")",
+      "Bash(mv /tmp/cmdb_dash_reverted.css \"/Users/akshaypatwa/Desktop/Workspace/AI/ServiceNow/Claude Code/Claude Code_SN_SDK/CMDB_AI_Doc_app/src/widgets/cmdb_health_dashboard/cmdb_health_dashboard.css\")"
     ]
   }
 }

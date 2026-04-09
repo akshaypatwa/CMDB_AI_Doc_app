@@ -70,7 +70,7 @@
               <div class="ci-card-sub">{{record.ci_class}} &middot; {{record.environment || 'Unknown'}}</div>
             </div>
             <div class="ci-card-score-block">
-              <div class="ci-card-score" ng-style="{'color': getStatusColor(record.health_status), 'text-shadow': '0 0 12px ' + getStatusColor(record.health_status)}">
+              <div class="ci-card-score" ng-style="{'color': getStatusColor(record.health_status)}">
                 {{record.overall_score}}
               </div>
               <div class="ci-card-score-label">SCORE</div>
@@ -80,32 +80,29 @@
           <!-- Score bars -->
           <div class="score-bars">
             <div class="score-row">
-              <div class="score-label">COR</div>
+              <div class="score-label" title="Correctness">CORR</div>
               <div class="score-track">
                 <div class="score-fill"
                      ng-style="{'width': scoresAnimated ? (record.correctness_score + '%') : '0%',
-                                'background': getDimColor(record.correctness_score),
-                                'color': getDimColor(record.correctness_score)}"></div>
+                                'background': getDimColor(record.correctness_score)}"></div>
               </div>
               <div class="score-num">{{record.correctness_score}}</div>
             </div>
             <div class="score-row">
-              <div class="score-label">COM</div>
+              <div class="score-label" title="Completeness">COMP</div>
               <div class="score-track">
                 <div class="score-fill"
                      ng-style="{'width': scoresAnimated ? (record.completeness_score + '%') : '0%',
-                                'background': getDimColor(record.completeness_score),
-                                'color': getDimColor(record.completeness_score)}"></div>
+                                'background': getDimColor(record.completeness_score)}"></div>
               </div>
               <div class="score-num">{{record.completeness_score}}</div>
             </div>
             <div class="score-row">
-              <div class="score-label">CPL</div>
+              <div class="score-label" title="Compliance">CMPL</div>
               <div class="score-track">
                 <div class="score-fill"
                      ng-style="{'width': scoresAnimated ? (record.compliance_score + '%') : '0%',
-                                'background': getDimColor(record.compliance_score),
-                                'color': getDimColor(record.compliance_score)}"></div>
+                                'background': getDimColor(record.compliance_score)}"></div>
               </div>
               <div class="score-num">{{record.compliance_score}}</div>
             </div>
@@ -121,6 +118,7 @@
           </div>
 
           <!-- Priority action preview -->
+          <div class="ci-priority-label" ng-if="record.priority_action">PRIORITY ACTION</div>
           <div class="ci-priority-preview">
             {{record.priority_action || 'No priority action identified.'}}
           </div>

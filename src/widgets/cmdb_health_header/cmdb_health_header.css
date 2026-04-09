@@ -57,10 +57,9 @@
 }
 
 .cmdb-header-lastrun {
-  font-size: 11px;
-  color: #546e7a;
-  font-family: 'Courier New', Courier, monospace;
-  letter-spacing: 0.04em;
+  font-size: 12px;
+  color: #78909c;
+  letter-spacing: 0.03em;
 }
 
 /* Pulsing alert dot */
