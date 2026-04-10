@@ -3,41 +3,66 @@
 .cmdb-header {
   position: relative;
   padding: 22px 28px;
-  background: #12172b;
+  background: linear-gradient(135deg, #0d1730 0%, #111a35 40%, #0f1d3a 70%, #131e3a 100%);
   box-shadow:
-    0 4px 16px rgba(0,0,0,0.5),
-    -2px -2px 8px rgba(255,255,255,0.04),
-    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 6px 24px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.07),
     inset 0 -1px 0 rgba(0,0,0,0.4);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(79,195,247,0.12);
   overflow: hidden;
-  /* Escape Bootstrap column gutter (15px each side) and SP row margin */
   margin: -16px -15px 0;
 }
 
-/* Scan-line texture overlay */
-.scanlines::after {
+/* Animated gradient top accent bar */
+.cmdb-header::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.04) 2px,
-    rgba(0,0,0,0.04) 4px
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    #4fc3f7 0%, #7c4dff 18%, #4fc3f7 36%, #00e676 54%, #fb8c00 72%, #e53935 88%, #4fc3f7 100%
   );
+  background-size: 200% 100%;
+  animation: aurora-shift 8s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes aurora-shift {
+  0%   { background-position: 0% 0%; }
+  50%  { background-position: 100% 0%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* Subtle mesh/grain texture */
+.cmdb-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(79,195,247,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 50%, rgba(124,77,255,0.05) 0%, transparent 55%);
   pointer-events: none;
   z-index: 1;
 }
 
 .cmdb-header > * { position: relative; z-index: 2; }
 
+/* Scan-line texture (dark mode) */
+.scanlines .cmdb-header::after {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+}
+
 .cmdb-header-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
   gap: 12px;
 }
@@ -54,14 +79,18 @@
   font-size: 22px;
   font-weight: 700;
   color: #e8eaf6;
-  letter-spacing: 0.05em;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.6), 0 0 12px rgba(79,195,247,0.15);
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 20px rgba(79,195,247,0.3), 0 1px 0 rgba(0,0,0,0.5);
 }
 
 .cmdb-header-lastrun {
-  font-size: 13px;
-  color: #90a4ae;
+  font-size: 12px;
+  color: #78909c;
   letter-spacing: 0.03em;
+  padding: 3px 10px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.07);
 }
 
 /* Pulsing alert dot */
@@ -77,32 +106,33 @@
   background: radial-gradient(circle at 35% 35%, #ff6b6b, #c0392b);
   animation: pulse-ring 1.5s ease-out infinite;
   display: inline-block;
+  flex-shrink: 0;
 }
 
-/* Neumorphic button */
+/* Neumorphic button — dark */
 .btn-skeuo {
   background: linear-gradient(145deg, #1c2442, #0f1830);
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(79,195,247,0.2);
   box-shadow:
     4px 4px 10px rgba(0,0,0,0.55),
     -2px -2px 7px rgba(255,255,255,0.06),
     inset 0 1px 0 rgba(255,255,255,0.10);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.18s ease;
 }
 .btn-skeuo:hover {
-  border-color: rgba(79,195,247,0.4);
+  border-color: rgba(79,195,247,0.5);
   box-shadow:
-    5px 5px 12px rgba(0,0,0,0.6),
+    5px 5px 14px rgba(0,0,0,0.6),
     -3px -3px 9px rgba(255,255,255,0.07),
     inset 0 1px 0 rgba(255,255,255,0.12),
-    0 0 14px rgba(79,195,247,0.2);
+    0 0 18px rgba(79,195,247,0.25);
 }
 .btn-skeuo:active {
   box-shadow:
     inset 3px 3px 7px rgba(0,0,0,0.6),
     inset -2px -2px 5px rgba(255,255,255,0.05);
-  transform: translateY(0);
+  transform: translateY(1px);
 }
 .btn-refresh {
   padding: 9px 20px;
@@ -113,33 +143,52 @@
   letter-spacing: 0.08em;
 }
 
-/* Summary count cards row */
+/* ─── SUMMARY COUNT CARDS — Dark ─────────────────────────────── */
 .cmdb-header-counts {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .summary-count-card {
   text-align: center;
-  padding: 18px 28px;
+  padding: 16px 24px;
   border-radius: 12px;
-  background: #12172b;
-  border: 1px solid rgba(255,255,255,0.06);
+  background: linear-gradient(145deg, #161f3a, #0e1628);
+  border: 1px solid rgba(255,255,255,0.07);
   box-shadow:
     5px 5px 14px rgba(0,0,0,0.5),
-    -3px -3px 10px rgba(255,255,255,0.055),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-  min-width: 100px;
+    -3px -3px 10px rgba(255,255,255,0.045),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  min-width: 96px;
   flex: 1 1 auto;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
+/* Bottom accent bar per card */
+.summary-count-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 15%; right: 15%;
+  height: 2px;
+  border-radius: 2px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+.summary-count-card:hover::after { opacity: 1; }
+.summary-count-card:first-child::after  { background: #4fc3f7; }
+.summary-count-card:nth-child(2)::after { background: #e53935; }
+.summary-count-card:nth-child(3)::after { background: #fb8c00; }
+.summary-count-card:nth-child(4)::after { background: #fdd835; }
+.summary-count-card:last-child::after   { background: #43a047; }
+
 .summary-count-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow:
-    7px 7px 18px rgba(0,0,0,0.6),
-    -4px -4px 12px rgba(255,255,255,0.065),
-    inset 0 1px 0 rgba(255,255,255,0.10);
+    7px 10px 20px rgba(0,0,0,0.55),
+    -4px -4px 12px rgba(255,255,255,0.055),
+    inset 0 1px 0 rgba(255,255,255,0.09);
 }
 
 .summary-count-card .count-number {
@@ -147,12 +196,12 @@
   font-weight: 700;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 16px currentColor;
+  text-shadow: 0 0 20px currentColor;
 }
 .summary-count-card .count-label {
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #546e7a;
   margin-top: 6px;
@@ -163,140 +212,148 @@
 .count-minor    { color: #fdd835; }
 .count-healthy  { color: #43a047; }
 
-/* ─── LIGHT THEME OVERRIDES — "Pearl Horizon" Edition ───────────────── */
 
+/* ═══════════════════════════════════════════════════════════════════
+   LIGHT THEME — "Frost Prism"
+   Unified neumorphic across header + dashboard.
+   Base: #e4eaf4 (ice-blue, L≈92%) · shadow-dk: rgba(165,182,210)
+   Both widgets share this palette + background-attachment:fixed
+   for a seamless continuous gradient across the full page.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── 1. Header shell ─────────────────────────────────────── */
 .cmdb-header.theme-light {
-  background: linear-gradient(160deg, #d8e4f8 0%, #e4edfb 35%, #edf3fd 65%, #dceaf8 100%);
+  background: linear-gradient(160deg, #e2e8f2 0%, #e4eaf4 40%, #e8eef6 70%, #e2e8f2 100%);
+  background-attachment: fixed;
   box-shadow:
-    0 6px 28px rgba(100,130,200,0.2),
-    0 2px 8px rgba(100,130,200,0.12),
-    inset 0 1px 0 rgba(255,255,255,0.95),
-    inset 0 -1px 0 rgba(140,165,220,0.25);
-  border-bottom: 1px solid rgba(150,175,230,0.35);
+    0 6px 24px rgba(165,182,210,0.4),
+    0 2px 6px rgba(165,182,210,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+  border-bottom: 1px solid rgba(160,180,215,0.35);
 }
 
-/* Aurora shimmer strip along the top edge */
+/* Aurora top bar — vivid, saturated */
 .cmdb-header.theme-light::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
   background: linear-gradient(90deg,
-    #667eea 0%, #9c6ee8 20%, #4fc3f7 45%, #43a047 65%, #fdd835 82%, #667eea 100%
+    #2979ff 0%, #7c4dff 14%, #00b8d4 28%,
+    #00bfa5 42%, #64dd17 56%, #ffd600 70%,
+    #ff6d00 84%, #2979ff 100%
   );
   background-size: 200% 100%;
-  animation: aurora-shift 8s ease-in-out infinite;
-  z-index: 10;
+  height: 4px;
+  opacity: 1;
 }
 
-@keyframes aurora-shift {
-  0%   { background-position: 0% 0%; }
-  50%  { background-position: 100% 0%; }
-  100% { background-position: 0% 0%; }
-}
+/* Suppress the dark radial mesh */
+.cmdb-header.theme-light::after { background: none; }
 
+/* ─── 2. Title row ───────────────────────────────────────── */
 .cmdb-header.theme-light .cmdb-header-title {
-  color: #1a2550;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.95), 0 0 40px rgba(102,126,234,0.15);
+  color: #101e32;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-shadow:
+    1px 1px 0 rgba(255,255,255,0.6),
+    -1px -1px 0 rgba(165,182,210,0.15);
 }
 
 .cmdb-header.theme-light .cmdb-header-lastrun {
-  color: #5a6a98;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+  color: #3a5268;
+  background: linear-gradient(145deg, #edf2f8, #e0e8f2);
+  border: 1px solid rgba(160,180,215,0.4);
+  box-shadow:
+    inset 2px 2px 5px rgba(155,175,208,0.35),
+    inset -1px -1px 3px rgba(255,255,255,0.7);
 }
 
-/* Summary count cards — deep pearl neumorphic */
+/* ─── 3. Summary cards — raised neumorphic tiles ─────────── */
 .cmdb-header.theme-light .summary-count-card {
-  background: linear-gradient(145deg, #eaf0fc, #dce6f7);
-  border: 1px solid rgba(180,200,240,0.5);
+  background: linear-gradient(150deg, #edf2f8, #e0e8f0);
+  border: 1px solid rgba(160,180,215,0.35);
   box-shadow:
-    6px 6px 18px rgba(145,165,215,0.55),
-    -4px -4px 14px rgba(255,255,255,0.95),
-    inset 0 1px 0 rgba(255,255,255,0.85),
-    inset 0 -1px 0 rgba(150,170,220,0.18);
+    7px 7px 20px rgba(165,182,210,0.5),
+    -5px -5px 16px rgba(255,255,255,0.85),
+    inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
 .cmdb-header.theme-light .summary-count-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow:
-    8px 14px 28px rgba(120,148,215,0.6),
-    -4px -4px 16px rgba(255,255,255,0.98),
-    inset 0 1px 0 rgba(255,255,255,0.9);
+    9px 12px 28px rgba(165,182,210,0.55),
+    -5px -5px 18px rgba(255,255,255,0.9),
+    inset 0 1px 0 rgba(255,255,255,0.75);
 }
 
-.cmdb-header.theme-light .summary-count-card .count-label {
-  color: #5a6a98;
-  letter-spacing: 0.14em;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+/* Severity colour stripe at top of each card */
+.cmdb-header.theme-light .summary-count-card::after {
+  display: block;
+  top: 0; bottom: auto; left: 0; right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+  opacity: 1;
 }
+.cmdb-header.theme-light .summary-count-card:nth-child(1)::after { background: linear-gradient(90deg, #1565c0, #42a5f5); }
+.cmdb-header.theme-light .summary-count-card:nth-child(2)::after { background: linear-gradient(90deg, #b71c1c, #ef5350); }
+.cmdb-header.theme-light .summary-count-card:nth-child(3)::after { background: linear-gradient(90deg, #e65100, #ff7043); }
+.cmdb-header.theme-light .summary-count-card:nth-child(4)::after { background: linear-gradient(90deg, #f57f17, #ffca28); }
+.cmdb-header.theme-light .summary-count-card:nth-child(5)::after { background: linear-gradient(90deg, #1b5e20, #66bb6a); }
 
-/* Vivid count numbers with ambient glow — visible even in light mode */
+/* Count numbers — embossed jewel tones */
 .cmdb-header.theme-light .count-total {
-  color: #1565c0;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.5),
-    0 0 20px rgba(21,101,192,0.4),
-    0 0 50px rgba(21,101,192,0.18);
+  color: #1252a8;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.6), 0 0 18px rgba(18,82,168,0.2);
 }
 .cmdb-header.theme-light .count-critical {
-  color: #b71c1c;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.5),
-    0 0 20px rgba(183,28,28,0.4),
-    0 0 50px rgba(183,28,28,0.18);
+  color: #aa1414;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.6), 0 0 18px rgba(170,20,20,0.2);
 }
 .cmdb-header.theme-light .count-moderate {
-  color: #e65100;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.5),
-    0 0 20px rgba(230,81,0,0.35),
-    0 0 50px rgba(230,81,0,0.14);
+  color: #c84800;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.6), 0 0 18px rgba(200,72,0,0.18);
 }
 .cmdb-header.theme-light .count-minor {
-  color: #8a6d00;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.5),
-    0 0 20px rgba(138,109,0,0.28);
+  color: #7a5c00;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.6), 0 0 16px rgba(120,90,0,0.18);
 }
 .cmdb-header.theme-light .count-healthy {
-  color: #1b5e20;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.5),
-    0 0 20px rgba(27,94,32,0.35),
-    0 0 50px rgba(27,94,32,0.15);
+  color: #14561e;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.6), 0 0 18px rgba(20,86,30,0.2);
 }
 
-/* Neumorphic buttons — raised pearl */
+/* Count label */
+.cmdb-header.theme-light .summary-count-card .count-label {
+  color: #3a5070;
+  letter-spacing: 0.14em;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+}
+
+/* ─── 4. Refresh button — neumorphic raised pill ─────────── */
 .cmdb-header.theme-light .btn-skeuo {
-  background: linear-gradient(145deg, #edf3ff, #dde7fa);
-  border: 1px solid rgba(160,185,240,0.5);
-  color: #2040c0;
+  background: linear-gradient(145deg, #eef4fa, #e2eaf4);
+  border: 1px solid rgba(160,180,215,0.4);
+  color: #0e2248;
   box-shadow:
-    4px 4px 12px rgba(140,165,220,0.5),
-    -3px -3px 9px rgba(255,255,255,0.9),
-    inset 0 1px 0 rgba(255,255,255,0.8);
-  text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+    4px 4px 10px rgba(165,182,210,0.45),
+    -3px -3px 8px rgba(255,255,255,0.82),
+    inset 0 1px 0 rgba(255,255,255,0.65);
   font-weight: 600;
+  letter-spacing: 0.08em;
 }
-
 .cmdb-header.theme-light .btn-skeuo:hover {
-  background: linear-gradient(145deg, #ffffff, #eef4ff);
-  border-color: rgba(102,126,234,0.55);
+  background: linear-gradient(145deg, #f4f8fc, #ecf2f8);
+  color: #0a1a38;
   box-shadow:
-    5px 5px 16px rgba(120,148,220,0.55),
-    -3px -3px 10px rgba(255,255,255,0.95),
-    inset 0 1px 0 rgba(255,255,255,0.9),
-    0 0 18px rgba(102,126,234,0.22);
-  color: #1535b0;
+    5px 5px 14px rgba(165,182,210,0.52),
+    -3px -3px 10px rgba(255,255,255,0.88),
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    0 0 14px rgba(100,140,210,0.12);
 }
-
 .cmdb-header.theme-light .btn-skeuo:active {
   box-shadow:
-    inset 3px 3px 8px rgba(130,155,215,0.45),
-    inset -2px -2px 6px rgba(255,255,255,0.8);
+    inset 3px 3px 8px rgba(155,175,210,0.38),
+    inset -2px -2px 6px rgba(255,255,255,0.65);
   transform: translateY(1px);
 }
 
-.cmdb-header.theme-light.scanlines::after {
-  opacity: 0;
-}
+/* Disable scanlines overlay in light mode */
+.cmdb-header.theme-light.scanlines::after { display: none; }
