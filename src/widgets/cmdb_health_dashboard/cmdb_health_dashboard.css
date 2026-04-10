@@ -2,7 +2,7 @@
 
 .cmdb-dashboard {
   padding: 0 39px 48px;  /* 24px content + 15px to compensate for negative margin */
-  background: #0d0d1a;
+  background: #12172b;
   min-height: calc(100vh - 120px); /* fill remaining viewport below header */
   color: #e8eaf6;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -22,7 +22,7 @@
   align-items: center;
   gap: 14px;
   flex-wrap: wrap;
-  background: linear-gradient(180deg, #0d0d1a 0%, #0d0d1a 80%, rgba(13,13,26,0.6) 100%);
+  background: linear-gradient(180deg, #12172b 0%, #12172b 80%, rgba(18,23,43,0.6) 100%);
 }
 
 .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -75,16 +75,21 @@
 .cmdb-search:focus { outline: none; border-color: rgba(79,195,247,0.5); }
 
 .btn-skeuo {
-  background: linear-gradient(145deg, #1a2540, #0d1525);
+  background: linear-gradient(145deg, #1c2442, #0f1830);
   border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+  box-shadow:
+    4px 4px 10px rgba(0,0,0,0.55),
+    -2px -2px 7px rgba(255,255,255,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.10);
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: inherit;
 }
 .btn-skeuo:active {
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3);
-  transform: translateY(1px);
+  box-shadow:
+    inset 3px 3px 7px rgba(0,0,0,0.6),
+    inset -2px -2px 5px rgba(255,255,255,0.05);
+  transform: translateY(0);
 }
 .btn-skeuo:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-add {
@@ -117,7 +122,7 @@
 .cmdb-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 18px;
+  gap: 24px;
 }
 
 .cmdb-grid-item {
@@ -161,6 +166,11 @@
               0 0 32px rgba(80,130,255,0.18),
               0 12px 40px rgba(0,0,0,0.55);
 }
+/* Spotlight halo on the expanded card */
+.cmdb-grid-item.expanded-row {
+  box-shadow: 0 0 0 1px rgba(79,195,247,0.2), 0 0 60px rgba(79,195,247,0.08);
+}
+
 /* Subtle dim/blur on sibling cards while one is expanded */
 .cmdb-dashboard.focus-mode .cmdb-grid-item:not(.expanded-row) .ci-card {
   opacity: 0.55;
@@ -206,7 +216,7 @@
 .card-stripe-minor    { border-left: 4px solid #fdd835; box-shadow: -2px 0 16px rgba(253,216,53,0.25),  0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); }
 .card-stripe-healthy  { border-left: 4px solid #43a047; box-shadow: -2px 0 16px rgba(67,160,71,0.30),  0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); }
 
-.ci-card-body { padding: 18px 20px 14px; }
+.ci-card-body { padding: 22px 20px 16px; }
 
 .ci-card-head {
   display: flex;
@@ -272,26 +282,28 @@
   margin-bottom: 7px;
 }
 .score-label {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   color: #7a8fa0;
-  width: 36px;
+  width: 52px;
   flex-shrink: 0;
 }
 .score-track {
   flex: 1;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(0,0,0,0.35);
   border-radius: 4px;
   height: 9px;
   overflow: hidden;
+  box-shadow:
+    inset 2px 2px 5px rgba(0,0,0,0.5),
+    inset -1px -1px 3px rgba(255,255,255,0.05);
 }
 .score-fill {
   border-radius: 4px;
   height: 100%;
   width: 0%;
-  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .score-num {
   font-size: 11px;
@@ -304,21 +316,24 @@
 /* Issue badges */
 .badge-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  gap: 4px;
   margin-bottom: 12px;
   min-height: 18px;
 }
 .badge-pill {
   display: inline-block;
-  padding: 3px 9px;
+  padding: 3px 8px;
   border-radius: 10px;
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
-.badge-stale     { background: rgba(84,110,122,0.3);  color: #8892a4; border: 1px solid rgba(84,110,122,0.4); }
+.badge-stale     { background: rgba(84,110,122,0.28); color: #b0bec5; border: 1px solid rgba(144,164,174,0.45); }
 .badge-orphan    { background: rgba(79,195,247,0.15); color: #4fc3f7; border: 1px solid rgba(79,195,247,0.3); }
 .badge-duplicate { background: rgba(251,140,0,0.15);  color: #fb8c00; border: 1px solid rgba(251,140,0,0.3); }
 .badge-violation { background: rgba(229,57,53,0.15);  color: #e53935; border: 1px solid rgba(229,57,53,0.3); }
@@ -527,10 +542,11 @@
   margin-bottom: 14px;
 }
 .dp-score-num {
-  font-size: 68px;
+  font-size: 52px;
   font-weight: 800;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 28px currentColor;
 }
 .dp-score-right { display: flex; flex-direction: column; gap: 10px; }
 .dp-status-badge {
@@ -588,8 +604,8 @@
 
 /* ── CI name in score header ── */
 .dp-ci-name-header {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 800;
   color: #e8eaf6;
   letter-spacing: 0.04em;
   margin-bottom: 4px;
@@ -734,7 +750,7 @@
 .dp-dim-fill {
   height: 100%;
   border-radius: 3px;
-  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .dp-dim-summary {
   font-size: 11px;
@@ -746,23 +762,22 @@
   overflow: hidden;
 }
 
-/* Terminal readout */
+/* AI Analysis briefing note — professional document style */
 .terminal-readout {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 12px;
-  line-height: 1.7;
-  color: #4fc3f7;
-  background: #030712;
-  border: 1px solid rgba(79,195,247,0.2);
-  border-left: 3px solid rgba(79,195,247,0.4);
-  border-radius: 8px;
-  padding: 16px 18px;
-  box-shadow: inset 0 2px 8px rgba(0,0,0,0.7);
-  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.75;
+  color: #c5cae9;
+  background: rgba(79,195,247,0.04);
+  border: 1px solid rgba(79,195,247,0.15);
+  border-left: 3px solid #4fc3f7;
+  border-radius: 10px;
+  padding: 20px 22px;
+  box-shadow: none;
+  white-space: normal;
   word-break: break-word;
   margin-bottom: 22px;
 }
-/* Cursor removed — static AI content should not appear incomplete */
 
 /* ── Recommendations section label ── */
 .dp-rec-section-label {
@@ -801,10 +816,10 @@
   letter-spacing: 0.02em;
 }
 
-/* Recommendations wrapper — sets context off from the rest of the panel */
+/* Recommendations wrapper — AI intelligence zone */
 .dp-rec-container {
-  background: rgba(0,0,0,0.28);
-  border: 1px solid rgba(255,255,255,0.04);
+  background: rgba(79,195,247,0.04);
+  border: 1px solid rgba(79,195,247,0.12);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 32px;
@@ -1365,16 +1380,16 @@
 
 /* Cards */
 .theme-light .embossed-card {
-  background: #ffffff;
-  border: 1px solid #e4e8f0;
+  background: #e8edf8;
+  border: 1px solid rgba(255,255,255,0.6);
   box-shadow:
-    0 1px 2px rgba(15,23,42,0.04),
-    0 8px 24px rgba(15,23,42,0.06);
+    6px 6px 16px #c8cfde,
+    -6px -6px 16px #ffffff;
 }
 .theme-light .ci-card:hover {
   box-shadow:
-    0 2px 4px rgba(15,23,42,0.06),
-    0 16px 36px rgba(15,23,42,0.10);
+    8px 8px 20px #c0c8d8,
+    -8px -8px 20px #ffffff;
 }
 .theme-light .ci-card.expanded {
   box-shadow: 0 0 0 2px rgba(102,126,234,0.35), 0 8px 24px rgba(15,23,42,0.1);
@@ -1390,9 +1405,11 @@
 .theme-light .score-label   { color: #9aa3b8; }
 .theme-light .score-num     { color: #4b5574; }
 .theme-light .score-track {
-  background: #eef1f8;
-  border: 1px solid #e0e4ef;
-  box-shadow: inset 0 1px 2px rgba(15,23,42,0.06);
+  background: rgba(0,0,0,0.08);
+  border: none;
+  box-shadow:
+    inset 2px 2px 4px #c8cfde,
+    inset -1px -1px 3px rgba(255,255,255,0.8);
 }
 .theme-light .score-fill    { box-shadow: none; }
 .theme-light .ci-priority-label   { color: #7a8599; }
@@ -1473,10 +1490,11 @@
 .theme-light .dp-dim-fill    { box-shadow: none !important; }
 
 .theme-light .terminal-readout {
-  background: #f7f9fc;
-  border: 1px solid #e4e8f0;
-  color: #1a1f36;
-  box-shadow: inset 0 1px 2px rgba(15,23,42,0.04);
+  background: rgba(79,130,220,0.05);
+  border: 1px solid rgba(79,130,220,0.18);
+  border-left: 3px solid rgba(79,130,220,0.6);
+  color: #2d3a5c;
+  box-shadow: none;
   text-shadow: none;
 }
 
@@ -1560,11 +1578,11 @@
    ═══════════════════════════════════════════════════════════════ */
 body.cmdb-theme-dark,
 html.cmdb-theme-dark {
-  background: #0d0d1a !important;
+  background: #12172b !important;
 }
 body.cmdb-theme-light,
 html.cmdb-theme-light {
-  background: linear-gradient(180deg, #eef2fb 0%, #e2e8f5 100%) !important;
+  background: #e8edf8 !important;
   color: #1a1f36;
 }
 body.cmdb-theme-light .sp-page-root,
@@ -1583,39 +1601,25 @@ body.cmdb-theme-light #main {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   HEADER / FILTER BAR — premium skeuomorphic control panel
+   HEADER / FILTER BAR — neumorphic control panel
    ═══════════════════════════════════════════════════════════════ */
 .cmdb-filter-bar {
-  padding: 18px 22px !important;
+  padding: 12px 20px !important;
   margin-bottom: 22px !important;
   border-radius: 14px !important;
-  background:
-    linear-gradient(145deg, #1c254a 0%, #121a34 55%, #0c1226 100%) !important;
-  border: 1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(145deg, #1a2240 0%, #111830 55%, #0d142a 100%) !important;
+  border: 1px solid rgba(255,255,255,0.07);
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.08) inset,
-    0 -1px 0 rgba(0,0,0,0.5) inset,
-    0 10px 30px rgba(0,0,0,0.55),
-    0 0 42px rgba(102,126,234,0.12);
+    4px 4px 16px rgba(0,0,0,0.55),
+    -2px -2px 10px rgba(255,255,255,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.08);
   position: sticky;
   top: 8px;
   z-index: 50;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
-.cmdb-filter-bar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  pointer-events: none;
-  background: linear-gradient(90deg,
-    rgba(102,126,234,0.18) 0%,
-    rgba(102,126,234,0) 30%,
-    rgba(255,213,79,0) 70%,
-    rgba(255,213,79,0.12) 100%);
-  opacity: 0.6;
-}
+.cmdb-filter-bar::before { display: none; }
 .cmdb-filter-bar > * { position: relative; z-index: 1; }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1690,19 +1694,18 @@ body.cmdb-theme-light #main {
   box-shadow: 0 2px 5px rgba(0,0,0,0.5), 0 0 14px rgba(67,160,71,0.4), inset 0 1px 0 rgba(255,255,255,0.14); }
 
 /* ═══════════════════════════════════════════════════════════════
-   ENHANCED DARK MODE SKEUOMORPHISM
-   Adds deeper layering, subtle bevels, and tactile highlights
+   ENHANCED DARK MODE NEUMORPHISM
+   Bilateral shadows from new #12172b base — physically correct lift
    ═══════════════════════════════════════════════════════════════ */
 .embossed-card {
   background:
-    radial-gradient(ellipse at top left, rgba(102,126,234,0.10), transparent 50%),
-    linear-gradient(155deg, #212b4f 0%, #151e3a 50%, #0d1428 100%) !important;
+    radial-gradient(ellipse at top left, rgba(102,126,234,0.08), transparent 50%),
+    linear-gradient(155deg, #1d2748 0%, #131c38 50%, #0e1630 100%) !important;
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.10) inset,
-    0 -1px 0 rgba(0,0,0,0.55) inset,
-    0 2px 4px rgba(0,0,0,0.4),
-    0 12px 32px rgba(0,0,0,0.55),
-    0 0 0 1px rgba(0,0,0,0.25) !important;
+    6px 6px 16px rgba(0,0,0,0.55),
+    -4px -4px 12px rgba(255,255,255,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 0 0 1px rgba(0,0,0,0.2) !important;
 }
 .ci-card::before {
   content: '';
@@ -1719,20 +1722,19 @@ body.cmdb-theme-light #main {
    Soft neumorphic surfaces, tactile buttons, premium feel
    ═══════════════════════════════════════════════════════════════ */
 .cmdb-dashboard.theme-light {
-  background: linear-gradient(180deg, #eef2fb 0%, #e2e8f5 100%) !important;
+  background: #e8edf8 !important;
   color: #1a1f36;
   min-height: 100vh;
 }
 
 .theme-light .cmdb-filter-bar {
-  background: linear-gradient(145deg, #ffffff 0%, #f1f4fb 100%) !important;
-  border: 1px solid #d9deeb !important;
+  background: #e8edf8 !important;
+  border: 1px solid #d4daea !important;
   border-radius: 16px !important;
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.9) inset,
-    0 -1px 0 rgba(15,23,42,0.04) inset,
-    8px 8px 24px rgba(163,177,198,0.45),
-    -8px -8px 24px rgba(255,255,255,0.95) !important;
+    6px 6px 16px #c8cfde,
+    -6px -6px 16px #ffffff,
+    inset 0 1px 0 rgba(255,255,255,0.9) !important;
 }
 .theme-light .cmdb-filter-bar::before {
   background: linear-gradient(90deg,
@@ -2783,13 +2785,11 @@ body.cmdb-theme-light #main {
     4px  4px 16px rgba(0,0,0,0.7);
 }
 
-/* ── Terminal readout: deep inset ── */
+/* ── Terminal readout: briefing note style (no deep inset) ── */
 .terminal-readout {
-  background: linear-gradient(145deg, #080c18, #0d1220);
-  box-shadow:
-    inset 4px 4px 14px rgba(0,0,0,0.95),
-    inset -1px -1px 4px rgba(255,255,255,0.025);
-  border-color: rgba(255,255,255,0.04);
+  background: rgba(79,195,247,0.04);
+  box-shadow: none;
+  border-color: rgba(79,195,247,0.15);
 }
 
 /* ── Tabs bar: inset channel ── */
@@ -2971,12 +2971,11 @@ body.cmdb-theme-light #main {
     4px  4px  14px rgba(163,177,198,0.45);
 }
 .theme-light .terminal-readout {
-  background: linear-gradient(145deg, #d0daea, #c5cfe0);
-  box-shadow:
-    inset 4px 4px 12px rgba(163,177,198,0.65),
-    inset -2px -2px 6px rgba(255,255,255,0.9);
-  border-color: rgba(163,177,198,0.3);
-  color: #1a2540;
+  background: rgba(79,130,220,0.05);
+  box-shadow: none;
+  border-color: rgba(79,130,220,0.18);
+  border-left-color: rgba(79,130,220,0.6);
+  color: #2d3a5c;
 }
 .theme-light .dp-tabs {
   background: linear-gradient(145deg, #d5dff0, #e4ecf7);
@@ -3114,11 +3113,11 @@ body.cmdb-theme-light #main {
 /* (score numeral light-mode overrides removed — reverted to simple) */
 .theme-light .ci-card-head::after { color: #3d7af5; text-shadow: 0 0 8px rgba(61,122,245,0.5); }
 
-/* ─── Light mode: fix terminal readout (remove blue neon colour) ─ */
+/* ─── Light mode: terminal readout briefing note ─ */
 .theme-light .terminal-readout {
-  color: #1a2540 !important;
-  border-left-color: rgba(61,122,245,0.4) !important;
-  background: #f0f4fb !important;
+  color: #2d3a5c !important;
+  border-left-color: rgba(61,122,245,0.55) !important;
+  background: rgba(61,122,245,0.05) !important;
   box-shadow: none !important;
 }
 
