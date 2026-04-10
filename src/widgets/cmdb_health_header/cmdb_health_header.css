@@ -162,3 +162,66 @@
 .count-moderate { color: #fb8c00; }
 .count-minor    { color: #fdd835; }
 .count-healthy  { color: #43a047; }
+
+/* ─── LIGHT THEME OVERRIDES ─────────────────────────────────────────── */
+
+.cmdb-header.theme-light {
+  background: #f0f4fc;
+  box-shadow:
+    0 4px 16px rgba(163,177,198,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    inset 0 -1px 0 rgba(163,177,198,0.25);
+  border-bottom: 1px solid #d9deeb;
+}
+
+.cmdb-header.theme-light .cmdb-header-title {
+  color: #1a1f36;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.cmdb-header.theme-light .cmdb-header-lastrun {
+  color: #7a8599;
+}
+
+.cmdb-header.theme-light .summary-count-card {
+  background: #f0f4fc;
+  border: 1px solid #d9deeb;
+  box-shadow:
+    5px 5px 14px rgba(163,177,198,0.45),
+    -3px -3px 10px rgba(255,255,255,0.85),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.cmdb-header.theme-light .summary-count-card:hover {
+  box-shadow:
+    7px 7px 18px rgba(163,177,198,0.5),
+    -4px -4px 12px rgba(255,255,255,0.9),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.cmdb-header.theme-light .summary-count-card .count-label {
+  color: #7a8599;
+}
+
+.cmdb-header.theme-light .btn-skeuo {
+  background: linear-gradient(145deg, #f5f8ff, #e8edf8);
+  border: 1px solid #d0d6e8;
+  color: #3d7af5;
+  box-shadow:
+    4px 4px 10px rgba(163,177,198,0.45),
+    -2px -2px 7px rgba(255,255,255,0.85),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.cmdb-header.theme-light .btn-skeuo:hover {
+  background: linear-gradient(145deg, #ffffff, #eef2fc);
+  box-shadow:
+    5px 5px 12px rgba(163,177,198,0.5),
+    -3px -3px 9px rgba(255,255,255,0.9),
+    inset 0 1px 0 rgba(255,255,255,0.8),
+    0 0 14px rgba(61,122,245,0.15);
+}
+
+.cmdb-header.theme-light.scanlines::after {
+  opacity: 0;
+}

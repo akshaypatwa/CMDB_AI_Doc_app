@@ -1,4 +1,4 @@
-api.controller = function($scope, spUtil, $timeout, $http) {
+api.controller = function($scope, spUtil, $timeout, $http, $rootScope) {
 
     // ─── Initial state ────────────────────────────────────────
     $scope.allRecords     = $scope.data.records || [];
@@ -40,7 +40,11 @@ api.controller = function($scope, spUtil, $timeout, $http) {
         $scope.theme = ($scope.theme === 'light') ? 'dark' : 'light';
         try { localStorage.setItem('cmdb_theme', $scope.theme); } catch (e) {}
         applyThemeToHost($scope.theme);
+        $rootScope.$broadcast('cmdb:themeChanged', $scope.theme);
     };
+
+    // Broadcast initial theme so the header widget syncs on load
+    $rootScope.$broadcast('cmdb:themeChanged', $scope.theme);
 
     // ─── Per-card Quick-Fix side panel ────────────────────────
     $scope.quickPanelCard = null;
